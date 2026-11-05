@@ -13,7 +13,7 @@
     ["adminUsers", "/adminUsers/list.page", "Admin.users"],
     ["pendingActivations", "/adminUsers/pendingActivations.page", "Admin.pendingActivations"],
     ["adminSmilies", "/adminSmilies/list.page", "Admin.smilies"],
-    ["adminAttachConfig", "/adminAttachments/configurations.page", "Admin.attachConfigurations"],
+    ["adminAttachConfig", "/adminAttachments/configurations.page", "Admin.attachments"],
     ["adminAttachExtGroups", "/adminAttachments/extensionGroups.page", "Admin.attachExtensionGroups"],
     ["adminAttachExt", "/adminAttachments/extensions.page", "Admin.attachExtensions"],
     ["adminAttachQuota", "/adminAttachments/quotaLimit.page", "Admin.attachQuota"],
