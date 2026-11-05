@@ -18,6 +18,8 @@ public final class RssWriter {
     private RssWriter() {
     }
 
+    static final String DC_NS = "http://purl.org/dc/elements/1.1/";
+
     public static String write(String title, String link, String description, List<RssItem> items) {
         StringWriter out = new StringWriter();
         try {
@@ -25,6 +27,7 @@ public final class RssWriter {
             w.writeStartDocument("UTF-8", "1.0");
             w.writeStartElement("rss");
             w.writeAttribute("version", "2.0");
+            w.writeNamespace("dc", DC_NS);
             w.writeStartElement("channel");
             element(w, "title", title);
             element(w, "link", link);
@@ -43,7 +46,10 @@ public final class RssWriter {
                     element(w, "pubDate", rfc822(item.publishDate()));
                 }
                 if (item.author() != null) {
-                    element(w, "author", item.author());
+                    // RSS 2.0 <author> must be an e-mail address; expose the username as Dublin Core creator instead
+                    w.writeStartElement("dc", "creator", DC_NS);
+                    w.writeCharacters(stripInvalid(item.author()));
+                    w.writeEndElement();
                 }
                 w.writeEndElement();
             }

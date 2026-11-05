@@ -72,7 +72,8 @@ class RssIntegrationTest extends Track4Fixtures {
         assertThat(link).isEqualTo(config.get(ConfigKeys.FORUM_LINK).replaceAll("/+$", "") + "/" + "posts/preList/100/1000.page");
         assertThat(first.getElementsByTagName("guid").item(0).getTextContent()).isEqualTo(link);
         assertThat(first.getElementsByTagName("pubDate").item(0).getTextContent()).endsWith("GMT");
-        assertThat(first.getElementsByTagName("author").item(0).getTextContent()).isEqualTo("Admin");
+        assertThat(first.getElementsByTagName("dc:creator").item(0).getTextContent()).isEqualTo("Admin");
+        assertThat(first.getElementsByTagName("author").getLength()).isZero();
     }
 
     @Test
