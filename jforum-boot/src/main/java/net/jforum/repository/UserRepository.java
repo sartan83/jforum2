@@ -22,4 +22,12 @@ public interface UserRepository extends MongoRepository<User, Integer> {
     Optional<User> findTopByDeletedFalseOrderByIdDesc();
 
     long countByDeletedFalse();
+
+    Page<User> findByGroupIdsContaining(Integer groupId, Pageable pageable);
+
+    long countByGroupIdsContaining(Integer groupId);
+
+    boolean existsByUsernameIgnoreCase(String username);
+
+    Optional<User> findBySecurityHashAndEmailIgnoreCase(String securityHash, String email);
 }
