@@ -1,6 +1,6 @@
 <#import "layout.ftlh" as layout>
 <@layout.page title=I18n.getMessage("Search.search")>
-<@layout.breadcrumb> &raquo; <span>${I18n.getMessage("Search.search")}</span></@layout.breadcrumb>
+<@layout.breadcrumb> <span>${I18n.getMessage("Search.search")}</span></@layout.breadcrumb>
 <section class="card">
   <h1 class="card-title">${I18n.getMessage("Search.terms")}</h1>
   <form class="form" method="get" action="${contextPath}/search/search.page" id="formSearch">

@@ -1,6 +1,6 @@
 <#import "layout.ftlh" as layout>
 <@layout.page title=I18n.getMessage("Search.searchResults")>
-<@layout.breadcrumb> &raquo; <a href="${contextPath}/search/filters.page">${I18n.getMessage("Search.search")}</a> &raquo; <span>${I18n.getMessage("Search.searchResults")}</span></@layout.breadcrumb>
+<@layout.breadcrumb> <a href="${contextPath}/search/filters.page">${I18n.getMessage("Search.search")}</a> <span>${I18n.getMessage("Search.searchResults")}</span></@layout.breadcrumb>
 <div class="page-head">
   <h1>${I18n.getMessage("Search.searchResults")}: <span id="total-records">${totalRecords}</span> <#if totalRecords == 1>${I18n.getMessage("Search.recordFound")}<#else>${I18n.getMessage("Search.recordsFound")}</#if></h1>
   <form method="get" action="${contextPath}/search/search.page" class="inline">

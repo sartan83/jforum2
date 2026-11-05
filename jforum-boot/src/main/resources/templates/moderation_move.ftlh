@@ -1,6 +1,6 @@
 <#import "layout.ftlh" as layout>
 <@layout.page title=I18n.getMessage("PostForm.movingTopic")>
-<@layout.breadcrumb> &raquo; <span>${I18n.getMessage("PostForm.movingTopic")}</span></@layout.breadcrumb>
+<@layout.breadcrumb> <span>${I18n.getMessage("PostForm.movingTopic")}</span></@layout.breadcrumb>
 <section class="card">
   <h1 class="card-title">${I18n.getMessage("PostForm.movingTopic")}</h1>
   <ul>

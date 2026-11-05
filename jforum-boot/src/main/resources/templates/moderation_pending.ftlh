@@ -1,6 +1,6 @@
 <#import "layout.ftlh" as layout>
 <@layout.page title=I18n.getMessage("Moderation.Admin.pendingListCategory")>
-<@layout.breadcrumb> &raquo; <span>${I18n.getMessage("Moderation.Admin.pendingListCategory")}</span></@layout.breadcrumb>
+<@layout.breadcrumb> <span>${I18n.getMessage("Moderation.Admin.pendingListCategory")}</span></@layout.breadcrumb>
 <section class="card">
   <h1 class="card-title">${I18n.getMessage("Moderation.Admin.pendingListCategory")}</h1>
   <table class="data" id="pending-forums">

@@ -1,6 +1,6 @@
 <#import "layout.ftlh" as layout>
 <@layout.page title=I18n.getMessage("ModerationLog.moderationLog")>
-<@layout.breadcrumb> &raquo; <span>${I18n.getMessage("ModerationLog.moderationLog")}</span></@layout.breadcrumb>
+<@layout.breadcrumb> <span>${I18n.getMessage("ModerationLog.moderationLog")}</span></@layout.breadcrumb>
 <section class="card">
   <h1 class="card-title">${I18n.getMessage("ModerationLog.moderationLog")}</h1>
   <table class="data" id="moderation-log">

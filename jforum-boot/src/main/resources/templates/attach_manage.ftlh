@@ -1,7 +1,7 @@
 <#import "layout.ftlh" as layout>
 <#import "attach_show.ftlh" as attach>
 <@layout.page title=I18n.getMessage("Attachments.panel")>
-<@layout.breadcrumb><#if forum??> &raquo; <a href="${contextPath}/forums/show/${forum.id}.page">${forum.name}</a></#if> &raquo; <a href="${contextPath}/posts/preList/${post.topicId}/${post.id}.page">${post.subject!}</a> &raquo; <span>${I18n.getMessage("Attachments.panel")}</span></@layout.breadcrumb>
+<@layout.breadcrumb><#if forum??> <a href="${contextPath}/forums/show/${forum.id}.page">${forum.name}</a></#if> <a href="${contextPath}/posts/preList/${post.topicId}/${post.id}.page">${post.subject!}</a> <span>${I18n.getMessage("Attachments.panel")}</span></@layout.breadcrumb>
 <section class="card">
   <h1 class="card-title">${I18n.getMessage("Attachments.panel")}</h1>
   <#if error??><p class="alert alert-error" id="attach-error">${error}</p></#if>

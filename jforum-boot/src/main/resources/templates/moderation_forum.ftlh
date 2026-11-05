@@ -1,7 +1,7 @@
 <#import "layout.ftlh" as layout>
 <#import "moderation_tools.ftlh" as mod>
 <@layout.page title=forum.name>
-<@layout.breadcrumb> &raquo; <a href="${contextPath}/forums/show/${forum.id}.page">${forum.name}</a> &raquo; <span>${I18n.getMessage("Moderation.OpenModeration")}</span></@layout.breadcrumb>
+<@layout.breadcrumb> <a href="${contextPath}/forums/show/${forum.id}.page">${forum.name}</a> <span>${I18n.getMessage("Moderation.OpenModeration")}</span></@layout.breadcrumb>
 <div class="page-head">
   <h1>${forum.name}</h1>
   <p class="muted">

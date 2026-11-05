@@ -1,6 +1,6 @@
 <#import "layout.ftlh" as layout>
 <@layout.page title=I18n.getMessage("Moderation.Admin.pendingPosts")>
-<@layout.breadcrumb> &raquo; <a href="${contextPath}/moderation/pending.page">${I18n.getMessage("Moderation.Admin.pendingListCategory")}</a> &raquo; <span>${forum.name}</span></@layout.breadcrumb>
+<@layout.breadcrumb> <a href="${contextPath}/moderation/pending.page">${I18n.getMessage("Moderation.Admin.pendingListCategory")}</a> <span>${forum.name}</span></@layout.breadcrumb>
 <h1>${I18n.getMessage("Moderation.Admin.pendingPosts")}: ${forum.name}</h1>
 <#if groups?has_content>
 <form method="post" action="${contextPath}/moderation/pendingSave.page" id="pendingForm">
