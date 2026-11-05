@@ -6,7 +6,7 @@ Questo repository contiene la riscrittura di JForum 2.1.8 come applicazione **Sp
 |------|-----------|
 | `jforum-boot/` | Applicazione Spring Boot (package `net.jforum`): web MVC + FreeMarker, Spring Security, Spring Data MongoDB, GridFS, Spring Session |
 | `tools/migration/` | Tool di migrazione SQL Server → MongoDB (vedi [`tools/migration/README.md`](tools/migration/README.md)) |
-| `docker-compose.yml`, `Dockerfile` | Stack locale: `mongo:8` (replica set, volume persistente) + app + mailpit |
+| `docker-compose.yml`, `Dockerfile` | Stack locale: `mongo:8.2` (MongoDB 8.x, replica set, volume persistente) + app + mailpit |
 | `docs/demo/` | Screenshot e log della verifica end-to-end |
 
 ## Requisiti
@@ -33,13 +33,14 @@ docker compose up --build
 - Dati demo (categorie, forum, utenti `mario`/`giulia`/`luca` con password `demo123`, topic e post): sono attivi di default (`JFORUM_SEED_DEMO=true`). Si disattivano con `JFORUM_SEED_DEMO=false`.
 - Email (attivazione account, notifiche, PM): mailpit su http://localhost:8025.
 - Reset completo dei dati: `docker compose down -v`.
+- Se il volume `mongo-data` è stato creato con MongoDB 8.3, mongod 8.2 esce con codice 62 (`Invalid featureCompatibilityVersion`): ricrearlo con `docker compose down -v`. Si usa 8.2 perché 8.0 e 8.3 non partono su kernel Linux ≥ 6.19 (SERVER-121912); per cambiare immagine: `MONGO_IMAGE=...`.
 
 Variabili principali: `MONGODB_URI`, `FORUM_LINK`, `MAIL_HOST`/`MAIL_PORT`, `JFORUM_ADMIN_PASSWORD`, `JFORUM_SEED_DEMO`. Qualsiasi chiave di `SystemGlobals.properties` si può sovrascrivere come proprietà Spring `jforum.<chiave>` (es. `--jforum.topicsPerPage=20`). Dal pannello admin la si scrive nella collection `config`.
 
 ## Avvio senza Docker per l'app
 
 ```bash
-docker run -d --name jforum-mongo -p 27017:27017 mongo:8
+docker run -d --name jforum-mongo -p 27017:27017 mongo:8.2
 ./mvnw -pl jforum-boot -am spring-boot:run
 ```
 

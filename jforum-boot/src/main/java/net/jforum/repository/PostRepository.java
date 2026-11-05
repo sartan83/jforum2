@@ -37,4 +37,6 @@ public interface PostRepository extends MongoRepository<Post, Integer> {
     Optional<Post> findFirstByForumIdAndModerateFalseOrderByIdDesc(Integer forumId);
 
     long countByTopicIdAndModerateFalseAndIdLessThan(Integer topicId, Integer id);
+
+    long countByUserId(Integer userId);
 }

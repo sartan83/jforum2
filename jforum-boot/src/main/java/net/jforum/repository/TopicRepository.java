@@ -18,4 +18,6 @@ public interface TopicRepository extends MongoRepository<Topic, Integer> {
     Page<Topic> findByUserId(Integer userId, Pageable pageable);
 
     long countByForumIdAndModeratedFalse(Integer forumId);
+
+    long countByUserId(Integer userId);
 }

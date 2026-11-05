@@ -416,4 +416,21 @@ public class User {
     public void setGroupIds(List<Integer> groupIds) {
         this.groupIds = groupIds;
     }
+
+    /** Path (relative to the context path) or absolute URL of the avatar image, or null. */
+    public String getAvatarUrl() {
+        if (avatar == null || avatar.isBlank() || avatarType == null) {
+            return null;
+        }
+        return switch (avatarType) {
+            case UPLOAD -> "/user/avatar/" + id + ".page";
+            case EXTERNAL -> avatar;
+            case GALLERY -> "/images/avatar/" + avatar;
+            case NONE -> null;
+        };
+    }
+
+    public boolean isExternalAvatar() {
+        return avatarType == AvatarType.EXTERNAL;
+    }
 }

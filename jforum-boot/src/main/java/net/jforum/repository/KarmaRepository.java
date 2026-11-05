@@ -12,4 +12,6 @@ public interface KarmaRepository extends MongoRepository<Karma, Integer> {
     List<Karma> findByPostUserId(Integer postUserId);
 
     List<Karma> findByPostId(Integer postId);
+
+    List<Karma> findByRateDateBetween(java.time.Instant from, java.time.Instant to);
 }
