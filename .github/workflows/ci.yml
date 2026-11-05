@@ -14,6 +14,7 @@ jobs:
           java-version: '21'
           cache: maven
       - name: Build and test (Testcontainers MongoDB 8)
-        run: ./mvnw -B verify
+        # mongo:8.0 does not start on the runners' Linux kernel >= 6.19 (SERVER-121912); 8.2 does
+        run: ./mvnw -B verify -Dmongodb.image=mongo:8.2
       - name: Docker image builds
         run: docker build -t jforum-boot:ci .
