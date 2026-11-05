@@ -18,6 +18,7 @@ jobs:
       - name: Kernel version (mongo:8 needs < 6.19)
         run: uname -r
       - name: Build and test (Testcontainers MongoDB 8)
-        run: ./mvnw -B verify
+        # mongo 8.3+ refuses to start on runner kernels >= 6.19 (SERVER-121912 / SERVER-136272); 8.2 boots
+        run: ./mvnw -B verify -Dmongodb.image=mongo:8.2
       - name: Docker image builds
         run: docker build -t jforum-boot:ci .
