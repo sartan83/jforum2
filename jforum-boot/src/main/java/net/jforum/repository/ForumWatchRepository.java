@@ -10,4 +10,6 @@ public interface ForumWatchRepository extends MongoRepository<ForumWatch, String
     List<ForumWatch> findByForumId(Integer forumId);
 
     Optional<ForumWatch> findByForumIdAndUserId(Integer forumId, Integer userId);
+
+    void deleteByForumIdAndUserId(Integer forumId, Integer userId);
 }

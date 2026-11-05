@@ -12,4 +12,6 @@ public interface TopicWatchRepository extends MongoRepository<TopicWatch, String
     Optional<TopicWatch> findByTopicIdAndUserId(Integer topicId, Integer userId);
 
     void deleteByTopicId(Integer topicId);
+
+    void deleteByTopicIdAndUserId(Integer topicId, Integer userId);
 }
