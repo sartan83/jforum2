@@ -2,6 +2,7 @@ package net.jforum.repository;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 import net.jforum.domain.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,4 +27,16 @@ public interface PostRepository extends MongoRepository<Post, Integer> {
     long countByForumIdAndModerateFalse(Integer forumId);
 
     void deleteByTopicId(Integer topicId);
+
+    long countByTopicId(Integer topicId);
+
+    Optional<Post> findFirstByTopicIdAndModerateFalseOrderByIdDesc(Integer topicId);
+
+    Optional<Post> findFirstByTopicIdOrderByIdAsc(Integer topicId);
+
+    Optional<Post> findFirstByForumIdAndModerateFalseOrderByIdDesc(Integer forumId);
+
+    long countByTopicIdAndModerateFalseAndIdLessThan(Integer topicId, Integer id);
+
+    long countByUserId(Integer userId);
 }

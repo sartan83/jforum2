@@ -83,7 +83,9 @@ public class LegacyUrlFilter extends OncePerRequestFilter {
         if ("GET".equals(request.getMethod())) {
             response.sendRedirect(request.getContextPath() + target);
         } else {
-            request.getRequestDispatcher(target).forward(request, response);
+            // the forwarded request keeps the original parameters: re-adding them as a query string would duplicate them
+            int q = target.indexOf('?');
+            request.getRequestDispatcher(q < 0 ? target : target.substring(0, q)).forward(request, response);
         }
     }
 

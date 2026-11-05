@@ -12,4 +12,6 @@ public interface PrivateMessageRepository extends MongoRepository<PrivateMessage
     List<PrivateMessage> findByFromUserIdAndTypeInOrderByDateDesc(Integer fromUserId, Collection<PrivateMessageType> types);
 
     long countByToUserIdAndTypeIn(Integer toUserId, Collection<PrivateMessageType> types);
+
+    List<PrivateMessage> findByIdIn(Collection<Integer> ids);
 }

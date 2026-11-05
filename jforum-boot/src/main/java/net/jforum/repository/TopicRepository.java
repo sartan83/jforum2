@@ -16,4 +16,8 @@ public interface TopicRepository extends MongoRepository<Topic, Integer> {
     List<Topic> findByForumIdInAndMovedIdIsNull(Collection<Integer> forumIds, Pageable pageable);
 
     Page<Topic> findByUserId(Integer userId, Pageable pageable);
+
+    long countByForumIdAndModeratedFalse(Integer forumId);
+
+    long countByUserId(Integer userId);
 }
