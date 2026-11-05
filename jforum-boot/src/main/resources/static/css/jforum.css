@@ -124,3 +124,5 @@ table.data th { color: var(--muted); font-size: .8rem; text-transform: uppercase
   .post-author .avatar { width: 44px; height: 44px; margin: 0; }
   .admin-layout { grid-template-columns: 1fr; }
 }
+.poll .cell.last { white-space: nowrap; }
+.poll progress { width: 140px; vertical-align: middle; }
