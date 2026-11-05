@@ -60,6 +60,21 @@ Il tool conserva gli ID legacy (`_id` numerici) e le relazioni. Le password MD5 
 - **Sicurezza**: form login Spring Security, CSRF, remember-me, permessi per gruppo con la semantica di `permissions.xml`.
 - **Formattazione**: BBCode da `bb_config.xml`, SafeHtml ed emoticon, portati dal codice legacy.
 
+## Funzionalità e URL principali
+
+| Area | URL |
+|------|-----|
+| Forum, topic, post, sondaggi, watch | `/forums/list.page`, `/forums/show/<id>.page`, `/posts/list/<topicId>.page`, `/posts/insert/<forumId>.page`, `/posts/reply/<topicId>.page`, `/recentTopics/list.page`, `/hottestTopics/list.page` |
+| Utenti | `/user/login.page`, `/user/insert.page` (registrazione + attivazione via email), `/user/lostPassword.page`, `/user/profile/<id>.page`, `/user/list.page` |
+| Messaggi privati | `/pm/inbox.page`, `/pm/sentbox.page`, `/pm/send.page`, `/pm/read/<id>.page` |
+| Allegati e avatar | campi `file_N`/`comment_N` nel form del post, `/attachments/manage/<postId>.page`, `/posts/downloadAttach/<id>.page`; file in GridFS |
+| Moderazione | strumenti sul topic, `/moderation/forum/<forumId>.page`, `/moderation/pending.page`, `/moderation/showActivityLog.page` |
+| Ricerca e RSS | `/search/filters.page`, `/search/search.page`, `/rss/forums.page`, `/rss/forumTopics/<id>.page`, `/rss/topicPosts/<id>.page` |
+| REST e SSO | `/userApi/*` (chiave API da admin), SSO via header/cookie come `sso.*` legacy |
+| Amministrazione | `/admBase/main.page` (categorie, forum, gruppi e permessi, utenti, ranking, smilies, configurazione, banlist, estensioni allegati, quote, banner, cache) |
+
+Le evidenze della verifica end-to-end (screenshot, log, RSS, esito dei test) sono in [`docs/demo/`](docs/demo/README.md).
+
 ---
 
 ## README originale

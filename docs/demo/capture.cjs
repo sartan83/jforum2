@@ -50,7 +50,7 @@ const note = (m) => { const l = `${new Date().toISOString()} ${m}`; log.push(l);
     const subject = `Demo E2E ${Date.now()}`;
     await page.fill('input[name=subject]', subject);
     await page.fill('textarea[name=message]', '[b]Topic creato dal test E2E[/b] con [i]BBCode[/i] e un allegato :)');
-    const attach = path.join(OUT, 'sample-attachment.txt');
+    const attach = path.join(require('os').tmpdir(), 'sample-attachment.txt');
     fs.writeFileSync(attach, 'Allegato di esempio salvato in GridFS\n');
     if (await page.$('input[name=file_0]')) {
       await page.setInputFiles('input[name=file_0]', attach);
@@ -105,10 +105,10 @@ const note = (m) => { const l = `${new Date().toISOString()} ${m}`; log.push(l);
     await go('/forums/show/1.page', 'forum-admin');
     await go('/moderation/pending.page', 'moderation-pending');
     await go('/moderation/showActivityLog.page', 'moderation-log');
-    for (const u of ['/admBase/main.page', '/adm', '/admin']) {
-      const r = await page.goto(BASE + u);
-      if (r.status() === 200) { note(`GET ${u} -> 200`); await shot('admin-panel'); break; }
-    }
+    const admin = [['/admBase/main.page', 'admin-panel'], ['/adminCategories/list.page', 'admin-categories'],
+      ['/adminForums/list.page', 'admin-forums'], ['/adminGroups/list.page', 'admin-groups'],
+      ['/adminUsers/list.page', 'admin-users'], ['/adminConfig/list.page', 'admin-config']];
+    for (const [u, name] of admin) await go(u, name);
 
     for (const u of ['/rss/forums.page', '/rss/forumTopics/1.page', '/rss/topicPosts/1.page']) {
       const r = await ctx.request.get(BASE + u);
