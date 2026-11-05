@@ -5,7 +5,8 @@ on:
   pull_request:
 jobs:
   build:
-    runs-on: ubuntu-latest
+    # ubuntu-latest (26.04, kernel >= 6.19) cannot run mongo:8: SERVER-121912
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
