@@ -1,0 +1,20 @@
+./mvnw -B verify -Dmongodb.image=mongo:8.2  (Testcontainers: mongo:8.2, SQL Server 2022)
+admin.AdminIntegrationTest: Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.108 s -- in net.jforum.admin.AdminIntegrationTest
+api.UserRestIntegrationTest: Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.541 s -- in net.jforum.api.UserRestIntegrationTest
+attachment.AttachmentIntegrationTest: Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.422 s -- in net.jforum.attachment.AttachmentIntegrationTest
+attachment.PostFormAttachmentIntegrationTest: Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.832 s -- in net.jforum.attachment.PostFormAttachmentIntegrationTest
+bootstrap.DemoDataLoaderTest: Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.689 s -- in net.jforum.bootstrap.DemoDataLoaderTest
+config.VariableExpanderTest: Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 s -- in net.jforum.config.VariableExpanderTest
+format.PostFormatterTest: Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.461 s -- in net.jforum.format.PostFormatterTest
+format.SafeHtmlTest: Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.014 s -- in net.jforum.format.SafeHtmlTest
+moderation.ModerationIntegrationTest: Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.194 s -- in net.jforum.moderation.ModerationIntegrationTest
+pm.PrivateMessageIntegrationTest: Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.563 s -- in net.jforum.pm.PrivateMessageIntegrationTest
+post.PostFlowsIntegrationTest: Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.881 s -- in net.jforum.post.PostFlowsIntegrationTest
+rss.RssIntegrationTest: Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.004 s -- in net.jforum.rss.RssIntegrationTest
+search.SearchIntegrationTest: Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.611 s -- in net.jforum.search.SearchIntegrationTest
+sso.SsoIntegrationTest: Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.287 s -- in net.jforum.sso.SsoIntegrationTest
+user.KarmaBookmarkIntegrationTest: Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.830 s -- in net.jforum.user.KarmaBookmarkIntegrationTest
+user.ProfileIntegrationTest: Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.716 s -- in net.jforum.user.ProfileIntegrationTest
+user.UserRegistrationIntegrationTest: Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.839 s -- in net.jforum.user.UserRegistrationIntegrationTest
+web.FoundationIntegrationTest: Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 8.749 s -- in net.jforum.web.FoundationIntegrationTest
+migration.MigrationIntegrationTest: Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 14.18 s -- in net.jforum.migration.MigrationIntegrationTest

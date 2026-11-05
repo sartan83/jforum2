@@ -1,0 +1,67 @@
+2026-11-05T18:53:47.440Z GET /forums/list.page -> 200
+2026-11-05T18:53:47.567Z screenshot 01-index-anonymous.png <- /forums/list.page
+2026-11-05T18:53:47.604Z GET /user/insert.page -> 200
+2026-11-05T18:53:47.693Z screenshot 02-register-form.png <- /user/insert.page
+2026-11-05T18:53:47.741Z GET /user/login.page -> 200
+2026-11-05T18:53:48.026Z login mario -> /forums/list.page
+2026-11-05T18:53:48.079Z GET /forums/list.page -> 200
+2026-11-05T18:53:48.206Z screenshot 03-index-logged-mario.png <- /forums/list.page
+2026-11-05T18:53:48.289Z GET /forums/show/1.page -> 200
+2026-11-05T18:53:48.357Z screenshot 04-forum-topics.png <- /forums/show/1.page
+2026-11-05T18:53:48.454Z GET /posts/list/1.page -> 200
+2026-11-05T18:53:48.545Z screenshot 05-topic-view.png <- /posts/list/1.page
+2026-11-05T18:53:48.590Z GET /posts/insert/1.page -> 200
+2026-11-05T18:53:48.729Z screenshot 06-new-topic-form.png <- /posts/insert/1.page
+2026-11-05T18:53:48.981Z new topic "Demo E2E 1793904828591" -> /posts/list/10.page#26
+2026-11-05T18:53:49.074Z screenshot 07-new-topic-with-attachment.png <- /posts/list/10.page#26
+2026-11-05T18:53:49.248Z reply rejected by flood control (posts.new.delay = 15s, legacy behaviour)
+2026-11-05T18:53:49.337Z screenshot 08-flood-control.png <- /posts/insertSave.page
+2026-11-05T18:54:05.487Z reply -> /posts/list/10.page#27
+2026-11-05T18:54:05.576Z screenshot 09-topic-after-reply.png <- /posts/list/10.page#27
+2026-11-05T18:54:05.645Z GET /search/search.page?search_keywords=Demo&match_type=all -> 200
+2026-11-05T18:54:05.722Z screenshot 10-search-results.png <- /search/search.page?search_keywords=Demo&match_type=all
+2026-11-05T18:54:05.767Z GET /recentTopics/list.page -> 200
+2026-11-05T18:54:05.876Z screenshot 11-recent-topics.png <- /recentTopics/list.page
+2026-11-05T18:54:05.919Z GET /pm/send.page -> 200
+2026-11-05T18:54:06.047Z screenshot 12-pm-compose.png <- /pm/send.page
+2026-11-05T18:54:06.158Z pm send -> /pm/sendSave.page
+2026-11-05T18:54:06.239Z screenshot 13-pm-sent.png <- /pm/sendSave.page
+2026-11-05T18:54:06.282Z GET /pm/sentbox.page -> 200
+2026-11-05T18:54:06.359Z screenshot 14-pm-sentbox.png <- /pm/sentbox.page
+2026-11-05T18:54:06.416Z GET /user/profile/4.page -> 200
+2026-11-05T18:54:06.509Z screenshot 15-profile.png <- /user/profile/4.page
+2026-11-05T18:54:06.619Z logout -> /forums/list.page
+2026-11-05T18:54:06.646Z GET /user/login.page -> 200
+2026-11-05T18:54:06.805Z login giulia -> /forums/list.page
+2026-11-05T18:54:06.838Z GET /pm/inbox.page -> 200
+2026-11-05T18:54:06.926Z screenshot 16-pm-inbox-giulia.png <- /pm/inbox.page
+2026-11-05T18:54:07.102Z screenshot 17-pm-read.png <- /pm/read/2.page
+2026-11-05T18:54:07.210Z logout -> /forums/list.page
+2026-11-05T18:54:07.236Z GET /user/login.page -> 200
+2026-11-05T18:54:07.370Z login Admin -> /forums/list.page
+2026-11-05T18:54:07.421Z GET /posts/list/10.page -> 200
+2026-11-05T18:54:07.509Z screenshot 18-topic-moderation-tools-admin.png <- /posts/list/10.page
+2026-11-05T18:54:07.544Z GET /forums/show/1.page -> 200
+2026-11-05T18:54:07.622Z screenshot 19-forum-admin.png <- /forums/show/1.page
+2026-11-05T18:54:07.653Z GET /moderation/pending.page -> 200
+2026-11-05T18:54:07.737Z screenshot 20-moderation-pending.png <- /moderation/pending.page
+2026-11-05T18:54:07.769Z GET /moderation/showActivityLog.page -> 200
+2026-11-05T18:54:07.838Z screenshot 21-moderation-log.png <- /moderation/showActivityLog.page
+2026-11-05T18:54:07.877Z GET /admBase/main.page -> 200
+2026-11-05T18:54:07.993Z screenshot 22-admin-panel.png <- /admBase/main.page
+2026-11-05T18:54:08.023Z GET /adminCategories/list.page -> 200
+2026-11-05T18:54:08.094Z screenshot 23-admin-categories.png <- /adminCategories/list.page
+2026-11-05T18:54:08.129Z GET /adminForums/list.page -> 200
+2026-11-05T18:54:08.200Z screenshot 24-admin-forums.png <- /adminForums/list.page
+2026-11-05T18:54:08.239Z GET /adminGroups/list.page -> 200
+2026-11-05T18:54:08.314Z screenshot 25-admin-groups.png <- /adminGroups/list.page
+2026-11-05T18:54:08.348Z GET /adminUsers/list.page -> 200
+2026-11-05T18:54:08.411Z screenshot 26-admin-users.png <- /adminUsers/list.page
+2026-11-05T18:54:08.458Z GET /adminConfig/list.page -> 200
+2026-11-05T18:54:08.607Z screenshot 27-admin-config.png <- /adminConfig/list.page
+2026-11-05T18:54:08.642Z RSS /rss/forums.page -> 200 text/xml;charset=UTF-8 items=5
+2026-11-05T18:54:08.658Z RSS /rss/forumTopics/1.page -> 200 text/xml;charset=UTF-8 items=2
+2026-11-05T18:54:08.679Z RSS /rss/topicPosts/1.page -> 200 text/xml;charset=UTF-8 items=1
+2026-11-05T18:54:08.686Z legacy /jforum.page?module=posts&action=list&topic_id=1 -> 302 http://localhost:8080/posts/list/1.page
+2026-11-05T18:54:08.705Z GET /posts/list/999999.page -> 404
+2026-11-05T18:54:08.885Z screenshot index-mobile (390x844)

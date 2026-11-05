@@ -1,0 +1,7 @@
+Hi ${user.username}
+
+Welcome to ${forumName}! Your account has been created.
+
+You can log in at ${url}
+
+Remember: your username is: ${user.username}

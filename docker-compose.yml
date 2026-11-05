@@ -1,0 +1,43 @@
+# docker compose up  ->  http://localhost:8080 (admin login: Admin / admin)
+# Demo seed data (extra users, forums, topics, posts):  JFORUM_SEED_DEMO=true docker compose up
+services:
+  mongo:
+    image: ${MONGO_IMAGE:-mongo:8.2}
+    command: ["--replSet", "rs0", "--bind_ip_all"]
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "try { rs.status().ok } catch (e) { rs.initiate({_id: 'rs0', members: [{_id: 0, host: 'mongo:27017'}]}).ok }"]
+      interval: 5s
+      timeout: 10s
+      retries: 30
+      start_period: 10s
+
+  app:
+    build: .
+    image: jforum-boot:latest
+    depends_on:
+      mongo:
+        condition: service_healthy
+    environment:
+      MONGODB_URI: mongodb://mongo:27017/jforum?replicaSet=rs0
+      MAIL_HOST: mailpit
+      MAIL_PORT: "1025"
+      FORUM_LINK: http://localhost:8080/
+      JFORUM_ADMIN_PASSWORD: ${JFORUM_ADMIN_PASSWORD:-admin}
+      JFORUM_SEED_DEMO: ${JFORUM_SEED_DEMO:-true}
+    ports:
+      - "8080:8080"
+    volumes:
+      - app-data:/app/data
+
+  mailpit:
+    image: axllent/mailpit:latest
+    ports:
+      - "8025:8025"
+
+volumes:
+  mongo-data:
+  app-data:
