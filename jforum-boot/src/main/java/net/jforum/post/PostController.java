@@ -3,10 +3,15 @@ package net.jforum.post;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import net.jforum.attachment.AttachmentException;
+import net.jforum.attachment.AttachmentService;
 import net.jforum.config.ForumConfig;
+import net.jforum.domain.Attachment;
 import net.jforum.domain.Forum;
 import net.jforum.domain.Poll;
 import net.jforum.domain.PollOption;
@@ -15,6 +20,7 @@ import net.jforum.domain.Topic;
 import net.jforum.domain.TopicStatus;
 import net.jforum.domain.User;
 import net.jforum.forum.ForumService;
+import net.jforum.i18n.I18n;
 import net.jforum.repository.ForumRepository;
 import net.jforum.repository.PostRepository;
 import net.jforum.repository.TopicRepository;
@@ -49,9 +55,14 @@ public class PostController {
     private final TopicService topicService;
     private final CurrentUser currentUser;
     private final ForumConfig config;
+    private final AttachmentService attachments;
+    private final I18n i18n;
 
     public PostController(ForumService forumService, ForumRepository forums, TopicRepository topics, PostRepository posts,
-                          PostService postService, TopicService topicService, CurrentUser currentUser, ForumConfig config) {
+                          PostService postService, TopicService topicService, CurrentUser currentUser, ForumConfig config,
+                          AttachmentService attachments, I18n i18n) {
+        this.attachments = attachments;
+        this.i18n = i18n;
         this.forumService = forumService;
         this.forums = forums;
         this.topics = topics;
@@ -177,6 +188,12 @@ public class PostController {
         model.addAttribute("topic", topic);
         model.addAttribute("forum", forum);
         model.addAttribute("posts", postService.views(page, uid, logged, pc, request.getContextPath()));
+        Map<String, List<Attachment>> attachmentsByPost = new HashMap<>();
+        if (attachments.canDownload(pc, forum.getId())) {
+            page.stream().filter(Post::isHasAttachments)
+                .forEach(p -> attachmentsByPost.put(String.valueOf(p.getId()), attachments.forPost(p.getId())));
+        }
+        model.addAttribute("attachmentsByPost", attachmentsByPost);
         model.addAttribute("pagination", new Pagination(s, per, total, "/posts/list", String.valueOf(topic.getId())));
         model.addAttribute("start", s);
         model.addAttribute("locked", locked(topic));
@@ -263,6 +280,10 @@ public class PostController {
             options.add("");
         }
         model.addAttribute("pollOptionFields", options);
+        int existing = editing == null ? 0 : attachments.forPost(editing.getId()).size();
+        model.addAttribute("canAttach", attachments.canAttach(pc, forum.getId()));
+        model.addAttribute("maxAttachments", Math.max(0, attachments.maxAttachmentsPerPost() - existing));
+        model.addAttribute("existingAttachments", existing);
         return "post_form";
     }
 
@@ -372,6 +393,11 @@ public class PostController {
         return form(model, forum, topic, editing, c);
     }
 
+    private String attachmentError(Model model, Forum forum, Topic topic, Post editing, PostCommand c, AttachmentException e) {
+        model.addAttribute("errorMessage", i18n.getMessage(e.getMessageKey(), e.getArgs()));
+        return form(model, forum, topic, editing, c);
+    }
+
     @PostMapping("/posts/insertSave.page")
     public String insertSave(HttpServletRequest request, HttpSession session, Model model) {
         PostCommand c = PostCommand.from(request);
@@ -391,8 +417,15 @@ public class PostController {
         if (error != null || request.getParameter("preview") != null) {
             return formWithPreview(model, forum, topic, null, c, error);
         }
+        List<AttachmentService.Upload> uploads;
+        try {
+            uploads = attachments.validateRequest(request, currentUser.get(), forum.getId(), currentUser.permissions(), 0);
+        } catch (AttachmentException e) {
+            return attachmentError(model, forum, topic, null, c, e);
+        }
         Post post = postService.insert(c, forum, topic, currentUser.get(), currentUser.isLogged(), currentUser.permissions(),
             request.getRemoteAddr());
+        attachments.store(uploads, post, currentUser.get());
         session.setAttribute(LAST_POST_TIME, System.currentTimeMillis());
         if (post.isModerate()) {
             return "redirect:/posts/waitingModeration/" + post.getTopicId() + "/" + forum.getId() + ".page";
@@ -420,7 +453,15 @@ public class PostController {
         if (error != null || request.getParameter("preview") != null) {
             return formWithPreview(model, forum, topic, post, c, error);
         }
+        List<AttachmentService.Upload> uploads;
+        try {
+            uploads = attachments.validateRequest(request, currentUser.get(), forum.getId(), currentUser.permissions(),
+                attachments.forPost(post.getId()).size());
+        } catch (AttachmentException e) {
+            return attachmentError(model, forum, topic, post, c, e);
+        }
         postService.edit(post, topic, c, currentUser.get(), currentUser.permissions());
+        attachments.store(uploads, post, currentUser.get());
         return redirectToPost(topic.getId(), post.getId());
     }
 

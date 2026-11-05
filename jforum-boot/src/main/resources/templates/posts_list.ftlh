@@ -1,4 +1,6 @@
 <#import "layout.ftlh" as layout>
+<#import "attach_show.ftlh" as attach>
+<#import "moderation_tools.ftlh" as mod>
 <@layout.page title=topic.title!"">
 <@layout.breadcrumb><a href="${contextPath}/forums/show/${forum.id?c}.page">${forum.name}</a><span>${topic.title!""}</span></@layout.breadcrumb>
 <div class="page-head">
@@ -11,6 +13,14 @@
     </#if>
   </div>
 </div>
+
+<#if isModerator>
+<form class="card form" method="post" action="${contextPath}/moderation/doModeration.page">
+  <@layout.csrf/>
+  <input type="hidden" name="topic_id" value="${topic.id?c}">
+  <@mod.buttons returnUrl="/forums/show/${forum.id?c}.page"/>
+</form>
+</#if>
 
 <#if poll??>
 <section class="card poll">
@@ -60,6 +70,7 @@
     </div>
     <#if p.moderate><div class="alert alert-info">${I18n.getMessage("PostShow.notModeratedYet")?replace("<[^>]*>", "", "r")}</div></#if>
     <div class="post-text">${pv.html?no_esc}</div>
+    <#if attachmentsByPost[p.id?c]??><@attach.list attachments=attachmentsByPost[p.id?c]/></#if>
     <#if (p.editCount > 0) && p.editTime??>
       <p class="small muted">${I18n.getMessage((p.editCount == 1)?then("PostShow.editCountSingle", "PostShow.editCountMany"), p.editCount?c, layout.date(p.editTime))}</p>
     </#if>

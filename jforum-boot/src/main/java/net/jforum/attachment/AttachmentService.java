@@ -43,6 +43,8 @@ import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
+import org.springframework.web.util.WebUtils;
 
 /**
  * Attachment handling ported from legacy AttachmentCommon (preProcess / insertAttachments / editAttachments)
@@ -219,7 +221,14 @@ public class AttachmentService {
 
     /** Reads the legacy {@code file_N} / {@code comment_N} fields of a multipart post form. */
     public List<Attachment> attachFromRequest(HttpServletRequest request, Post post, User user, PermissionControl pc) {
-        if (!(request instanceof MultipartHttpServletRequest multipart)) {
+        int existing = attachments.findByPostId(post.getId()).size();
+        return store(validateRequest(request, user, post.getForumId(), pc, existing), post, user);
+    }
+
+    /** Validates the {@code file_N} / {@code comment_N} uploads of a post form before the post is saved. */
+    public List<Upload> validateRequest(HttpServletRequest request, User user, int forumId, PermissionControl pc, int existing) {
+        MultipartHttpServletRequest multipart = multipartOf(request);
+        if (multipart == null) {
             return List.of();
         }
         int total = parseInt(request.getParameter("total_files"), -1);
@@ -233,7 +242,17 @@ public class AttachmentService {
                 comments.add(request.getParameter("comment_" + i));
             }
         }
-        return attach(post, files, comments, user, pc);
+        return validate(files, comments, user, forumId, pc, existing);
+    }
+
+    /** Filters (security, session) may wrap the multipart request the DispatcherServlet created. */
+    private static MultipartHttpServletRequest multipartOf(HttpServletRequest request) {
+        MultipartHttpServletRequest multipart = WebUtils.getNativeRequest(request, MultipartHttpServletRequest.class);
+        if (multipart == null && request.getContentType() != null
+            && request.getContentType().toLowerCase(java.util.Locale.ROOT).startsWith("multipart/")) {
+            multipart = new StandardMultipartHttpServletRequest(request);
+        }
+        return multipart;
     }
 
     /** Legacy AttachmentCommon.editAttachments: delete_attach (comma separated ids) and edit_comment_ID fields. */

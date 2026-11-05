@@ -9,6 +9,7 @@
   </div>
   <div class="post-actions">
     <#if !readonly && !replyOnly><a class="btn" href="${contextPath}/posts/insert/${forum.id?c}.page">${I18n.getMessage("PostForm.title")}</a></#if>
+    <#if canModerate><a class="btn btn-secondary" href="${contextPath}/moderation/forum/${forum.id?c}.page">${I18n.getMessage("Moderation.OpenModeration")}</a></#if>
     <#if logged>
       <a class="btn btn-secondary" href="${contextPath}/forums/readAll/${forum.id?c}.page">${I18n.getMessage("ForumIndex.setAllTopicsAsRead")}</a>
       <#if watching>
