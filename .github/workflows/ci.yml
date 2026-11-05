@@ -14,7 +14,7 @@ jobs:
           java-version: '21'
           cache: maven
       - name: Build and test (Testcontainers MongoDB 8)
-        # mongo 8.3 refuses to start on the runner kernel (>= 6.19, SERVER-121912 / SERVER-136272)
+        # mongo 8.3+ refuses to start on runner kernels >= 6.19 (SERVER-121912 / SERVER-136272); 8.2 boots
         run: ./mvnw -B verify -Dmongodb.image=mongo:8.2
       - name: Docker image builds
         run: docker build -t jforum-boot:ci .
