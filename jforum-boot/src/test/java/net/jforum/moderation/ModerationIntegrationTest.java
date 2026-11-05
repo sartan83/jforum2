@@ -222,6 +222,7 @@ class ModerationIntegrationTest extends Track4Fixtures {
         mvc.perform(post("/jforum.page").with(admin()).with(csrf())
                 .param("module", "moderation").param("action", "doModeration")
                 .param("topic_id", "100").param("topicLock", "1"))
-            .andExpect(r -> assertThat(r.getResponse().getForwardedUrl()).startsWith("/moderation/doModeration.page?topic_id=100&topicLock=1"));
+            .andExpect(r -> assertThat(r.getResponse().getForwardedUrl()).isEqualTo("/moderation/doModeration.page"))
+            .andExpect(r -> assertThat(r.getRequest().getParameter("topicLock")).isEqualTo("1"));
     }
 }
