@@ -11,7 +11,7 @@ import org.testcontainers.utility.DockerImageName;
 public class MongoTestContainer {
 
     static final MongoDBContainer MONGO = new MongoDBContainer(
-        DockerImageName.parse(System.getProperty("mongodb.image", "mongo:8")).asCompatibleSubstituteFor("mongo"));
+        DockerImageName.parse(System.getProperty("mongodb.image", "mongo:8.2")).asCompatibleSubstituteFor("mongo"));
 
     static {
         MONGO.start();

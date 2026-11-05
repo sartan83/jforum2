@@ -11,15 +11,16 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class ErrorAdvice {
 
-    private final GlobalModelAdvice globalModel;
+    /** @ModelAttribute methods are not applied to @ExceptionHandler models: add the globals explicitly. */
+    private final GlobalModelAdvice globals;
 
-    public ErrorAdvice(GlobalModelAdvice globalModel) {
-        this.globalModel = globalModel;
+    public ErrorAdvice(GlobalModelAdvice globals) {
+        this.globals = globals;
     }
 
     @ExceptionHandler(ForbiddenException.class)
     public String forbidden(ForbiddenException e, Model model, HttpServletRequest request, HttpServletResponse response) {
-        globalModel.common(model, request);
+        globals.common(model, request);
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         model.addAttribute("messageKey", e.getMessage());
         return "message";
@@ -27,7 +28,7 @@ public class ErrorAdvice {
 
     @ExceptionHandler(NotFoundException.class)
     public String notFound(NotFoundException e, Model model, HttpServletRequest request, HttpServletResponse response) {
-        globalModel.common(model, request);
+        globals.common(model, request);
         response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         model.addAttribute("messageKey", e.getMessage());
         return "message";
