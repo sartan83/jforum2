@@ -44,6 +44,7 @@ public class SecurityConfig {
             .logout(logout -> logout
                 .logoutRequestMatcher(request -> "/user/logout.page".equals(request.getRequestURI().substring(request.getContextPath().length())))
                 .logoutSuccessUrl("/forums/list.page"))
+            .exceptionHandling(e -> e.accessDeniedPage(net.jforum.web.ForbiddenController.PATH))
             .csrf(csrf -> csrf.ignoringRequestMatchers("/userApi/**"))
             .headers(h -> h.frameOptions(f -> f.sameOrigin()))
             .addFilterBefore(ssoFilter, org.springframework.security.web.authentication.AnonymousAuthenticationFilter.class);

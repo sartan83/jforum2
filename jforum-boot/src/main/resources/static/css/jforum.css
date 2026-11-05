@@ -119,8 +119,12 @@ table.data th { color: var(--muted); font-size: .8rem; text-transform: uppercase
   .row.head { display: none; }
   .cell.num, .cell.last { width: auto; text-align: left; font-size: .82rem; color: var(--muted); }
   .cell.num::before { content: attr(data-label) ": "; }
+  .cell.grow { flex: 1 1 100%; }
   .post { grid-template-columns: 1fr; }
-  .post-author { border-right: 0; border-bottom: 1px solid var(--border); display: flex; gap: .75rem; align-items: center; }
+  .post-author { border-right: 0; border-bottom: 1px solid var(--border); display: flex; flex-wrap: wrap; gap: .25rem .75rem; align-items: center; }
+  .post-author > * { min-width: 0; overflow-wrap: anywhere; }
+  .attachments { overflow-x: auto; }
+  .attachments table.data th, .attachments table.data td { padding: .5rem .6rem; }
   .post-author .avatar { width: 44px; height: 44px; margin: 0; }
   .admin-layout { grid-template-columns: 1fr; }
 }

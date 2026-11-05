@@ -8,6 +8,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -71,6 +72,10 @@ class AdminIntegrationTest extends AbstractIntegrationTest {
         createUser("bob");
         mvc.perform(as("bob", get("/admBase/login.page"))).andExpect(status().isForbidden());
         mvc.perform(as("bob", get("/adminUsers/list.page"))).andExpect(status().isForbidden());
+        mvc.perform(as("bob", get("/admBase/main.page"))).andExpect(status().isForbidden())
+            .andExpect(forwardedUrl("/forbidden.page"));
+        mvc.perform(as("bob", get("/forbidden.page"))).andExpect(status().isForbidden())
+            .andExpect(content().string(org.hamcrest.Matchers.containsString("message-card")));
         mvc.perform(as("bob", post("/adminConfig/editSave.page").with(csrf()).param("p_forum.name", "hacked")))
             .andExpect(status().isForbidden());
         assertThat(config.forumName()).isNotEqualTo("hacked");

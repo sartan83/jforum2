@@ -11,7 +11,6 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import net.jforum.config.ForumConfig;
-import net.jforum.domain.AvatarType;
 import net.jforum.domain.Forum;
 import net.jforum.domain.LastPostInfo;
 import net.jforum.domain.ModerationLog;
@@ -136,12 +135,9 @@ public class PostService {
             }
         }
         String avatar = null;
-        if (u.isAvatarEnabled() && u.getAvatar() != null && !u.getAvatar().isBlank()) {
-            if (u.getAvatarType() == AvatarType.EXTERNAL || u.getAvatar().startsWith("http")) {
-                avatar = u.getAvatar();
-            } else if (u.getAvatarType() == AvatarType.UPLOAD) {
-                avatar = contextPath + "/images/avatar/" + u.getAvatar();
-            }
+        String avatarUrl = u.isAvatarEnabled() ? u.getAvatarUrl() : null;
+        if (avatarUrl != null) {
+            avatar = u.isExternalAvatar() ? avatarUrl : contextPath + avatarUrl;
         }
         String signature = null;
         if (p.isSignatureEnabled() && u.getSignature() != null && !u.getSignature().isBlank()) {

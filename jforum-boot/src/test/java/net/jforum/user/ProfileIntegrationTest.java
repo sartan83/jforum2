@@ -47,6 +47,9 @@ class ProfileIntegrationTest extends AbstractIntegrationTest {
     @Autowired
     private ForumConfig config;
 
+    @Autowired
+    private net.jforum.post.PostService postService;
+
     private User mario;
 
     @BeforeEach
@@ -62,6 +65,14 @@ class ProfileIntegrationTest extends AbstractIntegrationTest {
             .param("allowbbcode", "1").param("allowsmilies", "1").param("language", "it_IT");
         b.with(csrf()).with(as(mario));
         return b;
+    }
+
+    private String postAvatar(String contextPath) {
+        net.jforum.domain.Post post = new net.jforum.domain.Post();
+        post.setUserId(mario.getId());
+        post.setText("hi");
+        return postService.views(java.util.List.of(post), 0, false,
+            new net.jforum.security.PermissionControl(java.util.Map.of()), contextPath).get(0).getAuthor().getAvatarUrl();
     }
 
     private static byte[] png(int w, int h) throws Exception {
@@ -141,6 +152,7 @@ class ProfileIntegrationTest extends AbstractIntegrationTest {
         assertThat(u.getAvatarType()).isEqualTo(AvatarType.UPLOAD);
         assertThat(u.getAvatarUrl()).isEqualTo("/user/avatar/" + mario.getId() + ".page");
         assertThat(mongo.getCollection("fs.files").countDocuments()).isEqualTo(1);
+        assertThat(postAvatar("/ctx")).isEqualTo("/ctx/user/avatar/" + mario.getId() + ".page");
 
         byte[] served = mvc.perform(get("/user/avatar/" + mario.getId() + ".page"))
             .andExpect(status().isOk())
@@ -166,6 +178,7 @@ class ProfileIntegrationTest extends AbstractIntegrationTest {
 
         mvc.perform(editSave().param("avatarGallery", "avatar_02.png")).andExpect(status().is3xxRedirection());
         assertThat(users.findById(mario.getId()).orElseThrow().getAvatarUrl()).isEqualTo("/images/avatar/avatar_02.png");
+        assertThat(postAvatar("")).isEqualTo("/images/avatar/avatar_02.png");
         mvc.perform(get("/images/avatar/avatar_02.png")).andExpect(status().isOk());
 
         mvc.perform(editSave().param("avatarUrl", "ftp://example.org/a.png")).andExpect(content().string(containsString("alert-error")));
