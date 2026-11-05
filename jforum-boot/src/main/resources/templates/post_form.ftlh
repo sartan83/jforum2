@@ -1,12 +1,14 @@
 <#import "layout.ftlh" as layout>
+<#import "attach_show.ftlh" as attach>
 <#assign heading = editing?then(I18n.getMessage("PostForm.edit"), topic???then(I18n.getMessage("PostForm.reply") + " " + (topic.title!""), I18n.getMessage("PostForm.title")))>
 <@layout.page title=heading>
 <@layout.breadcrumb><a href="${contextPath}/forums/show/${forum.id?c}.page">${forum.name}</a><#if topic??><a href="${contextPath}/posts/list/${topic.id?c}.page">${topic.title!""}</a></#if></@layout.breadcrumb>
 <#if errorKey??><div class="alert alert-error">${I18n.getMessage(errorKey)}</div></#if>
+<#if errorMessage??><div class="alert alert-error">${errorMessage}</div></#if>
 <#include "post_preview.ftlh">
 <section class="card">
   <h1 class="card-title">${heading}</h1>
-  <form class="form" method="post" action="${contextPath}/posts/${action}.page">
+  <form class="form" method="post" action="${contextPath}/posts/${action}.page"<#if canAttach> enctype="multipart/form-data"</#if>>
     <@layout.csrf/>
     <input type="hidden" name="forum_id" value="${forum.id?c}">
     <#if topic??><input type="hidden" name="topic_id" value="${topic.id?c}"></#if>
@@ -46,6 +48,13 @@
       </#list>
       <label>${I18n.getMessage("PostForm.pollRunFor")} (${I18n.getMessage("PostForm.pollDays")})<input type="number" min="0" name="poll_length" value="${command.pollLength?c}"></label>
       <span class="small muted">${I18n.getMessage("PostForm.pollDaysDescription")}</span>
+    </fieldset>
+    </#if>
+    <#if canAttach>
+    <fieldset class="form">
+      <legend>${I18n.getMessage("Attachments.attach")}</legend>
+      <#if (maxAttachments > 0)><@attach.uploadFields max=maxAttachments/></#if>
+      <#if editing && (existingAttachments > 0)><a href="${contextPath}/attachments/manage/${command.postId?c}.page">${I18n.getMessage("Attachments.panel")}</a></#if>
     </fieldset>
     </#if>
     <div class="post-actions">
