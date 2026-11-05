@@ -22,7 +22,8 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http, ObjectProvider<CurrentUser> currentUser,
                                             UserDetailsService userDetailsService,
-                                            @Value("${jforum.remember-me-key:jforum-remember-me}") String rememberMeKey) throws Exception {
+                                            @Value("${jforum.remember-me-key:jforum-remember-me}") String rememberMeKey,
+                                            net.jforum.sso.SsoAuthenticationFilter ssoFilter) throws Exception {
         http
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(RegexRequestMatcher.regexMatcher("^/adm[A-Za-z]*/.*"))
@@ -44,7 +45,8 @@ public class SecurityConfig {
                 .logoutRequestMatcher(request -> "/user/logout.page".equals(request.getRequestURI().substring(request.getContextPath().length())))
                 .logoutSuccessUrl("/forums/list.page"))
             .csrf(csrf -> csrf.ignoringRequestMatchers("/userApi/**"))
-            .headers(h -> h.frameOptions(f -> f.sameOrigin()));
+            .headers(h -> h.frameOptions(f -> f.sameOrigin()))
+            .addFilterBefore(ssoFilter, org.springframework.security.web.authentication.AnonymousAuthenticationFilter.class);
         return http.build();
     }
 }

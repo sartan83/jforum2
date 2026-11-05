@@ -2,7 +2,7 @@
 <@layout.page title=I18n.getMessage("ForumBase.login") bodyClass="narrow">
 <section class="card form-card">
   <h1 class="card-title">${I18n.getMessage("Login.enterUsername")}</h1>
-  <#if invalidLogin><div class="alert alert-error" role="alert">${I18n.getMessage("Login.invalidLogin")}</div></#if>
+  <#if invalidLogin><div class="alert alert-error" role="alert">${loginError!I18n.getMessage("Login.invalidLogin")}</div></#if>
   <form method="post" action="${contextPath}/user/validateLogin.page" class="form" id="loginform">
     <@layout.csrf/>
     <#if returnPath?has_content><input type="hidden" name="returnPath" value="${returnPath}"></#if>

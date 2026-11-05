@@ -26,4 +26,6 @@ public interface PostRepository extends MongoRepository<Post, Integer> {
     long countByForumIdAndModerateFalse(Integer forumId);
 
     void deleteByTopicId(Integer topicId);
+
+    long countByUserId(Integer userId);
 }
