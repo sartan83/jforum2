@@ -65,8 +65,8 @@
     </#if>
     <#if pv.author.signatureHtml??><div class="signature">${pv.author.signatureHtml?no_esc}</div></#if>
     <div class="post-actions">
-      <#if !locked && !readonly><a class="btn btn-secondary btn-small" href="${contextPath}/posts/quote/${start?c}/${p.id?c}.page">${I18n.getMessage("PostForm.helplineQuote")}</a></#if>
-      <#if pv.canEdit && (!locked || isModerator)><a class="btn btn-secondary btn-small" href="${contextPath}/posts/edit/${p.id?c}.page">${I18n.getMessage("PostForm.edit")}</a></#if>
+      <#if !locked && !readonly><a class="btn btn-secondary" href="${contextPath}/posts/quote/${start?c}/${p.id?c}.page">${I18n.getMessage("PostForm.helplineQuote")}</a></#if>
+      <#if pv.canEdit && (!locked || isModerator)><a class="btn btn-secondary" href="${contextPath}/posts/edit/${p.id?c}.page">${I18n.getMessage("PostForm.edit")}</a></#if>
       <#if canRemove>
       <form class="inline" method="post" action="${contextPath}/posts/delete/${p.id?c}.page">
         <@layout.csrf/>

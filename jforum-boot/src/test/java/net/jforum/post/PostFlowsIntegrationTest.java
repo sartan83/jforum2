@@ -285,7 +285,7 @@ class PostFlowsIntegrationTest extends AbstractIntegrationTest {
 
         MvcResult forwarded = mvc.perform(post("/jforum.page").with(csrf()).param("module", "posts").param("action", "vote")
             .param("topic_id", String.valueOf(topicId)).param("poll_option", "1")).andReturn();
-        assertThat(forwarded.getResponse().getForwardedUrl()).startsWith("/posts/vote");
+        assertThat(forwarded.getResponse().getForwardedUrl()).isEqualTo("/posts/vote.page");
 
         mvc.perform(post("/posts/vote.page").with(csrf()).param("topic_id", String.valueOf(topicId)).param("poll_option", "1"))
             .andExpect(redirectedUrl("/posts/list/" + topicId + ".page"));
