@@ -245,12 +245,8 @@ public class ConfigKeys
 	public static final String REGISTRATION_ENABLED = "registration.enabled";
 	public static final String USERNAME_MAX_LENGTH = "username.max.length";
 
-	public static final String QUARTZ_CONFIG = "quartz.config";
 	
-	public static final String QUARTZ_CONTEXT = "org.quartz.context.";
 	public static final String SEARCH_INDEXING_ENABLED = "search.indexing.enabled";
-	public static final String SEARCH_INDEXER_IMPLEMENTATION = "search.indexer.implementation";
-	public static final String SEARCH_INDEXER_CRON_EXPRESSON = "indexer.cron.expression";
 	public static final String EXTENSION_FIELD = "extension.field";
 	
 	public static final String LDAP_SECURITY_PROTOCOL = "ldap.security.protocol";
@@ -287,12 +283,6 @@ public class ConfigKeys
 	public static final String LOGIN_IGNORE_XFORWARDEDHOST = "login.ignore.xforwardedhost";
 	public static final String LOGIN_IGNORE_REFERER = "login.ignore.referer";
 	
-	public static final String LUCENE_ANALYZER = "lucene.analyzer";
-	public static final String LUCENE_INDEX_WRITE_PATH = "lucene.index.write.path";
-	public static final String LUCENE_SETTINGS = "lucene.settings";
-	public static final String LUCENE_CURRENTLY_INDEXING = "lucene.currently.indexing";
-	public static final String LUCENE_INDEXER_RAM_NUMDOCS = "lucene.indexer.ram.numdocs";
-	public static final String LUCENE_INDEXER_DB_FETCH_COUNT = "lucene.indexer.db.fetch.count";
 	
 	public static final String MODERATION_LOGGING_ENABLED = "moderation.logging.enabled";
 	public static final String PROXIED_CONTEXT_PATH = "proxied.context.path";
