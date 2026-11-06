@@ -21,5 +21,5 @@ public class ForumDocument
 	public int forumOrder;
 	public int forumTopics;
 	public int forumLastPostId;
-	public boolean moderated;
+	public int moderated;
 }

@@ -17,5 +17,5 @@ public class TopicWatchDocument
 	public int topicId;
 	@Indexed
 	public int userId;
-	public boolean isRead = true;
+	public int isRead = 1;
 }

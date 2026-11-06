@@ -127,7 +127,7 @@ public class MongoTopicStore implements TopicStore
 				.append("forumId", new Document("$in", this.forumAccess.allowedForumIds()))),
 			lookupPost("topicFirstPostId", "firstPost"),
 			new Document("$unwind", "$firstPost"),
-			new Document("$match", new Document("firstPost.needModerate", false)),
+			new Document("$match", new Document("firstPost.needModerate", new Document("$nin", List.of(1, true, 1L)))),
 			new Document("$count", "total"));
 
 		Document d = this.mongo.getCollection("topics").aggregate(pipeline).first();
@@ -184,7 +184,7 @@ public class MongoTopicStore implements TopicStore
 				.set("topicLastPostId", topic.getLastPostId())
 				.set("topicFirstPostId", topic.getFirstPostId())
 				.set("topicType", topic.getType())
-				.set("moderated", topic.isModerated())
+				.set("moderated", topic.isModerated() ? 1 : 0)
 				.set("topicVoteId", topic.getVoteId()),
 			TopicDocument.class);
 	}
@@ -201,7 +201,7 @@ public class MongoTopicStore implements TopicStore
 		d.topicFirstPostId = topic.getFirstPostId();
 		d.topicLastPostId = topic.getLastPostId();
 		d.topicType = topic.getType();
-		d.moderated = topic.isModerated();
+		d.moderated = topic.isModerated() ? 1 : 0;
 		this.repository.insert(d);
 
 		topic.setId(d.id);
@@ -257,7 +257,7 @@ public class MongoTopicStore implements TopicStore
 	@Override
 	public int getTotalPosts(int topicId)
 	{
-		return (int)this.mongo.count(new Query(Criteria.where("topicId").is(topicId).and("needModerate").is(false)),
+		return (int)this.mongo.count(new Query(Criteria.where("topicId").is(topicId).and("needModerate").nin(1, true, 1L)),
 			PostDocument.class);
 	}
 
@@ -275,7 +275,7 @@ public class MongoTopicStore implements TopicStore
 
 		for (TopicWatchDocument w : this.mongo.find(new Query(Criteria.where("topicId").is(topic.getId())
 				.and("userId").nin(posterId, anonUser)), TopicWatchDocument.class)) {
-			watches.put(w.userId, w.isRead);
+			watches.put(w.userId, w.isRead != 0);
 		}
 
 		List<User> l = new ArrayList<>();
@@ -295,7 +295,7 @@ public class MongoTopicStore implements TopicStore
 		}
 
 		this.mongo.updateMulti(new Query(Criteria.where("topicId").is(topic.getId()).and("userId").nin(posterId, anonUser)),
-			new Update().set("isRead", false), TopicWatchDocument.class);
+			new Update().set("isRead", 0), TopicWatchDocument.class);
 
 		return l;
 	}
@@ -314,7 +314,7 @@ public class MongoTopicStore implements TopicStore
 		TopicWatchDocument d = new TopicWatchDocument();
 		d.topicId = topicId;
 		d.userId = userId;
-		d.isRead = true;
+		d.isRead = 1;
 		this.mongo.insert(d);
 	}
 
@@ -339,7 +339,7 @@ public class MongoTopicStore implements TopicStore
 	@Override
 	public void updateReadStatus(int topicId, int userId, boolean read)
 	{
-		this.mongo.updateMulti(watch(topicId, userId), new Update().set("isRead", read), TopicWatchDocument.class);
+		this.mongo.updateMulti(watch(topicId, userId), new Update().set("isRead", read ? 1 : 0), TopicWatchDocument.class);
 	}
 
 	@Override
@@ -370,14 +370,14 @@ public class MongoTopicStore implements TopicStore
 	@Override
 	public void setModerationStatus(int forumId, boolean status)
 	{
-		this.mongo.updateMulti(new Query(Criteria.where("forumId").is(forumId)), new Update().set("moderated", status),
+		this.mongo.updateMulti(new Query(Criteria.where("forumId").is(forumId)), new Update().set("moderated", status ? 1 : 0),
 			TopicDocument.class);
 	}
 
 	@Override
 	public void setModerationStatusByTopic(int topicId, boolean status)
 	{
-		this.mongo.updateFirst(byId(topicId), new Update().set("moderated", status), TopicDocument.class);
+		this.mongo.updateFirst(byId(topicId), new Update().set("moderated", status ? 1 : 0), TopicDocument.class);
 	}
 
 	@Override
@@ -449,7 +449,7 @@ public class MongoTopicStore implements TopicStore
 		pipeline.add(new Document("$unwind", "$lastPost"));
 
 		if (onlyApproved) {
-			pipeline.add(new Document("$match", new Document("lastPost.needModerate", false)));
+			pipeline.add(new Document("$match", new Document("lastPost.needModerate", new Document("$nin", List.of(1, true, 1L)))));
 		}
 
 		if (sort != null) {
@@ -531,7 +531,7 @@ public class MongoTopicStore implements TopicStore
 		t.setLastPostId(d.topicLastPostId);
 		t.setType(d.topicType);
 		t.setForumId(d.forumId);
-		t.setModerated(d.moderated);
+		t.setModerated(d.moderated != 0);
 		t.setVoteId(d.topicVoteId);
 		t.setMovedId(d.topicMovedId);
 

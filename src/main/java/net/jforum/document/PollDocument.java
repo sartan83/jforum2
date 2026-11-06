@@ -12,9 +12,11 @@ import org.springframework.data.mongodb.core.mapping.Document;
  * Former <code>jforum_vote_desc</code>, with <code>jforum_vote_results</code> embedded as
  * <code>options</code> and <code>jforum_vote_voters</code> embedded as <code>voters</code>.
  */
-@Document(collection = "vote_desc")
+@Document(collection = PollDocument.COLLECTION)
 public class PollDocument
 {
+	public static final String COLLECTION = "polls";
+
 	@Id
 	public int id;
 	@Indexed

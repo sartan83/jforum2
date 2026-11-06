@@ -15,5 +15,5 @@ public class CategoryDocument
 	public String title;
 	@Indexed
 	public int displayOrder;
-	public boolean moderated;
+	public int moderated;
 }

@@ -38,5 +38,5 @@ public class TopicDocument
 	@Indexed
 	public int topicLastPostId;
 	public int topicMovedId;
-	public boolean moderated;
+	public int moderated;
 }

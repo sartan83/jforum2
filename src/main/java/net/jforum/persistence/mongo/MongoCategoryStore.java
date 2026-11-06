@@ -64,7 +64,7 @@ public class MongoCategoryStore implements CategoryStore
 	public void update(Category category)
 	{
 		this.mongo.updateFirst(new Query(Criteria.where("_id").is(category.getId())),
-			new Update().set("title", category.getName()).set("moderated", category.isModerated()),
+			new Update().set("title", category.getName()).set("moderated", category.isModerated() ? 1 : 0),
 			CategoryDocument.class);
 	}
 
@@ -78,7 +78,7 @@ public class MongoCategoryStore implements CategoryStore
 		d.id = this.sequences.next("categories");
 		d.title = category.getName();
 		d.displayOrder = (max == null ? 0 : max.displayOrder) + 1;
-		d.moderated = category.isModerated();
+		d.moderated = category.isModerated() ? 1 : 0;
 		this.repository.insert(d);
 
 		category.setId(d.id);
@@ -120,7 +120,7 @@ public class MongoCategoryStore implements CategoryStore
 		c.setId(d.id);
 		c.setName(d.title);
 		c.setOrder(d.displayOrder);
-		c.setModerated(d.moderated);
+		c.setModerated(d.moderated != 0);
 		return c;
 	}
 }

@@ -117,7 +117,7 @@ public class MongoForumStore implements ForumStore
 				.set("categoriesId", forum.getCategoryId())
 				.set("forumName", forum.getName())
 				.set("forumDesc", forum.getDescription())
-				.set("moderated", forum.isModerated()),
+				.set("moderated", forum.isModerated() ? 1 : 0),
 			ForumDocument.class);
 	}
 
@@ -133,7 +133,7 @@ public class MongoForumStore implements ForumStore
 		d.forumName = forum.getName();
 		d.forumDesc = forum.getDescription();
 		d.forumOrder = (max == null ? 0 : max.forumOrder) + 1;
-		d.moderated = forum.isModerated();
+		d.moderated = forum.isModerated() ? 1 : 0;
 		this.repository.insert(d);
 
 		forum.setId(d.id);
@@ -179,7 +179,7 @@ public class MongoForumStore implements ForumStore
 			TopicDocument.class);
 
 		PostDocument post = topic == null ? null : this.mongo.findOne(
-			new Query(Criteria.where("_id").is(forum.forumLastPostId).and("forumId").is(forumId).and("needModerate").is(false)),
+			new Query(Criteria.where("_id").is(forum.forumLastPostId).and("forumId").is(forumId).and("needModerate").nin(1, true, 1L)),
 			PostDocument.class);
 
 		String username = post == null ? null : this.users.username(post.userId);
@@ -207,7 +207,7 @@ public class MongoForumStore implements ForumStore
 		}
 
 		int postId = this.getMaxPostId(forumId);
-		PostDocument latest = this.mongo.findOne(new Query(Criteria.where("forumId").is(forumId).and("needModerate").is(false))
+		PostDocument latest = this.mongo.findOne(new Query(Criteria.where("forumId").is(forumId).and("needModerate").nin(1, true, 1L))
 			.with(Sort.by(Sort.Direction.DESC, "topicId")).limit(1), PostDocument.class);
 
 		if (latest != null) {
@@ -234,7 +234,8 @@ public class MongoForumStore implements ForumStore
 
 		Set<Integer> groupIds = new HashSet<>();
 		Query forumRoles = new Query(Criteria.where("name").is("perm_moderation_forums")
-			.orOperator(Criteria.where("roleValues").is(String.valueOf(forumId)), Criteria.where("roleValues").is(forumId)));
+			.orOperator(Criteria.where("roleValues").in(String.valueOf(forumId), forumId),
+				Criteria.where("values.roleValue").in(String.valueOf(forumId), forumId)));
 
 		for (Document role : this.mongo.find(forumRoles, Document.class, "roles")) {
 			int groupId = MongoUsers.intValue(role.get("groupId"));
@@ -260,7 +261,7 @@ public class MongoForumStore implements ForumStore
 	@Override
 	public int getTotalMessages()
 	{
-		return (int)this.mongo.count(new Query(Criteria.where("needModerate").is(false)), PostDocument.class);
+		return (int)this.mongo.count(new Query(Criteria.where("needModerate").nin(1, true, 1L)), PostDocument.class);
 	}
 
 	@Override
@@ -286,7 +287,7 @@ public class MongoForumStore implements ForumStore
 			int topicId = Integer.parseInt(topic);
 
 			this.mongo.updateFirst(byId(topicId),
-				new Update().set("forumId", toForumId).set("topicMovedId", fromForumId).set("moderated", f.isModerated()),
+				new Update().set("forumId", toForumId).set("topicMovedId", fromForumId).set("moderated", f.isModerated() ? 1 : 0),
 				TopicDocument.class);
 			this.mongo.updateMulti(new Query(Criteria.where("topicId").is(topicId)), new Update().set("forumId", toForumId),
 				PostDocument.class);
@@ -322,7 +323,7 @@ public class MongoForumStore implements ForumStore
 	@Override
 	public void setModerated(int categoryId, boolean status)
 	{
-		this.mongo.updateMulti(new Query(Criteria.where("categoriesId").is(categoryId)), new Update().set("moderated", status),
+		this.mongo.updateMulti(new Query(Criteria.where("categoriesId").is(categoryId)), new Update().set("moderated", status ? 1 : 0),
 			ForumDocument.class);
 	}
 
@@ -457,7 +458,7 @@ public class MongoForumStore implements ForumStore
 		f.setOrder(d.forumOrder);
 		f.setTotalTopics(d.forumTopics);
 		f.setLastPostId(d.forumLastPostId);
-		f.setModerated(d.moderated);
+		f.setModerated(d.moderated != 0);
 		f.setTotalPosts((int)this.mongo.count(new Query(Criteria.where("forumId").is(d.id)), PostDocument.class));
 		return f;
 	}

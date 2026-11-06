@@ -67,15 +67,15 @@ public class MongoPostStore implements PostStore
 			new Update()
 				.set("topicId", post.getTopicId())
 				.set("forumId", post.getForumId())
-				.set("enableBbcode", post.isBbCodeEnabled())
-				.set("enableHtml", post.isHtmlEnabled())
-				.set("enableSmilies", post.isSmiliesEnabled())
-				.set("enableSig", post.isSignatureEnabled())
+				.set("enableBbcode", post.isBbCodeEnabled() ? 1 : 0)
+				.set("enableHtml", post.isHtmlEnabled() ? 1 : 0)
+				.set("enableSmilies", post.isSmiliesEnabled() ? 1 : 0)
+				.set("enableSig", post.isSignatureEnabled() ? 1 : 0)
 				.set("postEditTime", new Date())
 				.set("postEditCount", post.getEditCount() + 1)
 				.set("posterIp", post.getUserIp())
-				.set("postText", post.getText())
-				.set("postSubject", post.getSubject()),
+				.set("text", post.getText())
+				.set("subject", post.getSubject()),
 			PostDocument.class);
 
 		SearchFacade.update(post);
@@ -91,15 +91,15 @@ public class MongoPostStore implements PostStore
 		d.userId = post.getUserId();
 		d.postTime = post.getTime() != null ? post.getTime() : new Date();
 		d.posterIp = post.getUserIp();
-		d.enableBbcode = post.isBbCodeEnabled();
-		d.enableHtml = post.isHtmlEnabled();
-		d.enableSmilies = post.isSmiliesEnabled();
-		d.enableSig = post.isSignatureEnabled();
+		d.enableBbcode = post.isBbCodeEnabled() ? 1 : 0;
+		d.enableHtml = post.isHtmlEnabled() ? 1 : 0;
+		d.enableSmilies = post.isSmiliesEnabled() ? 1 : 0;
+		d.enableSig = post.isSignatureEnabled() ? 1 : 0;
 		d.postEditTime = d.postTime;
-		d.needModerate = post.isModerate();
-		d.attach = post.hasAttachments();
-		d.postSubject = post.getSubject();
-		d.postText = post.getText();
+		d.needModerate = post.isModerate() ? 1 : 0;
+		d.attach = post.hasAttachments() ? 1 : 0;
+		d.subject = post.getSubject();
+		d.text = post.getText();
 		this.repository.insert(d);
 
 		post.setId(d.id);
@@ -111,7 +111,7 @@ public class MongoPostStore implements PostStore
 	@Override
 	public List selectAllByTopicByLimit(int topicId, int startFrom, int count)
 	{
-		Query query = new Query(Criteria.where("topicId").is(topicId).and("needModerate").is(false))
+		Query query = new Query(Criteria.where("topicId").is(topicId).and("needModerate").nin(1, true, 1L))
 			.with(Sort.by("postTime", "id"))
 			.skip(startFrom)
 			.limit(count);
@@ -123,7 +123,7 @@ public class MongoPostStore implements PostStore
 	public List selectByUserByLimit(int userId, int startFrom, int count)
 	{
 		Query query = new Query(Criteria.where("userId").is(userId)
-				.and("needModerate").is(false)
+				.and("needModerate").nin(1, true, 1L)
 				.and("forumId").in(this.forumAccess.allowedForumIds()))
 			.with(Sort.by(Sort.Direction.DESC, "id"))
 			.skip(startFrom)
@@ -136,7 +136,7 @@ public class MongoPostStore implements PostStore
 	public int countUserPosts(int userId)
 	{
 		return (int)this.mongo.count(new Query(Criteria.where("userId").is(userId)
-			.and("needModerate").is(false)
+			.and("needModerate").nin(1, true, 1L)
 			.and("forumId").in(this.forumAccess.allowedForumIds())), PostDocument.class);
 	}
 
@@ -186,7 +186,7 @@ public class MongoPostStore implements PostStore
 		List<Post> l = new ArrayList<>();
 
 		for (PostDocument d : this.firstPosts(this.mongo.find(query, TopicDocument.class), limit)) {
-			l.add(this.toRssPost(d, d.postSubject));
+			l.add(this.toRssPost(d, d.subject));
 		}
 
 		this.fillUsernames(l);
@@ -221,7 +221,7 @@ public class MongoPostStore implements PostStore
 		List<Integer> ids = topics.stream().map(t -> t.topicFirstPostId).toList();
 		Map<Integer, PostDocument> posts = new java.util.HashMap<>();
 
-		for (PostDocument d : this.mongo.find(new Query(Criteria.where("_id").in(ids).and("needModerate").is(false)), PostDocument.class)) {
+		for (PostDocument d : this.mongo.find(new Query(Criteria.where("_id").in(ids).and("needModerate").nin(1, true, 1L)), PostDocument.class)) {
 			posts.put(d.id, d);
 		}
 
@@ -243,7 +243,7 @@ public class MongoPostStore implements PostStore
 		Post post = new Post();
 		post.setId(d.id);
 		post.setSubject(subject);
-		post.setText(d.postText);
+		post.setText(d.text);
 		post.setTopicId(d.topicId);
 		post.setForumId(d.forumId);
 		post.setUserId(d.userId);
@@ -280,16 +280,16 @@ public class MongoPostStore implements PostStore
 			post.setUserId(d.userId);
 			post.setTime(d.postTime);
 			post.setUserIp(d.posterIp);
-			post.setBbCodeEnabled(d.enableBbcode);
-			post.setHtmlEnabled(d.enableHtml);
-			post.setSmiliesEnabled(d.enableSmilies);
-			post.setSignatureEnabled(d.enableSig);
+			post.setBbCodeEnabled(d.enableBbcode != 0);
+			post.setHtmlEnabled(d.enableHtml != 0);
+			post.setSmiliesEnabled(d.enableSmilies != 0);
+			post.setSignatureEnabled(d.enableSig != 0);
 			post.setEditCount(d.postEditCount);
 			post.setEditTime(d.postEditTime);
-			post.setSubject(d.postSubject);
-			post.setText(d.postText);
-			post.hasAttachments(d.attach);
-			post.setModerate(d.needModerate);
+			post.setSubject(d.subject);
+			post.setText(d.text);
+			post.hasAttachments(d.attach != 0);
+			post.setModerate(d.needModerate != 0);
 			post.setFormatedTime(d.postTime != null ? df.format(d.postTime) : null);
 			post.setKarma(karmaStore != null ? karmaStore.getPostKarma(d.id) : new KarmaStatus(d.id, 0));
 			l.add(post);

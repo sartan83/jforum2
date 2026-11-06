@@ -84,7 +84,7 @@ public class MongoPollStore implements PollStore
 	public int addNew(Poll poll)
 	{
 		PollDocument d = new PollDocument();
-		d.id = this.sequences.next("vote_desc");
+		d.id = this.sequences.next(PollDocument.COLLECTION);
 		d.topicId = poll.getTopicId();
 		d.voteText = poll.getLabel();
 		d.voteLength = poll.getLength();

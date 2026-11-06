@@ -62,7 +62,7 @@ class MongoTopicStoreTest extends ForumCoreTestSupport
 		Topic visible = this.topic(this.forumId, 2, "visible", 1_000);
 		Topic pending = this.topic(this.forumId, 2, "pending", 2_000);
 		this.mongo.updateFirst(new Query(Criteria.where("_id").is(pending.getFirstPostId())),
-			new Update().set("needModerate", true), "posts");
+			new Update().set("needModerate", 1), "posts");
 
 		assertEquals(List.of(visible.getId()), ids(this.topics.selectAllByForum(this.forumId)));
 		assertEquals(pending.getId(), this.topics.selectById(pending.getId()).getId());

@@ -27,7 +27,7 @@ import org.springframework.data.mongodb.core.query.Query;
 abstract class ForumCoreTestSupport extends MongoTestSupport
 {
 	private static final List<String> COLLECTIONS = List.of("categories", "forums", "forums_watch", "topics",
-		"topics_watch", "posts", "vote_desc", "config", "users", "roles", "groups", "mail_integration");
+		"topics_watch", "posts", "polls", "config", "users", "roles", "groups", "mail_integration");
 
 	@Autowired
 	protected MongoTemplate mongo;

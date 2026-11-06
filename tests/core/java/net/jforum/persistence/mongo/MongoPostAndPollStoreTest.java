@@ -187,6 +187,33 @@ class MongoPostAndPollStoreTest extends ForumCoreTestSupport
 		assertNull(this.polls.selectById(pollId));
 	}
 
+	@Test
+	void readsDocumentsWrittenByTheMigrationTool()
+	{
+		Topic t = this.topic(this.forumId, 2, "migrated", 1_000);
+		this.mongo.insert(new org.bson.Document("_id", 500).append("topicId", t.getId()).append("forumId", this.forumId)
+			.append("userId", 3).append("postTime", new Date(2_000)).append("posterIp", "10.0.0.3")
+			.append("enableBbcode", 1).append("enableHtml", 0).append("enableSmilies", 1).append("enableSig", 0)
+			.append("attach", 0).append("needModerate", 0).append("status", 1)
+			.append("subject", "legacy subject").append("text", "legacy text"), "posts");
+
+		Post p = this.posts.selectById(500);
+		assertEquals("legacy subject", p.getSubject());
+		assertEquals("legacy text", p.getText());
+		assertTrue(p.isBbCodeEnabled());
+		assertFalse(p.isHtmlEnabled());
+		assertFalse(p.isSignatureEnabled());
+		assertFalse(p.isModerationNeeded());
+		assertEquals(List.of(t.getFirstPostId(), 500), ids(this.posts.selectAllByTopic(t.getId())));
+
+		this.mongo.insert(new org.bson.Document("_id", 70).append("topicId", t.getId()).append("voteText", "q")
+			.append("voteStart", new Date(1_000)).append("voteLength", 0)
+			.append("options", List.of(new org.bson.Document("voteOptionId", 1).append("voteOptionText", "a").append("voteResult", 4)))
+			.append("voters", List.of(new org.bson.Document("voteUserId", 3).append("voteUserIp", "10.0.0.3"))), "polls");
+		assertEquals(4, this.polls.selectById(70).getTotalVotes());
+		assertTrue(this.polls.hasUserVotedOnPoll(70, 3));
+	}
+
 	private static PollOption option(String text)
 	{
 		PollOption o = new PollOption();

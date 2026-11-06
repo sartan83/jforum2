@@ -10,7 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * Former <code>jforum_posts</code> merged with <code>jforum_posts_text</code>
- * (<code>postSubject</code>, <code>postText</code>).
+ * (<code>subject</code>, <code>text</code>, as written by the migration tool).
  */
 @Document(collection = "posts")
 @CompoundIndexes({
@@ -30,16 +30,16 @@ public class PostDocument
 	@Indexed
 	public Date postTime;
 	public String posterIp;
-	public boolean enableBbcode = true;
-	public boolean enableHtml = true;
-	public boolean enableSmilies = true;
-	public boolean enableSig = true;
+	public int enableBbcode = 1;
+	public int enableHtml = 1;
+	public int enableSmilies = 1;
+	public int enableSig = 1;
 	public Date postEditTime;
 	public int postEditCount;
 	public int status = 1;
-	public boolean attach;
+	public int attach;
 	@Indexed
-	public boolean needModerate;
-	public String postSubject;
-	public String postText;
+	public int needModerate;
+	public String subject;
+	public String text;
 }
