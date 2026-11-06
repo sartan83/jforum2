@@ -12,7 +12,7 @@ import net.jforum.migration.target.Measure;
 
 /**
  * jforum_roles + jforum_role_values → <code>roles</code> with embedded
- * <code>values: [{roleValue, roleType}]</code> (ordered by role_value).
+ * <code>roleValues: [String]</code> (ordered by role_value), as <code>RoleDocument</code>.
  */
 public class RolesMigrator implements TableMigrator
 {
@@ -33,7 +33,7 @@ public class RolesMigrator implements TableMigrator
 	{
 		return List.of(
 			ParitySpec.table("jforum_roles", "roles", Measure.documents()),
-			ParitySpec.table("jforum_role_values", "roles", Measure.arraySize("values")));
+			ParitySpec.table("jforum_role_values", "roles", Measure.arraySize("roleValues")));
 	}
 
 	@Override
@@ -42,10 +42,15 @@ public class RolesMigrator implements TableMigrator
 		EmbeddedChildren.warnIfMissing(ctx, "jforum_role_values", "roles.values");
 		Map<Object, List<Document>> values = EmbeddedChildren.load(ctx.source(), "jforum_role_values", "role_id",
 			"role_id, role_value");
+		long nullValues = values.values().stream().flatMap(List::stream).filter(v -> v.get("roleValue") == null).count();
+		if (nullValues > 0) {
+			ctx.warn("jforum_role_values: " + nullValues + " row(s) with a NULL role_value kept as null in roles.roleValues");
+		}
 		try (BatchSink sink = ctx.sink("roles")) {
 			ctx.source().stream("SELECT * FROM " + ctx.source().qualified("jforum_roles") + " ORDER BY role_id", row -> {
 				var doc = Columns.toDocument(row, "role_id", Set.of());
-				doc.put("values", values.getOrDefault(row.get("role_id"), List.of()));
+				doc.put("roleValues", values.getOrDefault(row.get("role_id"), List.of()).stream()
+					.map(v -> v.get("roleValue") == null ? null : v.get("roleValue").toString()).toList());
 				sink.add(doc);
 			});
 			sink.flush();

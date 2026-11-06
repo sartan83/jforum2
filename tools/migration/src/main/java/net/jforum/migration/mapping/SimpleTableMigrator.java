@@ -19,12 +19,19 @@ public class SimpleTableMigrator implements TableMigrator
 	private final String table;
 	private final String collection;
 	private final String idColumn;
+	private final FieldRules rules;
 
 	public SimpleTableMigrator(String table, String collection, String idColumn)
+	{
+		this(table, collection, idColumn, FieldRules.NONE);
+	}
+
+	public SimpleTableMigrator(String table, String collection, String idColumn, FieldRules rules)
 	{
 		this.table = table;
 		this.collection = collection;
 		this.idColumn = idColumn;
+		this.rules = rules;
 	}
 
 	public String idColumn()
@@ -69,7 +76,7 @@ public class SimpleTableMigrator implements TableMigrator
 				if (this.idColumn == null) {
 					doc.put("_id", ++sequence[0]);
 				}
-				sink.add(doc);
+				sink.add(this.rules.apply(doc));
 			});
 			sink.flush();
 			return sink.written();

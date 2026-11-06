@@ -142,3 +142,6 @@ SET IDENTITY_INSERT jforum_banner OFF;
 SET IDENTITY_INSERT jforum_api ON;
 INSERT INTO jforum_api (api_id, api_key, api_validity) VALUES (1, '0123456789abcdef0123456789abcdef', '2030-12-31 23:59:59');
 SET IDENTITY_INSERT jforum_api OFF;
+
+INSERT INTO jforum_sessions (session_id, session_user_id, session_start, session_time, session_ip, session_page, session_logged_int)
+  VALUES ('5F2C1A9B', 3, '2024-03-05 09:00:00', 900000, '0a000001', 0, 1);

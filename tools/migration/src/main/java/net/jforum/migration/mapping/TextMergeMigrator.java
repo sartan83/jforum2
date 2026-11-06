@@ -16,7 +16,7 @@ import net.jforum.migration.target.Measure;
  * parity check counts.
  * <ul>
  * <li>jforum_posts + jforum_posts_text → <code>posts</code> (post_subject → <code>subject</code>, post_text → <code>text</code>)</li>
- * <li>jforum_privmsgs + jforum_privmsgs_text → <code>privmsgs</code> (<code>privmsgsText</code>)</li>
+ * <li>jforum_privmsgs + jforum_privmsgs_text → <code>privmsgs</code> (fields without the <code>privmsgs</code> prefix, see {@link MappingCatalog#PRIVMSGS_RULES})</li>
  * </ul>
  */
 public class TextMergeMigrator implements TableMigrator
@@ -29,9 +29,17 @@ public class TextMergeMigrator implements TableMigrator
 	private final String idColumn;
 	/** text column → document field */
 	private final Map<String, String> textFields;
+	private final FieldRules rules;
 
 	public TextMergeMigrator(String table, String textTable, String collection, String idColumn, Map<String, String> textFields)
 	{
+		this(table, textTable, collection, idColumn, textFields, FieldRules.NONE);
+	}
+
+	public TextMergeMigrator(String table, String textTable, String collection, String idColumn, Map<String, String> textFields,
+		FieldRules rules)
+	{
+		this.rules = rules;
 		this.table = table;
 		this.textTable = textTable;
 		this.collection = collection;
@@ -50,7 +58,7 @@ public class TextMergeMigrator implements TableMigrator
 	public static TextMergeMigrator privateMessages()
 	{
 		return new TextMergeMigrator("jforum_privmsgs", "jforum_privmsgs_text", "privmsgs", "privmsgs_id",
-			Map.of("privmsgs_text", "privmsgsText"));
+			Map.of("privmsgs_text", "text"), MappingCatalog.PRIVMSGS_RULES);
 	}
 
 	/** Field used to count the merged text rows. */
@@ -102,7 +110,7 @@ public class TextMergeMigrator implements TableMigrator
 				if (row.get(MARKER) != null) {
 					this.textFields.forEach((column, field) -> doc.put(field, row.get(column)));
 				}
-				sink.add(doc);
+				sink.add(this.rules.apply(doc));
 			});
 			sink.flush();
 			return sink.written();

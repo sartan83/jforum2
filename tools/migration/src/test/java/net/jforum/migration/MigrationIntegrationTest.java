@@ -92,7 +92,8 @@ class MigrationIntegrationTest
 
 		assertThat(report.entry("jforum_posts", "documents").sourceRows()).isEqualTo(3);
 		assertThat(report.entry("jforum_posts_text", "documents with subject").targetCount()).isEqualTo(3);
-		assertThat(report.entry("jforum_role_values", "embedded values[]").targetCount())
+		assertThat(report.entry("jforum_privmsgs_text", "documents with text").targetCount()).isEqualTo(2);
+		assertThat(report.entry("jforum_role_values", "embedded roleValues[]").targetCount())
 			.isEqualTo(LegacySqlServer.count("SELECT COUNT(*) FROM jforum_role_values"));
 		assertThat(report.entry("jforum_vote_results", "embedded options[]").targetCount()).isEqualTo(3);
 		assertThat(report.entry("jforum_vote_voters", "embedded voters[]").targetCount()).isEqualTo(2);
@@ -133,6 +134,7 @@ class MigrationIntegrationTest
 	{
 		Document alice = find("users", 3);
 		assertThat(alice.getString("username")).isEqualTo("alice");
+		assertThat(find("users", 2).getString("usernameLower")).isEqualTo("admin");
 		assertThat(alice.getList("groupIds", Integer.class)).containsExactly(1, 3);
 		assertThat(alice.getString("userSig")).isEqualTo("Alice [b]sig[/b]");
 		assertThat(alice.get("userKarma")).isEqualTo(4.5);
@@ -146,10 +148,10 @@ class MigrationIntegrationTest
 	{
 		Document role = db.getCollection("roles").find(Filters.eq("name", "perm_moderation_forums")).first();
 		assertThat(role.getInteger("groupId")).isEqualTo(3);
-		assertThat(role.getList("values", Document.class)).extracting(v -> v.getString("roleValue")).containsExactly("1", "2");
-		assertThat(role.getList("values", Document.class).get(0)).doesNotContainKey("roleId");
+		assertThat(role.getList("roleValues", String.class)).containsExactly("1", "2");
+		assertThat(role).doesNotContainKey("values");
 		Document empty = db.getCollection("roles").find(Filters.eq("name", "perm_moderation")).first();
-		assertThat(empty.getList("values", Document.class)).isEmpty();
+		assertThat(empty.getList("roleValues", String.class)).isEmpty();
 	}
 
 	@Test
@@ -170,9 +172,17 @@ class MigrationIntegrationTest
 	void privateMessagesAreMergedWithTheirText()
 	{
 		Document pm = find("privmsgs", 20);
-		assertThat(pm.getString("privmsgsSubject")).isEqualTo("Hello Bob");
-		assertThat(pm.getString("privmsgsText")).isEqualTo("See the attached [i]file[/i].");
-		assertThat(pm.getInteger("privmsgsToUserid")).isEqualTo(4);
+		assertThat(pm.getString("subject")).isEqualTo("Hello Bob");
+		assertThat(pm.getString("text")).isEqualTo("See the attached [i]file[/i].");
+		assertThat(pm.getInteger("type")).isEqualTo(1);
+		assertThat(pm.getInteger("fromUserId")).isEqualTo(3);
+		assertThat(pm.getInteger("toUserId")).isEqualTo(4);
+		assertThat(pm.getDate("date")).isEqualTo(Date.from(Instant.parse("2024-03-05T09:15:00Z")));
+		assertThat(pm.getString("ip")).isEqualTo("10.0.0.1");
+		assertThat(pm.getBoolean("enableBbcode")).isTrue();
+		assertThat(pm.getBoolean("enableHtml")).isFalse();
+		assertThat(pm.getBoolean("attachSig")).isFalse();
+		assertThat(pm.keySet()).noneMatch(k -> k.startsWith("privmsgs"));
 	}
 
 	@Test
@@ -200,7 +210,16 @@ class MigrationIntegrationTest
 		assertThat(find("forums", 8).getInteger("categoriesId")).isEqualTo(5);
 		assertThat(find("topics", 10).getInteger("topicVoteId")).isEqualTo(1);
 		assertThat(find("categories", 5).getString("title")).isEqualTo("Second category");
-		assertThat(find("banner", 1).getString("bannerName")).isEqualTo("Sponsor");
+		Document banner = find("banner", 1);
+		assertThat(banner).containsEntry("name", "Sponsor").containsEntry("placement", 2).containsEntry("weight", 60)
+			.containsEntry("active", true).containsEntry("url", "https://example.com").containsEntry("width", 468);
+		assertThat(banner.keySet()).noneMatch(k -> k.startsWith("banner"));
+		assertThat(find("bookmarks", 1)).containsEntry("publicVisible", true).containsEntry("relationType", 2);
+		assertThat(find("bookmarks", 2)).containsEntry("publicVisible", false);
+		assertThat(find("karma", 1)).containsEntry("postUserId", 3).containsEntry("fromUserId", 4).containsEntry("points", 5);
+		assertThat(find("groups", 3)).containsEntry("groupName", "Moderators").containsEntry("parentId", 1);
+		assertThat(find("sessions", 3)).containsEntry("sessionId", "5F2C1A9B").containsEntry("sessionTime", 900000)
+			.containsEntry("sessionLoggedInt", 1).doesNotContainKey("sessionUserId");
 		assertThat(find("moderation_log", 1).getString("logOriginalMessage")).isEqualTo("I voted <b>Java</b>!!!");
 		assertThat(db.getCollection("smilies").countDocuments()).isEqualTo(LegacySqlServer.count("SELECT COUNT(*) FROM jforum_smilies"));
 		assertThat(db.getCollection("topics_watch").find().map(d -> d.get("_id")).into(new java.util.ArrayList<>()))
