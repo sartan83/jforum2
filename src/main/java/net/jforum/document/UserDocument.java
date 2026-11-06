@@ -21,7 +21,7 @@ public class UserDocument
 	private Integer userActive;
 	private String username;
 
-	@Indexed(unique = true)
+	@Indexed(unique = true, sparse = true)
 	private String usernameLower;
 	private String userPassword;
 	private Long userSessionTime;

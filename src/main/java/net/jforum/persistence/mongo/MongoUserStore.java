@@ -147,7 +147,7 @@ public class MongoUserStore implements UserStore
 		u.setUsername(d.getUsername());
 		u.setDeleted(i(d.getDeleted()));
 		KarmaStatus karma = new KarmaStatus();
-		karma.setKarmaPoints(d.getUserKarma() == null ? 0 : d.getUserKarma().intValue());
+		karma.setKarmaPoints(d.getUserKarma() == null ? 0 : d.getUserKarma());
 		u.setKarma(karma);
 		u.setFrom(d.getUserFrom());
 		u.setWebSite(d.getUserWebsite());

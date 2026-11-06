@@ -332,6 +332,19 @@ class MongoUserStoreTest extends MongoTestSupport
 	}
 
 	@Test
+	void userKarmaWrittenByKarmaStoreIsLoaded()
+	{
+		int id = this.newUser("karmic", "p", "k@example.com");
+		this.mongo.updateFirst(new Query(Criteria.where("_id").is(id)),
+			new org.springframework.data.mongodb.core.query.Update().set("userKarma", 3.5), UserDocument.class);
+
+		User u = this.store.selectById(id);
+		assertEquals(id, u.getKarma().getId());
+		assertEquals(3.5, u.getKarma().getKarmaPoints(), 0.0001);
+		assertEquals(0.0, this.store.selectById(this.newUser("plain", "p", "p@example.com")).getKarma().getKarmaPoints(), 0.0001);
+	}
+
+	@Test
 	void groupMembership()
 	{
 		this.group(1, "General");
