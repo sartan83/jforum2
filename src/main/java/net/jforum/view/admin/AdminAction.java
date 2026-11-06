@@ -65,6 +65,8 @@ import net.jforum.security.SecurityConstants;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.util.preferences.TemplateKeys;
+import org.apache.log4j.Logger;
+
 import freemarker.template.SimpleHash;
 import freemarker.template.Template;
 
@@ -73,6 +75,8 @@ import freemarker.template.Template;
  * @version $Id: AdminAction.java,v 1.23 2007/02/25 13:48:34 rafaelsteil Exp $
  */
 public class AdminAction extends Command {
+	private static final Logger logger = Logger.getLogger(AdminAction.class);
+
 
 	/** 
 	 * @see net.jforum.Command#list()
@@ -157,7 +161,16 @@ public class AdminAction extends Command {
 		String version = data.substring(0, index).trim();
 		String notes = data.substring(index + 1, data.length());
 		
-		this.matchVersion(version);
+		try {
+			this.matchVersion(version);
+		}
+		catch (RuntimeException e) {
+			// the remote version file is not in the expected "major.minor.revision" format
+			logger.warn("Could not compare the board version with " + version + ": " + e);
+			this.context.put("developmentVersion", false);
+			return;
+		}
+
 		this.context.put("notes", notes);
 	}
 	

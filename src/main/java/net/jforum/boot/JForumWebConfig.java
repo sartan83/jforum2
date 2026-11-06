@@ -1,5 +1,9 @@
 package net.jforum.boot;
 
+import java.io.IOException;
+import java.util.Locale;
+import java.util.Set;
+
 import jakarta.servlet.MultipartConfigElement;
 
 import net.jforum.ForumSessionListener;
@@ -14,11 +18,15 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.resource.PathResourceResolver;
+import org.springframework.core.io.Resource;
+import org.springframework.util.StringUtils;
 
 /**
  * Former WEB-INF/web.xml: the JForum front controller keeps serving every
  * <code>*.page</code> URL (urlPattern.properties / modulesMapping.properties),
- * while templates assets, images and uploads are served as static resources.
+ * while template assets and images are served as static resources
+ * (attachment thumbnails come from GridFS, see AttachmentThumbnailController).
  */
 @Configuration
 public class JForumWebConfig implements WebMvcConfigurer
@@ -68,10 +76,31 @@ public class JForumWebConfig implements WebMvcConfigurer
 	{
 		String home = this.environment.getHome().toURI().toString();
 
-		registry.addResourceHandler("/templates/**/*.css", "/templates/**/*.js", "/templates/**/*.gif",
-				"/templates/**/*.png", "/templates/**/*.jpg", "/templates/**/*.ico", "/templates/**/*.swf")
-			.addResourceLocations(home + "templates/");
+		registry.addResourceHandler("/templates/**")
+			.addResourceLocations(home + "templates/")
+			.resourceChain(true)
+			.addResolver(new StaticAssetResolver());
 		registry.addResourceHandler("/images/**").addResourceLocations(home + "images/");
-		registry.addResourceHandler("/upload/**").addResourceLocations(home + "upload/");
+	}
+
+	/**
+	 * Only serves the static assets of the template directories (css, js, images),
+	 * never the FreeMarker sources.
+	 */
+	static class StaticAssetResolver extends PathResourceResolver
+	{
+		private static final Set<String> EXTENSIONS = Set.of("css", "js", "gif", "png", "jpg", "jpeg", "ico", "swf");
+
+		@Override
+		protected Resource getResource(String resourcePath, Resource location) throws IOException
+		{
+			String extension = StringUtils.getFilenameExtension(resourcePath);
+
+			if (extension == null || !EXTENSIONS.contains(extension.toLowerCase(Locale.ROOT))) {
+				return null;
+			}
+
+			return super.getResource(resourcePath, location);
+		}
 	}
 }

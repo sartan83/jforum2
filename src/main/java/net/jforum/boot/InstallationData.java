@@ -96,7 +96,7 @@ public class InstallationData
 		int adminGroupId = this.addGroup("Administration", "Admin Users");
 
 		this.addUser(ANONYMOUS_ID, "Anonymous", "nopass", 0, generalGroupId);
-		this.addUser(ADMIN_ID, "Admin", MD5.crypt(this.adminPassword), 1, adminGroupId);
+		this.addUser(ADMIN_ID, "Admin", MD5.crypt(this.adminPassword), 0, adminGroupId);
 
 		for (int i = 0; i < SMILIES.length; i++) {
 			Smilie s = new Smilie();
@@ -232,6 +232,7 @@ public class InstallationData
 		t.setLastPostDate(time);
 		Stores.topic().update(t);
 
+		Stores.user().incrementPosts(userId);
 		Stores.forum().incrementTotalTopics(forumId, 1);
 		Stores.forum().setLastPost(forumId, postId);
 		return topicId;

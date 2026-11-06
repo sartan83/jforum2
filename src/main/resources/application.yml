@@ -314,6 +314,8 @@ jforum:
   "defaultUserGroup": "1"
   "cache.engine.default": "net.jforum.cache.DefaultCacheEngine"
   "cache.engine.implementation": "${cache.engine.default}"
+  # the period in milliseconds the config files are watched for changes (0 disables it)
+  "file.changes.delay": "2000"
   "cacheable.objects": "net.jforum.repository.BBCodeRepository, net.jforum.repository.RankingRepository, net.jforum.repository.SmiliesRepository, net.jforum.repository.ForumRepository, net.jforum.repository.TopicRepository, net.jforum.SessionFacade, net.jforum.repository.PostRepository, net.jforum.repository.Tpl, net.jforum.repository.RolesRepository, net.jforum.repository.SecurityRepository, net.jforum.repository.BanlistRepository"
   # The template to use
   "template.dir": "default"
