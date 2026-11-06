@@ -44,18 +44,14 @@ package net.jforum.util.preferences;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Vector;
 
 import net.jforum.exceptions.ForumException;
 
@@ -88,6 +84,7 @@ public class SystemGlobals implements VariableStore
 	private Map objectProperties = new HashMap();
 	private static List additionalDefaultsList = new ArrayList();
 	private static Properties transientValues = new Properties();
+	private static SettingsPersister settingsPersister;
 
 	private VariableExpander expander = new VariableExpander(this, "${", "}");
 	
@@ -110,9 +107,54 @@ public class SystemGlobals implements VariableStore
 		globals.installation = new Properties();
 		globals.installationConfig = globals.getVariableValue(ConfigKeys.INSTALLATION_CONFIG);
 
-		if (globals.installationConfig != null && new File(globals.installationConfig).exists()) {
-			loadAdditionalDefaults(globals.installationConfig);
+		loadInstallation();
+	}
+
+	/**
+	 * Sets where the installation overrides are loaded from and saved to.
+	 * Must be called before {@link #initGlobals(String, Properties)}.
+	 */
+	public static void setSettingsPersister(SettingsPersister persister)
+	{
+		settingsPersister = persister;
+	}
+
+	public static SettingsPersister getSettingsPersister()
+	{
+		return settingsPersister;
+	}
+
+	private static void loadInstallation()
+	{
+		if (settingsPersister != null) {
+			globals.installation.putAll(settingsPersister.load());
+			globals.expander.clearCache();
 		}
+	}
+
+	/**
+	 * Applies overrides saved by another application instance.
+	 *
+	 * @return the number of keys whose value changed
+	 */
+	public static int mergeInstallation(Properties overrides)
+	{
+		int changed = 0;
+
+		for (String key : overrides.stringPropertyNames()) {
+			String value = overrides.getProperty(key);
+
+			if (!value.equals(globals.installation.getProperty(key))) {
+				globals.installation.put(key, value);
+				changed++;
+			}
+		}
+
+		if (changed > 0) {
+			globals.expander.clearCache();
+		}
+
+		return changed;
 	}
 
 	public static void initGlobals(String appPath, String mainConfigurationFile)
@@ -150,9 +192,7 @@ public class SystemGlobals implements VariableStore
 			loadAdditionalDefaults((String)iter.next());
 		}
 		
-		if (new File(this.installationConfig).exists()) {
-			loadAdditionalDefaults(this.installationConfig);
-		}
+		loadInstallation();
 	}
 	
 	/**
@@ -239,40 +279,19 @@ public class SystemGlobals implements VariableStore
 	}
 
 	/**
-	 * Save installation defaults
+	 * Save installation defaults through the configured {@link SettingsPersister}
+	 * (MongoDB <code>settings</code> collection), so they survive restarts and are shared by every instance.
 	 */
 	public static void saveInstallation()
 	{
-		// We need this temporary "p" because, when
-		// new FileOutputStream() is called, it will 
-		// raise an event to the TimerTask who is listen
-		// for file modifications, which then reloads the
-		// configurations from the filesystem, overwriting
-		// our new keys. 
-		class SortedProperties extends Properties{
-			public synchronized Enumeration keys() {
-				Enumeration keysEnum = super.keys();
-				Vector keyList = new Vector();
-				while(keysEnum.hasMoreElements()){
-					keyList.add(keysEnum.nextElement());
-				}
-				Collections.sort(keyList);
-				return keyList.elements();
-			}
+		if (settingsPersister == null) {
+			logger.warn("No SettingsPersister configured: installation settings are kept in memory only");
+			return;
 		}
 
-		Properties p = new SortedProperties();
+		Properties p = new Properties();
 		p.putAll(globals.installation);
-		
-		try {
-			FileOutputStream out = new FileOutputStream(globals.installationConfig);
-			p.store(out, "Installation specific configuration options");
-			out.close();
-		}
-		catch (IOException e) {
-			throw new ForumException(e);
-		}
-
+		settingsPersister.save(p);
 	}
 
 	/**
