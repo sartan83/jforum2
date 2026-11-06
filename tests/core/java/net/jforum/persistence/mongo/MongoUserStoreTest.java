@@ -438,11 +438,11 @@ class MongoUserStoreTest extends MongoTestSupport
 	void privateMessagesCountUsesNewMessagesOnly()
 	{
 		int id = this.newUser("Alice", "x", "a@example.com");
-		this.mongo.insert(new Document("_id", 1).append("privmsgsType", 1).append("privmsgsToUserid", id),
+		this.mongo.insert(new Document("_id", 1).append("type", 1).append("toUserId", id),
 			MongoUserStore.PRIVMSGS);
-		this.mongo.insert(new Document("_id", 2).append("privmsgsType", 1).append("privmsgsToUserid", id),
+		this.mongo.insert(new Document("_id", 2).append("type", 1).append("toUserId", id),
 			MongoUserStore.PRIVMSGS);
-		this.mongo.insert(new Document("_id", 3).append("privmsgsType", 0).append("privmsgsToUserid", id),
+		this.mongo.insert(new Document("_id", 3).append("type", 0).append("toUserId", id),
 			MongoUserStore.PRIVMSGS);
 
 		assertEquals(2, this.store.selectById(id).getPrivateMessagesCount());

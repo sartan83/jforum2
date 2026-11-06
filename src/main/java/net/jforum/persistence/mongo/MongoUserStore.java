@@ -180,11 +180,11 @@ public class MongoUserStore implements UserStore
 		d.setUserRegdate(new Date());
 		d.setUserActkey(user.getActivationKey());
 		d.setRankId(0);
-		d.setUserActive(0);
+		d.setUserActive(user.isActive() ? 1 : 0);
 		d.setDeleted(0);
 		d.setUserSessionTime(0L);
 		d.setUserSessionPage(0);
-		d.setUserPosts(0);
+		d.setUserPosts(user.getTotalPosts());
 		d.setUserTimezone("");
 		d.setUserLang("");
 		d.setUserDateformat("%d/%M/%Y %H:%i");
@@ -239,8 +239,8 @@ public class MongoUserStore implements UserStore
 		}
 
 		User u = this.toUser(d);
-		u.setPrivateMessagesCount((int)this.mongo.count(new Query(Criteria.where("privmsgsType").is(PRIVMSG_TYPE_NEW)
-			.and("privmsgsToUserid").is(userId)), PRIVMSGS));
+		u.setPrivateMessagesCount((int)this.mongo.count(new Query(Criteria.where("type").is(PRIVMSG_TYPE_NEW)
+			.and("toUserId").is(userId)), PRIVMSGS));
 
 		if (!d.getGroupIds().isEmpty()) {
 			Query q = new Query(Criteria.where("_id").in(d.getGroupIds())).with(Sort.by("_id"));
