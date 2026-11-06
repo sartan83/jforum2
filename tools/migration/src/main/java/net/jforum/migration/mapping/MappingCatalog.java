@@ -27,7 +27,9 @@ public final class MappingCatalog
 		"jforum_forums_watch",
 		"jforum_search_results",
 		"jforum_search_topics",
-		"jforum_search_wordmatch");
+		"jforum_search_wordmatch",
+		// no primary key; MongoMailIntegrationStore looks documents up by forumId
+		"jforum_mail_integration");
 
 	/** Known single-table mappings: table → legacy primary key column. */
 	public static final Map<String, String> PRIMARY_KEYS = new LinkedHashMap<>();

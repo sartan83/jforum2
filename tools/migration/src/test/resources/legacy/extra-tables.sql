@@ -19,3 +19,12 @@ CREATE TABLE jforum_api (
 	api_key VARCHAR(32) NOT NULL,
 	api_validity DATETIME NOT NULL
 );
+CREATE TABLE jforum_mail_integration (
+	forum_id INT NOT NULL,
+	forum_email VARCHAR(100) NOT NULL,
+	pop_username VARCHAR(100) NOT NULL,
+	pop_password VARCHAR(100) NOT NULL,
+	pop_host VARCHAR(100) NOT NULL,
+	pop_port INT DEFAULT 110,
+	pop_ssl TINYINT DEFAULT 0
+);

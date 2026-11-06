@@ -145,3 +145,8 @@ SET IDENTITY_INSERT jforum_api OFF;
 
 INSERT INTO jforum_sessions (session_id, session_user_id, session_start, session_time, session_ip, session_page, session_logged_int)
   VALUES ('5F2C1A9B', 3, '2024-03-05 09:00:00', 900000, '0a000001', 0, 1);
+
+INSERT INTO jforum_mail_integration (forum_id, forum_email, pop_username, pop_password, pop_host, pop_port, pop_ssl)
+  VALUES (2, 'news@example.com', 'news', 'secret2', 'pop.example.com', 110, 0);
+INSERT INTO jforum_mail_integration (forum_id, forum_email, pop_username, pop_password, pop_host, pop_port, pop_ssl)
+  VALUES (1, 'general@example.com', 'general', 'secret1', 'pop.example.com', 995, 1);
