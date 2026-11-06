@@ -2,7 +2,8 @@
 # The "jforum" section holds the functional keys of the former WEB-INF/config/SystemGlobals.properties,
 # with the same names (e.g. jforum."topics.per.page" == SystemGlobals "topics.per.page").
 # Override them as usual (profile yml, --jforum.forum.link=..., JFORUM_HOME, ...).
-# Values set from the admin panel are stored in ${installation.config} and win over these defaults.
+# Values set from the admin panel are stored in the MongoDB "settings" collection and win over these defaults
+# (re-read every jforum-settings.refresh-ms, default 60000, to pick up changes made on other instances).
 spring:
   application:
     name: jforum

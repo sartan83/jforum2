@@ -1,0 +1,52 @@
+# Local stack: MongoDB 8.0 + JForum (+ optional mongo-express).
+#   docker compose up --build                          # forum on http://localhost:8080
+#   docker compose --profile tools up -d mongo-express  # data browser on http://localhost:8081
+# Demo data: SPRING_PROFILES_ACTIVE=demo docker compose up --build
+services:
+  mongo:
+    image: mongo:8.0
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+  app:
+    build:
+      context: .
+      args:
+        MAVEN_MIRROR_URL: ${MAVEN_MIRROR_URL:-}
+    restart: unless-stopped
+    depends_on:
+      mongo:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATA_MONGODB_URI: ${SPRING_DATA_MONGODB_URI:-mongodb://mongo:27017/jforum}
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-}
+      JFORUM_FORUM_LINK: ${JFORUM_FORUM_LINK:-http://localhost:8080/}
+    volumes:
+      - jforum-home:/opt/jforum/home
+
+  mongo-express:
+    image: mongo-express:1.0.2
+    profiles: ["tools"]
+    depends_on:
+      mongo:
+        condition: service_healthy
+    ports:
+      - "8081:8081"
+    environment:
+      ME_CONFIG_MONGODB_URL: mongodb://mongo:27017/
+      ME_CONFIG_BASICAUTH: "false"
+
+volumes:
+  mongo-data:
+  jforum-home:
