@@ -39,7 +39,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class MongoAttachmentStore implements AttachmentStore
 {
-	static final String ATTACH = "attach";
+	static final String ATTACH = "attachments";
 	static final String EXTENSIONS = "extensions";
 	static final String EXTENSION_GROUPS = "extension_groups";
 	static final String QUOTA_LIMIT = "quota_limit";

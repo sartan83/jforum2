@@ -235,8 +235,8 @@ class MongoAttachmentStoreTest extends MongoTestSupport
 	@Test
 	void gridFsStorageStoresReplacesAndDeletesFiles() throws Exception
 	{
-		this.storage.store("2026/1/1/abc_1.txt_", stream("first"), "text/plain", 1);
-		this.storage.store("2026/1/1/abc_1.txt_", stream("second"), "text/plain", 1);
+		this.storage.store("2026/1/1/abc_1.txt_", stream("first"), "text/plain", 1, "abc.txt");
+		this.storage.store("2026/1/1/abc_1.txt_", stream("second"), "text/plain", 1, "abc.txt");
 
 		assertTrue(this.storage.exists("2026/1/1/abc_1.txt_"));
 		assertFalse(this.storage.exists("2026/1/1/abc_1.txt__thumb"));
@@ -245,12 +245,41 @@ class MongoAttachmentStoreTest extends MongoTestSupport
 			assertEquals("second", new String(in.readAllBytes(), StandardCharsets.UTF_8));
 		}
 
+		Document file = this.mongo.getCollection(AttachmentFileStorage.BUCKET + ".files")
+			.find(new Document("metadata.physicalFilename", "2026/1/1/abc_1.txt_")).first();
 		assertEquals(1, this.mongo.getCollection(AttachmentFileStorage.BUCKET + ".files")
-			.countDocuments(new Document("filename", "2026/1/1/abc_1.txt_")));
+			.countDocuments(new Document("metadata.physicalFilename", "2026/1/1/abc_1.txt_")));
+		assertEquals("abc.txt", file.getString("filename"));
+		assertEquals(1, ((Document)file.get("metadata")).get("attachId"));
+		assertEquals(false, ((Document)file.get("metadata")).get("thumb"));
 
 		this.storage.delete("2026/1/1/abc_1.txt_");
 		assertFalse(this.storage.exists("2026/1/1/abc_1.txt_"));
 		assertNull(this.storage.open("2026/1/1/abc_1.txt_"));
+	}
+
+	@Test
+	void filesImportedByTheMigrationToolAreFound() throws Exception
+	{
+		// tools/migration layout: bucket fs, filename = real name, metadata.physicalFilename / thumb
+		org.springframework.data.mongodb.gridfs.GridFsTemplate fs = new org.springframework.data.mongodb.gridfs.GridFsTemplate(
+			this.mongo.getMongoDatabaseFactory(), this.mongo.getConverter());
+		fs.store(stream("original"), "photo.png", new Document("attachId", 5)
+			.append("physicalFilename", "2007/3/1/xyz_2.png_").append("realFilename", "photo.png").append("thumb", false));
+		fs.store(stream("thumb"), "photo.png_thumb", new Document("attachId", 5)
+			.append("physicalFilename", "2007/3/1/xyz_2.png_").append("realFilename", "photo.png").append("thumb", true));
+
+		try (InputStream in = this.storage.openStream("2007/3/1/xyz_2.png_")) {
+			assertEquals("original", new String(in.readAllBytes(), StandardCharsets.UTF_8));
+		}
+
+		try (InputStream in = this.storage.openStream("2007/3/1/xyz_2.png__thumb")) {
+			assertEquals("thumb", new String(in.readAllBytes(), StandardCharsets.UTF_8));
+		}
+
+		this.storage.delete("2007/3/1/xyz_2.png__thumb");
+		assertFalse(this.storage.exists("2007/3/1/xyz_2.png__thumb"));
+		assertTrue(this.storage.exists("2007/3/1/xyz_2.png_"));
 	}
 
 	private Object postField(int postId, String field)

@@ -12,18 +12,19 @@ import org.springframework.data.mongodb.gridfs.GridFsResource;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Component;
 
-import com.mongodb.client.gridfs.model.GridFSFile;
-
 /**
- * Attachment contents (and their thumbnails) stored in the GridFS bucket <code>attachments</code>,
- * replacing the <code>attachments.store.dir</code> directory. Each file is named after the
- * legacy <code>physical_filename</code>, thumbnails get the legacy <code>_thumb</code> suffix.
+ * Attachment contents (and their thumbnails) stored in GridFS, replacing the
+ * <code>attachments.store.dir</code> directory. Same layout as the migration tool
+ * (<code>tools/migration</code>): default bucket <code>fs</code>, file name = real file name,
+ * <code>metadata: {attachId, physicalFilename, realFilename, mimetype, thumb}</code>.
+ * Files are looked up by <code>metadata.physicalFilename</code> + <code>metadata.thumb</code>;
+ * callers address a thumbnail with the legacy name <code>physicalFilename + "_thumb"</code>.
  * The static accessor serves the legacy (non Spring managed) action classes.
  */
 @Component
 public class AttachmentFileStorage
 {
-	public static final String BUCKET = "attachments";
+	public static final String BUCKET = "fs";
 	public static final String THUMB_SUFFIX = "_thumb";
 
 	private static AttachmentFileStorage instance;
@@ -45,44 +46,73 @@ public class AttachmentFileStorage
 		return instance;
 	}
 
-	public void store(String filename, InputStream content, String contentType, int attachId)
+	/**
+	 * @param name the physical file name, or the physical file name + <code>_thumb</code> for a thumbnail
+	 */
+	public void store(String name, InputStream content, String contentType, int attachId, String realFilename)
 	{
-		this.delete(filename);
-		this.gridFs.store(content, filename, contentType, new Document("attachId", attachId));
+		this.delete(name);
+
+		boolean thumb = isThumb(name);
+		String physical = physical(name);
+		String filename = realFilename != null ? realFilename : physical;
+
+		Document metadata = new Document("attachId", attachId)
+			.append("physicalFilename", physical)
+			.append("realFilename", realFilename)
+			.append("mimetype", contentType)
+			.append("thumb", thumb);
+
+		this.gridFs.store(content, thumb ? filename + THUMB_SUFFIX : filename, contentType, metadata);
 	}
 
-	public boolean exists(String filename)
+	public boolean exists(String name)
 	{
-		return this.find(filename) != null;
+		return name != null && this.gridFs.findOne(byName(name)) != null;
 	}
 
 	/**
-	 * @return the file, or <code>null</code> if there is no file with this name
+	 * @return the file, or <code>null</code> if there is no such file
 	 */
-	public GridFsResource open(String filename)
+	public GridFsResource open(String name)
 	{
-		GridFSFile file = this.find(filename);
+		if (name == null) {
+			return null;
+		}
+
+		var file = this.gridFs.findOne(byName(name));
 		return file == null ? null : this.gridFs.getResource(file);
 	}
 
-	public InputStream openStream(String filename) throws IOException
+	public InputStream openStream(String name) throws IOException
 	{
-		GridFsResource resource = this.open(filename);
+		GridFsResource resource = this.open(name);
 		return resource == null ? null : resource.getInputStream();
 	}
 
-	public void delete(String filename)
+	public void delete(String name)
 	{
-		this.gridFs.delete(byName(filename));
+		if (name != null) {
+			this.gridFs.delete(byName(name));
+		}
 	}
 
-	private GridFSFile find(String filename)
+	private static boolean isThumb(String name)
 	{
-		return filename == null ? null : this.gridFs.findOne(byName(filename));
+		return name.endsWith(THUMB_SUFFIX);
 	}
 
-	private static Query byName(String filename)
+	private static String physical(String name)
 	{
-		return new Query(Criteria.where("filename").is(filename));
+		return isThumb(name) ? name.substring(0, name.length() - THUMB_SUFFIX.length()) : name;
+	}
+
+	private static Query byName(String name)
+	{
+		return new Query(new Criteria().andOperator(
+			Criteria.where("metadata.physicalFilename").is(physical(name)),
+			isThumb(name)
+				? Criteria.where("metadata.thumb").is(true)
+				: Criteria.where("metadata.thumb").ne(true)));
 	}
 }

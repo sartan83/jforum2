@@ -7,11 +7,11 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
- * <code>jforum_attach</code> merged with its 1:1 <code>jforum_attach_desc</code> row.
- * The file contents live in the GridFS bucket <code>attachments</code>, under
- * <code>physicalFilename</code> (and <code>physicalFilename + "_thumb"</code> for thumbnails).
+ * <code>jforum_attach</code> merged with its 1:1 <code>jforum_attach_desc</code> row (collection name
+ * as written by the migration tool, which also keeps <code>attachDescId</code>).
+ * The file contents live in GridFS, see <code>AttachmentFileStorage</code>.
  */
-@Document(collection = "attach")
+@Document(collection = "attachments")
 public class AttachmentDocument
 {
 	@Id

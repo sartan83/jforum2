@@ -14,38 +14,50 @@ import org.springframework.stereotype.Component;
 @Component
 public class MongoMailIntegrationStore implements MailIntegrationStore
 {
-	private final MailIntegrationDocumentRepository integrations;
+	static final String COLLECTION = "mail_integration";
 
-	public MongoMailIntegrationStore(MailIntegrationDocumentRepository integrations)
+	private final MailIntegrationDocumentRepository integrations;
+	private final SequenceGenerator sequences;
+
+	public MongoMailIntegrationStore(MailIntegrationDocumentRepository integrations, SequenceGenerator sequences)
 	{
 		this.integrations = integrations;
+		this.sequences = sequences;
 	}
 
 	public void add(MailIntegration integration)
 	{
-		this.integrations.save(toDocument(integration));
+		MailIntegrationDocument d = toDocument(integration);
+		d.id = this.sequences.next(COLLECTION);
+		this.integrations.insert(d);
 	}
 
+	/** Updates the integration of <code>integration.getForumId()</code>, if any. */
 	public void update(MailIntegration integration)
 	{
-		this.integrations.save(toDocument(integration));
+		this.integrations.findFirstByForumId(integration.getForumId()).ifPresent(existing -> {
+			MailIntegrationDocument d = toDocument(integration);
+			d.id = existing.id;
+			this.integrations.save(d);
+		});
 	}
 
 	public void delete(int forumId)
 	{
-		this.integrations.deleteById(forumId);
+		this.integrations.deleteByForumId(forumId);
 	}
 
 	public MailIntegration find(int forumId)
 	{
-		return this.integrations.findById(forumId).map(MongoMailIntegrationStore::toEntity).orElse(null);
+		return this.integrations.findFirstByForumId(forumId).map(MongoMailIntegrationStore::toEntity).orElse(null);
 	}
 
+	/** Ordered by forum id. */
 	public List findAll()
 	{
 		List<MailIntegration> l = new ArrayList<>();
 
-		for (MailIntegrationDocument d : this.integrations.findAll(Sort.by("_id"))) {
+		for (MailIntegrationDocument d : this.integrations.findAll(Sort.by("forumId"))) {
 			l.add(toEntity(d));
 		}
 

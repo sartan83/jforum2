@@ -29,8 +29,8 @@ class AttachmentThumbnailControllerTest extends MongoTestSupport
 	void servesThumbnailsFromGridFsButNotTheOriginalFiles() throws Exception
 	{
 		byte[] thumb = { 1, 2, 3 };
-		this.storage.store("2026/11/6/abc_2.png_", new ByteArrayInputStream(new byte[] { 9 }), "image/png", 1);
-		this.storage.store("2026/11/6/abc_2.png__thumb", new ByteArrayInputStream(thumb), "image/jpeg", 1);
+		this.storage.store("2026/11/6/abc_2.png_", new ByteArrayInputStream(new byte[] { 9 }), "image/png", 1, "abc.png");
+		this.storage.store("2026/11/6/abc_2.png__thumb", new ByteArrayInputStream(thumb), "image/jpeg", 1, "abc.png");
 
 		ResponseEntity<Resource> ok = this.controller.thumbnail(request("/forum", "/forum/upload/2026/11/6/abc_2.png__thumb"));
 		assertEquals(HttpStatus.OK, ok.getStatusCode());

@@ -247,14 +247,15 @@ public class AttachmentCommon
 			this.am.addAttachment(a);
 			
 			try (InputStream in = uploadUtils.getInputStream()) {
-				AttachmentFileStorage.get().store(path, in, a.getInfo().getMimetype(), a.getId());
+				AttachmentFileStorage.get().store(path, in, a.getInfo().getMimetype(), a.getId(),
+					a.getInfo().getRealFilename());
 			}
 			catch (IOException e) {
 				throw new ForumException(e);
 			}
 			
 			if (this.shouldCreateThumb(a)) {
-				this.createSaveThumb(path, a.getId());
+				this.createSaveThumb(path, a);
 			}
 		}
 	}
@@ -267,7 +268,7 @@ public class AttachmentCommon
 				|| "gif".equals(extension) || "png".equals(extension));
 	}
 	
-	private void createSaveThumb(String path, int attachId) {
+	private void createSaveThumb(String path, Attachment a) {
 		AttachmentFileStorage storage = AttachmentFileStorage.get();
 		
 		try (InputStream in = storage.openStream(path)) {
@@ -285,7 +286,7 @@ public class AttachmentCommon
 			ImageIO.write(image, "jpg", thumb);
 			
 			storage.store(path + AttachmentFileStorage.THUMB_SUFFIX, 
-				new ByteArrayInputStream(thumb.toByteArray()), "image/jpeg", attachId);
+				new ByteArrayInputStream(thumb.toByteArray()), "image/jpeg", a.getId(), a.getInfo().getRealFilename());
 		}
 		catch (Exception e) {
 			logger.error(e.toString(), e);
