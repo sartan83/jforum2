@@ -27,6 +27,7 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 
+import net.jforum.migration.mapping.PollsMigrator;
 import net.jforum.migration.report.ParityEntry;
 import net.jforum.migration.report.ParityReport;
 import net.jforum.migration.report.SequenceEntry;
@@ -122,6 +123,23 @@ class MigrationIntegrationTest
 		assertThat(post.getDate("postTime")).isEqualTo(Date.from(Instant.parse("2024-03-02T18:45:10Z")));
 		assertThat(post.getInteger("postEditCount")).isEqualTo(2);
 		assertThat(post).doesNotContainKeys("postId", "postText", "postSubject");
+		// T1 reads the flags as int 0/1
+		for (String flag : List.of("enableBbcode", "enableHtml", "enableSmilies", "enableSig", "status", "attach", "needModerate")) {
+			assertThat(post.get(flag)).as(flag).isInstanceOf(Integer.class);
+		}
+		assertThat(post.getInteger("forumId")).isNotNull();
+
+		Document topic = find("topics", 10);
+		assertThat(topic.getString("topicTitle")).isNotBlank();
+		assertThat(topic.getInteger("topicVoteId")).isEqualTo(4);
+		assertThat(topic.get("moderated")).isInstanceOf(Integer.class);
+		assertThat(topic).doesNotContainKey("topicId");
+		Document forum = find("forums", topic.getInteger("forumId"));
+		assertThat(forum.getString("forumName")).isNotBlank();
+		assertThat(find("categories", forum.getInteger("categoriesId")).getString("title")).isNotBlank();
+		assertThat(db.getCollection("config").find(Filters.eq("configName", "most.users.ever.online")).first())
+			.containsEntry("configValue", "12");
+		assertThat(db.getCollection("topics_watch").find(Filters.eq("userId", 4)).first()).containsEntry("isRead", 0);
 
 		Document first = find("posts", 1);
 		assertThat(first.getString("subject")).isNotBlank();
@@ -165,6 +183,10 @@ class MigrationIntegrationTest
 		assertThat(options).extracting(o -> o.getString("voteOptionText")).containsExactly("Java", "Kotlin", "Scala");
 		assertThat(options).extracting(o -> o.getInteger("voteResult")).containsExactly(2, 0, 1);
 		assertThat(poll.getList("voters", Document.class)).extracting(v -> v.getInteger("voteUserId")).containsExactly(3, 4);
+		// vote_start is bigint (epoch seconds) in the SQL Server DDL, a date in PollDocument
+		assertThat(poll.getDate("voteStart")).isEqualTo(Date.from(Instant.parse("2024-03-01T12:00:00Z")));
+		assertThat(poll.getInteger("voteLength")).isEqualTo(7);
+		assertThat(PollsMigrator.voteStart(1709294400000L)).isEqualTo(Date.from(Instant.parse("2024-03-01T12:00:00Z")));
 	}
 
 	@Test
@@ -190,6 +212,10 @@ class MigrationIntegrationTest
 	void attachmentsKeepMetadataAndFilesGoToGridFs()
 	{
 		Document attach = find("attachments", 30);
+		assertThat(attach).containsEntry("postId", 11).containsEntry("userId", 3).containsEntry("downloadCount", 5)
+			.containsEntry("filesize", 12).containsEntry("thumb", 1).containsEntry("extensionId", 1)
+			.containsEntry("description", "Architecture diagram").doesNotContainKey("privmsgsId");
+		assertThat(find("attachments", 31)).containsEntry("privmsgsId", 20).doesNotContainKey("postId");
 		assertThat(attach.getInteger("postId")).isEqualTo(11);
 		assertThat(attach.getString("realFilename")).isEqualTo("diagram.png");
 		assertThat(attach.getString("physicalFilename")).isEqualTo("2024/3/1_abc123.png");
@@ -208,7 +234,7 @@ class MigrationIntegrationTest
 	void otherTablesKeepTheirIdsAndLinkTablesGetGeneratedIds()
 	{
 		assertThat(find("forums", 8).getInteger("categoriesId")).isEqualTo(5);
-		assertThat(find("topics", 10).getInteger("topicVoteId")).isEqualTo(1);
+		assertThat(find("topics", 10).getInteger("topicVoteId")).isEqualTo(4);
 		assertThat(find("categories", 5).getString("title")).isEqualTo("Second category");
 		Document banner = find("banner", 1);
 		assertThat(banner).containsEntry("name", "Sponsor").containsEntry("placement", 2).containsEntry("weight", 60)
@@ -221,6 +247,12 @@ class MigrationIntegrationTest
 		assertThat(find("sessions", 3)).containsEntry("sessionId", "5F2C1A9B").containsEntry("sessionTime", 900000)
 			.containsEntry("sessionLoggedInt", 1).doesNotContainKey("sessionUserId");
 		assertThat(find("moderation_log", 1).getString("logOriginalMessage")).isEqualTo("I voted <b>Java</b>!!!");
+		assertThat(find("moderation_log", 1)).containsEntry("userId", 2).containsEntry("logType", 1).containsEntry("postId", 12)
+			.containsEntry("topicId", 10).containsEntry("postUserId", 4).containsEntry("logDescription", "Edited for language")
+			.containsEntry("logDate", Date.from(Instant.parse("2024-03-02T19:00:00Z")));
+		assertThat(find("mail_integration", 1)).containsEntry("forumId", 1).containsEntry("popPort", 995).containsEntry("popSsl", 1)
+			.containsEntry("forumEmail", "general@example.com").containsEntry("popHost", "pop.example.com");
+		assertThat(find("mail_integration", 2)).containsEntry("forumId", 2).containsEntry("popUsername", "news");
 		assertThat(db.getCollection("smilies").countDocuments()).isEqualTo(LegacySqlServer.count("SELECT COUNT(*) FROM jforum_smilies"));
 		assertThat(db.getCollection("topics_watch").find().map(d -> d.get("_id")).into(new java.util.ArrayList<>()))
 			.containsExactlyInAnyOrder(1, 2);

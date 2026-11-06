@@ -44,7 +44,7 @@ SET IDENTITY_INSERT jforum_forums OFF;
 SET IDENTITY_INSERT jforum_topics ON;
 INSERT INTO jforum_topics (topic_id, forum_id, topic_title, user_id, topic_time, topic_views, topic_replies, topic_status, topic_vote_id,
   topic_type, topic_first_post_id, topic_last_post_id, moderated)
-  VALUES (10, 8, 'What do you prefer?', 3, '2024-03-01 12:00:00', 42, 1, 1, 1, 2, 11, 12, 0);
+  VALUES (10, 8, 'What do you prefer?', 3, '2024-03-01 12:00:00', 42, 1, 1, 4, 2, 11, 12, 0);
 SET IDENTITY_INSERT jforum_topics OFF;
 
 SET IDENTITY_INSERT jforum_posts ON;
@@ -145,3 +145,8 @@ SET IDENTITY_INSERT jforum_api OFF;
 
 INSERT INTO jforum_sessions (session_id, session_user_id, session_start, session_time, session_ip, session_page, session_logged_int)
   VALUES ('5F2C1A9B', 3, '2024-03-05 09:00:00', 900000, '0a000001', 0, 1);
+
+INSERT INTO jforum_mail_integration (forum_id, forum_email, pop_username, pop_password, pop_host, pop_port, pop_ssl)
+  VALUES (2, 'news@example.com', 'news', 'secret2', 'pop.example.com', 110, 0);
+INSERT INTO jforum_mail_integration (forum_id, forum_email, pop_username, pop_password, pop_host, pop_port, pop_ssl)
+  VALUES (1, 'general@example.com', 'general', 'secret1', 'pop.example.com', 995, 1);
