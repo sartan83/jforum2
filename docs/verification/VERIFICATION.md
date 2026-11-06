@@ -151,16 +151,14 @@ The earlier HTTP/headless results above are preserved and are separate from thes
 
 | Created topic with rendered BBCode | Giulia reads Mario's PM |
 | --- | --- |
-| ![Created topic](https://devin-gtm.devinenterprise.com/attachments/53f9bfed-cfd6-4550-92d4-b08b89baf9a7/browser-04-created-topic.png) | ![PM received](https://devin-gtm.devinenterprise.com/attachments/694fc9d2-743c-4914-99da-6ba7e74bea6b/browser-07-pm-read.png) |
+| ![Created topic](screenshots/browser-04-created-topic.png) | ![PM received](screenshots/browser-07-pm-read.png) |
 
 | 🔴 Before: locked topic | 🟢 After: unlocked topic |
 | --- | --- |
-| ![Locked](https://devin-gtm.devinenterprise.com/attachments/c3215220-84d4-42a5-b121-8df8809b0441/browser-14-locked.png) | ![Unlocked](https://devin-gtm.devinenterprise.com/attachments/d8368654-f5d8-4abb-b2e0-8e270c302f99/browser-15-unlocked.png) |
+| ![Locked](screenshots/browser-14-locked.png) | ![Unlocked](screenshots/browser-15-unlocked.png) |
 
 | Anonymous index after creation | Open item: real-mouse admin frame targeting |
 | --- | --- |
-| ![Public forum](https://devin-gtm.devinenterprise.com/attachments/15702047-dcbf-4457-b0b8-68b659675420/browser-17-public-index.png) | ![Frame issue](https://devin-gtm.devinenterprise.com/attachments/072b3ac2-d29d-4141-8375-279710ecffe3/browser-13-frame-issue.png) |
+| ![Public forum](screenshots/browser-17-public-index.png) | ![Frame issue](screenshots/browser-13-frame-issue.png) |
 
-Recording artifact on the test machine:
-`/home/ubuntu/screencasts/jforum-browser-e2e/jforum-browser-e2e-edited.mp4`.
-The recording includes frame troubleshooting and is longer than the primary functional journey.
+The screen recording of this run is attached to PR #16 (it is not committed to the repository).
