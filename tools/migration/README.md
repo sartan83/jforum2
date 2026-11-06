@@ -101,12 +101,12 @@ A SQL `NULL` leaves the field out of the document.
 | `jforum_extensions` | `extensions` | `extension_id` | |
 | `jforum_attach_quota` | `attach_quota` | `attach_quota_id` | |
 | `jforum_banlist` | `banlist` | `banlist_id` | |
-| `jforum_search_words` | `search_words` | `word_id` | |
-| `jforum_moderation_log` | `moderation_log` | `log_id` | |
+| `jforum_search_words` | `search_words` | `word_id` | Not read by the application (see [Search](#search)) |
+| `jforum_moderation_log` | `moderation_log` | `log_id` | as `ModerationLogDocument` (`userId`, `logDescription`, `logOriginalMessage`, `logDate`, `logType`, `postId`, `topicId`, `postUserId`) |
 | `jforum_banner` (if present) | `banner` | `banner_id` | fields without the `banner_` prefix as in `BannerDocument` (`name`, `placement`, `description`, `clicks`, `views`, `url`, `weight`, `active` as boolean, `comment`, `type`, `width`, `height`) |
 | `jforum_api` (if present) | `api` | `api_id` | |
 | `jforum_sessions` | `sessions` | `session_user_id` | One session per user, as `SessionDocument` (`_id` = user id) |
-| `jforum_topics_watch`, `jforum_forums_watch`, `jforum_search_results`, `jforum_search_topics`, `jforum_search_wordmatch` | same name without `jforum_` | generated `1..n` | Link/cache tables without a single-column key. Every column is kept as a field. The SQL Server DDL declares `jforum_forums_watch.forum_id` as an IDENTITY primary key, which is a schema bug, so that column is kept as a plain `forumId` field. |
+| `jforum_topics_watch`, `jforum_forums_watch`, `jforum_search_results`, `jforum_search_topics`, `jforum_search_wordmatch`, `jforum_mail_integration` | same name without `jforum_` | generated `1..n` | Link/cache tables without a single-column key. Every column is kept as a field. The SQL Server DDL declares `jforum_forums_watch.forum_id` as an IDENTITY primary key, which is a schema bug, so that column is kept as a plain `forumId` field. `jforum_mail_integration` has no primary key either: `MongoMailIntegrationStore` looks it up by `forumId` (unique index) and allocates new `_id`s from `sequences`. |
 | any other `jforum_*` table | name without `jforum_` | its single-column integer PK, else generated `1..n` | |
 
 A `sequences` document is written for every target collection (`value` = highest numeric `_id`, `0` for an
@@ -115,6 +115,22 @@ empty collection).
 Tables that the tool knows but cannot find in the source are listed under "Tables not found in the source" in
 the report. They are not counted as a mismatch. For example, `jforum_banner` and `jforum_api` are not created by
 the shipped `sqlserver_db_struct.sql`.
+
+### Attachments
+
+`attachments` documents are read by `MongoAttachmentStore` (`AttachmentDocument`). GridFS files follow the layout
+of `AttachmentFileStorage`: bucket `fs`, file name = `real_filename` (`+ "_thumb"` for a thumbnail), looked up by
+`metadata.physicalFilename` + `metadata.thumb`. `extensions`, `extension_groups`, `quota_limit` and `attach_quota`
+keep the legacy column names (`ExtensionDocument`, `ExtensionGroupDocument`, `QuotaLimitDocument`,
+`AttachQuotaDocument`).
+
+### Search
+
+The application searches with a MongoDB text index on `posts.subject` + `posts.text` (`MongoSearchManager`, index
+`posts_text_search`, created at startup when `posts` has no text index). The legacy search tables
+(`jforum_search_words`, `jforum_search_wordmatch`, `jforum_search_results`, `jforum_search_topics`) are still copied
+to their own collections for parity, but the application does not read them. `--drop-target` drops `posts` and its
+text index, so start (or restart) the application after the import to recreate it.
 
 ## Verifying the parity report
 

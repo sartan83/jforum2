@@ -190,6 +190,10 @@ class MigrationIntegrationTest
 	void attachmentsKeepMetadataAndFilesGoToGridFs()
 	{
 		Document attach = find("attachments", 30);
+		assertThat(attach).containsEntry("postId", 11).containsEntry("userId", 3).containsEntry("downloadCount", 5)
+			.containsEntry("filesize", 12).containsEntry("thumb", 1).containsEntry("extensionId", 1)
+			.containsEntry("description", "Architecture diagram").doesNotContainKey("privmsgsId");
+		assertThat(find("attachments", 31)).containsEntry("privmsgsId", 20).doesNotContainKey("postId");
 		assertThat(attach.getInteger("postId")).isEqualTo(11);
 		assertThat(attach.getString("realFilename")).isEqualTo("diagram.png");
 		assertThat(attach.getString("physicalFilename")).isEqualTo("2024/3/1_abc123.png");
@@ -221,6 +225,12 @@ class MigrationIntegrationTest
 		assertThat(find("sessions", 3)).containsEntry("sessionId", "5F2C1A9B").containsEntry("sessionTime", 900000)
 			.containsEntry("sessionLoggedInt", 1).doesNotContainKey("sessionUserId");
 		assertThat(find("moderation_log", 1).getString("logOriginalMessage")).isEqualTo("I voted <b>Java</b>!!!");
+		assertThat(find("moderation_log", 1)).containsEntry("userId", 2).containsEntry("logType", 1).containsEntry("postId", 12)
+			.containsEntry("topicId", 10).containsEntry("postUserId", 4).containsEntry("logDescription", "Edited for language")
+			.containsEntry("logDate", Date.from(Instant.parse("2024-03-02T19:00:00Z")));
+		assertThat(find("mail_integration", 1)).containsEntry("forumId", 1).containsEntry("popPort", 995).containsEntry("popSsl", 1)
+			.containsEntry("forumEmail", "general@example.com").containsEntry("popHost", "pop.example.com");
+		assertThat(find("mail_integration", 2)).containsEntry("forumId", 2).containsEntry("popUsername", "news");
 		assertThat(db.getCollection("smilies").countDocuments()).isEqualTo(LegacySqlServer.count("SELECT COUNT(*) FROM jforum_smilies"));
 		assertThat(db.getCollection("topics_watch").find().map(d -> d.get("_id")).into(new java.util.ArrayList<>()))
 			.containsExactlyInAnyOrder(1, 2);
