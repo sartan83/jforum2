@@ -1,0 +1,603 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="-1" />
+<style type="text/css">@import url( /templates/default/styles/style.css?1793962431913 );</style>
+<style type="text/css">@import url( /templates/default/styles/en_US.css?1793962431913 );</style>
+
+
+<title>New Topic</title>
+
+</head>
+<body class="en_US">
+
+<!--
+Original theme from phpBB (http://www.phpbb.com) subSilver
+Created by subBlue design
+http://www.subBlue.com
+
+Modifications by JForum Team
+-->
+
+<table width="100%" border="0">
+	<tr>
+		<td>
+			<table cellspacing="0" cellpadding="0" width="100%" border="0">
+				<tr>
+					<td>
+						&nbsp;
+						<!--
+						<a href="http://localhost:8080"><img src="/templates/default/images/logo.jpg"  vspace="1" border="0" alt="[Logo]" /></a>
+						-->
+					</td>
+					 
+					<td width="100%" align="center" valign="middle">
+						<span class="boardtitle">My Forum - your board description</span>
+						<table cellspacing="0" cellpadding="2" border="0">
+							<tr>
+								<td valign="top" nowrap="nowrap" align="center">&nbsp;
+									<img src="/templates/default/images/icon_mini_search.gif" alt="[Search]"/>
+									<span class="mainmenu"><a id="search" class="mainmenu" href="/search/filters.page"><b>Search</b></a> &nbsp;
+									
+									<img src="/templates/default/images/icon_mini_recentTopics.gif" alt="[Recent Topics]" />
+									<a id="latest" class="mainmenu" href="/recentTopics/list.page">Recent Topics</a> &nbsp;
+									<img src="/templates/default/images/icon_mini_recentTopics.gif" alt="[Hottest Topics]" />
+									<a id="hottest" class="mainmenu" href="/hottestTopics/list.page">Hottest Topics</a> &nbsp;
+									<img src="/templates/default/images/icon_mini_members.gif" alt="[Members]" />&nbsp;
+									<a id="latest2" class="mainmenu" href="/user/list.page">Member Listing</a> &nbsp;
+									<span class="mainmenu"> <img src="/templates/default/images/icon_mini_groups.gif" alt="[Groups]" />&nbsp;<a id="backtosite" class="mainmenu" href="http://localhost:8080">Back to home page</a>&nbsp;
+									
+									<br>
+
+										<img src="/templates/default/images/icon_mini_members.gif" alt="[Moderation Log]" />
+										<a id="moderationlog" class="mainmenu" href="/moderation/showActivityLog.page">Moderation Log</a> &nbsp;
+
+	
+										<a id="register" class="mainmenu" href="/user/insert.page"><img src="/templates/default/images/icon_mini_register.gif" border="0" alt="[Register]" /> Register</a>&nbsp;/&nbsp;</span>
+										<a id="login" class="mainmenu" href="/user/login.page"><img src="/templates/default/images/icon_mini_login.gif" border="0" alt="[Login]" /> Login</a>&nbsp; </span>
+
+									
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	<tr>
+		<td>
+
+
+<script type="text/javascript">
+var CONTEXTPATH = "";
+var SERVLET_EXTENSION  = ".page";
+</script>
+
+<style type="text/css">@import url( /templates/default/styles/tabs.css?1793962431913 );</style>
+<style type="text/css">@import url( /templates/default/styles/SyntaxHighlighter.css?1793962431913 );</style>
+
+<script type="text/javascript" src="/templates/default/js/jquery.js?1793962431913"></script>
+<script type="text/javascript" src="/templates/default/js/post.js?1793962431913"></script>
+
+<script type="text/javascript">
+// Helpline messages
+b_help = "Bold Text: [b]Text[/b]  (alt+b)";
+i_help = "Italic Text: [i]Text[/i]  (alt+i)";
+u_help = "Underline Text: [u]Text[/u]  (alt+u)";
+q_help = "Quote: [quote]Text[/quote]  (alt+q)";
+c_help = "Code: [code]Code[/code]  (alt+c)";
+l_help = "List: [list]Text[/list] (alt+l)";
+p_help = "Insert Image: [img]http://wwww.xxxx.com/img.ext[/img]  (alt+p)";
+w_help = "Insert URL: [url]http://url[/url] / [url=http://url]URL Description[/url]  (alt+w)";
+a_help = "Close all bbcode marks";
+s_help = "Color: [color=red]Text[/color]  Tip: can also use color=#FF0000";
+f_help = "Font: [size=x-small]Small Text[/size]";
+g_help = "Google: [google]A search phrase[/google]";
+y_help = "Youtube: [youtube]Youtube video URL[/youtube]";
+k_help = "Flash: [flash]Flash movie URL[/flash]";
+v_help = "WMV: [wmv]WMV video URL[/wmv]";
+function showEmail(beforeAt, afterAt)
+{
+	return beforeAt + "@" + afterAt;
+}
+
+var starOn = new Image();
+starOn.src = "/templates/default/images/star_on.gif";
+
+var starOff = new Image();
+starOff.src = "/templates/default/images/star_off.gif";
+
+function writeStars(q, postId)
+{
+	for (var i = 0; i < 5; i++) {
+		var name = "star" + postId + "_" + i;
+		document.write("<img name='" + name + "' alt='*' />");
+		document.images[name].src = q > i ? starOn.src : starOff.src;
+	}
+}
+
+function addBookmark(relationType, relationId)
+{
+	var w = window.open('/bookmarks/insert/' + relationType + '/' + relationId + '.page', 'bookmark_add', 'width=700, height=200, scrollbars=auto, resizable=true');
+	w.focus();
+}
+var panelOpen = false;
+var total = 0;
+var ignoreStart = false;
+var maxAttachments = 3;
+var counter = 0;
+
+	var template = "<div id='attach_#counter#'><table width='100%' class='gensmall'><tr><td>Filename</td>";
+	template += "<td><input type='file' size='50' name='file_#counter#'></td></tr>";
+	template += "<tr><td>Description</td>";
+	template += "<td><input type='text' name='comment_#counter#' size='50'>";
+	template += "&nbsp;&nbsp;<a href='javascript:removeAttach(#counter#)' class='gensmall'>[Remove]</a></td></tr>";
+	template += "</table><div style='border-top: 1px dashed #000;'>&nbsp;</div></div>";
+
+	function addAttachmentFields()
+	{
+		if (counter < maxAttachments) {
+			var s = template.replace(/#counter#/g, total);
+			$("#attachmentFields").append(s);
+			$("#total_files").val(++total);
+
+			counter++;
+
+			defineAttachmentButtonStatus();
+		}
+	}
+
+	function removeAttach(index)
+	{
+		$("#attach_" + index).empty();
+		counter--;
+		defineAttachmentButtonStatus();
+	}
+
+	function defineAttachmentButtonStatus()
+	{
+		var disabled = !(counter < maxAttachments);
+		document.post.add_attach.disabled = disabled;
+		document.post.add_attach.style.color = disabled ? "#cccccc" : "#000000";
+	}
+
+</script>
+
+<script type="text/javascript">
+<!--
+function newCaptcha()
+{
+	document.getElementById("captcha_img").src = "/jforum.page?module=captcha&action=generate&timestamp=" + new Date().getTime();
+}
+
+function validatePostForm(f)
+{
+	if (f.subject.value == "") {
+		alert("Subject empty, please enter a subject");
+		f.subject.focus();
+		
+		return false;
+	}
+	
+	if (f.message.value.replace(/^\s*|\s*$/g, "").length == 0) {
+		alert("Empty message, please enter a message or quit.");
+		f.message.focus();
+		
+		return false;
+	}
+
+
+	
+	$("#icon_saving").css("display", "inline");
+	$("#btnPreview").attr("disabled", "disabled");
+	$("#btnSubmit").attr("disabled", "disabled").val("Saving...");
+	
+	return true;
+}
+
+function openFindUserWindow()
+{
+	var w = window.open("/pm/findUser.page", "_findUser", "height=250,resizable=yes,width=400");
+	w.focus();
+}
+
+function smiliePopup()
+{
+	var w = window.open("/posts/listSmilies.page", "smilies", "width=300, height=300, toolbars=no, scrollbars=yes");
+	w.focus();
+}
+
+-->
+</script>
+
+
+
+
+
+
+<form action="/jforum.page" method="post" enctype="multipart/form-data" name="post" id="post" onsubmit="return validatePostForm(this)">
+<input type="hidden" name="action" value="insertSave" />
+<input type="hidden" name="module" value="posts" />
+<input type="hidden" name="preview" value="0"/>
+<input type="hidden" name="forum_id" value="2" />
+<input type="hidden" name="start" value="" />
+
+
+
+<table cellspacing="0" cellpadding="10" width="100%" align="center" border="0">
+	<tr>
+		<td class="bodyline">
+			
+			<!-- Preview message -->
+			<a name="preview"></a>
+			<table class="forumline" width="100%" cellspacing="1" cellpadding="4" border="0" style="display: none" id="previewTable">
+				<tr>
+					<th height="25" class="thhead">Preview</th>
+				</tr>
+				<tr>
+					<td class="row1">
+						<img src="/templates/default/images/icon_minipost.gif" alt="Post" />
+						<span class="postdetails" id="previewSubject"> Subject: </span>
+					</td>
+				</tr>
+				<tr>
+					<td class="row1" height="100%">
+						<table width="100%" border="0" cellspacing="0" cellpadding="0" style="height:100%">
+							<tr>
+								<td><span id="previewMessage" class="postbody"></span></td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td class="spacerow" height="1"><img src="/templates/default/images/spacer.gif" alt="" width="1" height="1" /></td>
+				</tr>
+			</table>
+			<br clear="all" />
+
+			<table cellspacing="2" cellpadding="2" width="100%" align="center" border="0">
+				<tr>
+					<td align="left">
+						<span class="nav">
+							<a class="nav" href="/forums/list.page">Forum Index</a>
+
+							&raquo; <a class="nav" href="/forums/show/2.page">Spring Boot</a>
+						</span>
+					</td>
+				</tr>
+			</table>
+		
+			<table class="forumline" cellspacing="1" cellpadding="3" width="100%" border="0">
+				<tr>
+					<th class="thhead" colspan="2" height="25">
+						<b>
+								New Topic
+						</b>
+					</th>
+				</tr>
+
+
+
+				<tr>
+					<td class="row1" width="15%"><span class="gen"><b>Subject</b></span></td>
+					<td class="row2" width="85%">
+						<span class="gen">
+							<input class="subject" type="text" tabindex="2" maxlength="100" name="subject" value="" /> 
+						</span>
+					</td>
+				</tr>
+
+				<tr>
+					<!-- Smilies -->
+					<td class="row1" valign="top">
+						<span class="gen"><b>Message body</b></span>
+
+						<table cellspacing="0" cellpadding="1" border="0" align="center">
+							<tr>
+								<td valign="middle" align="center">
+									<br />
+									<table cellspacing="0" cellpadding="5" width="100" border="0">
+										<tr align="center">
+											<td class="gensmall" colspan="4"><b>Emoticons</b></td>
+										</tr>
+
+															<tr>
+														<td><a href="javascript:emoticon(':)');"><img src="http://localhost:8080/images/smilies/3b63d1616c5dfcf29f8a7a031aaa7cad.gif" /></a></td>
+														<td><a href="javascript:emoticon(':D');"><img src="http://localhost:8080/images/smilies/283a16da79f3aa23fe1025c96295f04f.gif" /></a></td>
+														<td><a href="javascript:emoticon(':(');"><img src="http://localhost:8080/images/smilies/9d71f0541cff0a302a0309c5079e8dee.gif" /></a></td>
+														<td><a href="javascript:emoticon(':mrgreen:');"><img src="http://localhost:8080/images/smilies/ed515dbff23a0ee3241dcc0a601c9ed6.gif" /></a></td>
+															</tr>
+															<tr>
+														<td><a href="javascript:emoticon(':-o');"><img src="http://localhost:8080/images/smilies/47941865eb7bbc2a777305b46cc059a2.gif" /></a></td>
+														<td><a href="javascript:emoticon(':shock:');"><img src="http://localhost:8080/images/smilies/385970365b8ed7503b4294502a458efa.gif" /></a></td>
+														<td><a href="javascript:emoticon(':?:');"><img src="http://localhost:8080/images/smilies/0a4d7238daa496a758252d0a2b1a1384.gif" /></a></td>
+														<td><a href="javascript:emoticon('8)');"><img src="http://localhost:8080/images/smilies/b2eb59423fbf5fa39342041237025880.gif" /></a></td>
+															</tr>
+															<tr>
+														<td><a href="javascript:emoticon(':lol:');"><img src="http://localhost:8080/images/smilies/97ada74b88049a6d50a6ed40898a03d7.gif" /></a></td>
+														<td><a href="javascript:emoticon(':x');"><img src="http://localhost:8080/images/smilies/1069449046bcd664c21db15b1dfedaee.gif" /></a></td>
+														<td><a href="javascript:emoticon(':P');"><img src="http://localhost:8080/images/smilies/69934afc394145350659cd7add244ca9.gif" /></a></td>
+														<td><a href="javascript:emoticon(':oops:');"><img src="http://localhost:8080/images/smilies/499fd50bc713bfcdf2ab5a23c00c2d62.gif" /></a></td>
+															</tr>
+															<tr>
+														<td><a href="javascript:emoticon(':cry:');"><img src="http://localhost:8080/images/smilies/c30b4198e0907b23b8246bdd52aa1c3c.gif" /></a></td>
+														<td><a href="javascript:emoticon(':evil:');"><img src="http://localhost:8080/images/smilies/2e207fad049d4d292f60607f80f05768.gif" /></a></td>
+														<td><a href="javascript:emoticon(':twisted:');"><img src="http://localhost:8080/images/smilies/908627bbe5e9f6a080977db8c365caff.gif" /></a></td>
+														<td><a href="javascript:emoticon(':roll:');"><img src="http://localhost:8080/images/smilies/2786c5c8e1a8be796fb2f726cca5a0fe.gif" /></a></td>
+															</tr>
+															<tr>
+														<td><a href="javascript:emoticon(':wink:');"><img src="http://localhost:8080/images/smilies/8a80c6485cd926be453217d59a84a888.gif" /></a></td>
+														<td><a href="javascript:emoticon(':!:');"><img src="http://localhost:8080/images/smilies/9293feeb0183c67ea1ea8c52f0dbaf8c.gif" /></a></td>
+														<td><a href="javascript:emoticon(':?');"><img src="http://localhost:8080/images/smilies/136dd33cba83140c7ce38db096d05aed.gif" /></a></td>
+														<td><a href="javascript:emoticon(':idea:');"><img src="http://localhost:8080/images/smilies/8f7fb9dd46fb8ef86f81154a4feaada9.gif" /></a></td>
+															</tr>
+
+										<tr align="center">
+											<td colspan="4">
+												<span class="nav"><a href="#" onclick="smiliePopup();return false;">More smilies</a></span>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+						</table>
+					</td>
+
+					<!-- BB Codes, textarea -->
+					<td class="row2" valign="top">
+						<div class="gen">
+							<table cellspacing="0" cellpadding="2" border="0" width="100%">
+								<!-- bb code -->
+								<tr valign="middle">
+									<td>
+										<input class="button" onmouseover="helpline('b')" style="FONT-WEIGHT: bold; WIDTH: 30px" accesskey="b" onclick="bbstyle(0)" type="button" value=" B " name="addbbcode0" /> 
+										<input class="button" onmouseover="helpline('i')" style="WIDTH: 30px; FONT-STYLE: italic" accesskey="i" onclick="bbstyle(2)" type="button" value=" i " name="addbbcode2" /> 
+										<input class="button" onmouseover="helpline('u')" style="WIDTH: 30px; TEXT-DECORATION: underline" accesskey="u" onclick="bbstyle(4)" type="button" value=" u " name="addbbcode4" />
+										<input class="button" onmouseover="helpline('q')" style="WIDTH: 50px" accesskey="q" onclick="bbstyle(6)" type="button" value="Quote" name="addbbcode6" /> 
+										<input class="button" onmouseover="helpline('c')" style="WIDTH: 40px" accesskey="c" onclick="bbstyle(8)" type="button" value="Code" name="addbbcode8" />
+										<input class="button" onmouseover="helpline('l')" style="WIDTH: 40px" accesskey="l" onclick="bbstyle(10)" type="button" value="List" name="addbbcode10" />
+										<input class="button" onmouseover="helpline('p')" style="WIDTH: 40px" accesskey="p" onclick="bbstyle(12)" type="button" value="Img" name="addbbcode12" />
+										<input class="button" onmouseover="helpline('w')" style="WIDTH: 40px" accesskey="w" onclick="bbstyle(14)" type="button" value="URL" name="addbbcode14" />
+										<input class="button" onmouseover="helpline('g')" style="WIDTH: 50px" accesskey="g" onclick="bbstyle(16)" type="button" value="Google" name="addbbcode16" />
+										<input class="button" onmouseover="helpline('y')" style="WIDTH: 60px" accesskey="y" onclick="bbstyle(18)" type="button" value="Youtube" name="addbbcode18" />
+										<input class="button" onmouseover="helpline('k')" style="WIDTH: 40px" accesskey="k" onclick="bbstyle(20)" type="button" value="Flash" name="addbbcode20" />
+										<input class="button" onmouseover="helpline('v')" style="WIDTH: 40px" accesskey="v" onclick="bbstyle(22)" type="button" value="WMV" name="addbbcode22" />
+									</td>
+								</tr>
+								
+								<!-- Color, Fonts -->
+								<tr>
+									<td>
+										<span class="genmed">&nbsp;Text Color: 
+										<select onmouseover="helpline('s')" onchange="bbfontstyle('[color=' + this.form.addbbcode24.options[this.form.addbbcode24.selectedIndex].value + ']', '[/color]')" name="addbbcode24"> 
+											<option class="genmed" style="COLOR: black; BACKGROUND-COLOR: #fafafa" value="#444444" selected="selected">Default</option> 
+											<option class="genmed" style="COLOR: darkred; BACKGROUND-COLOR: #fafafa" value="darkred">Dark Red</option> 
+											<option class="genmed" style="COLOR: red; BACKGROUND-COLOR: #fafafa" value="red">Red</option> 
+											<option class="genmed" style="COLOR: orange; BACKGROUND-COLOR: #fafafa" value="orange">Orange</option> 
+											<option class="genmed" style="COLOR: brown; BACKGROUND-COLOR: #fafafa" value="brown">Brown</option> 
+											<option class="genmed" style="COLOR: yellow; BACKGROUND-COLOR: #fafafa" value="yellow">Yellow</option> 
+											<option class="genmed" style="COLOR: green; BACKGROUND-COLOR: #fafafa" value="green">Green</option> 
+											<option class="genmed" style="COLOR: olive; BACKGROUND-COLOR: #fafafa" value="olive">Olive</option> 
+											<option class="genmed" style="COLOR: cyan; BACKGROUND-COLOR: #fafafa" value="cyan">Cyan</option> 
+											<option class="genmed" style="COLOR: blue; BACKGROUND-COLOR: #fafafa" value="blue">Blue</option> 
+											<option class="genmed" style="COLOR: darkblue; BACKGROUND-COLOR: #fafafa" value="darkblue">Dark Blue</option> 
+											<option class="genmed" style="COLOR: violet; BACKGROUND-COLOR: #fafafa" value="violet">Violet</option> 
+											<option class="genmed" style="COLOR: white; BACKGROUND-COLOR: #fafafa" value="white">White</option>
+											<option class="genmed" style="COLOR: black; BACKGROUND-COLOR: #fafafa" value="black">Black</option>
+										</select> 
+
+										&nbsp;Font:
+										<select onmouseover="helpline('f')" onchange="bbfontstyle('[size=' + this.form.addbbcode26.options[this.form.addbbcode26.selectedIndex].value + ']', '[/size]')" name="addbbcode26"> 
+											<option class="genmed" value="7">Very Small</option> 
+											<option class="genmed" value="9">Small</option> 
+											<option class="genmed" value="12" selected="selected">Normal</option> 
+											<option class="genmed" value="18">Big</option> 
+											<option class="genmed" value="24">Giant</option>
+										</select> 
+										</span>
+										<span class="gensmall"><a class="genmed" onmouseover="helpline('a')" href="javascript:bbstyle(-1)">Close Marks</a></span>
+									</td>
+								</tr>
+
+								<!-- Help box -->
+								<tr>
+									<td>
+										<input name="helpbox" class="helpline" readonly="readonly" style="FONT-SIZE: 10px; WIDTH: 100%" value="Tip: Styles may be quickly applied to selected text" size="45" maxlength="100" /> 
+									</td>
+								</tr>
+								
+								<!-- Textarea -->
+								<tr>
+									<td valign="top">
+										<textarea class="message" onkeyup="storeCaret(this);" onclick="storeCaret(this);" onselect="storeCaret(this);" tabindex="3" name="message" rows="15"  cols="35"></textarea> 
+									</td>
+								</tr>
+							</table>
+						</div> 
+					</td>
+				</tr>
+
+				<!-- Options -->
+				<tr>
+					<td class="row1">&nbsp;</td>
+					<td class="row2">
+						<div id="tabs10">
+							<ul>
+							    <li target="postOptions" class="current"><a href="javascript:void(0);" onClick="activateTab('postOptions', this);"><span>Options</span></a></li>
+
+									<li target="postPoll"><a href="javascript:void(0);" onClick="activateTab('postPoll', this);"><span>Poll</span></a></li>
+								    <li target="postAttachments"><a href="javascript:void(0);" onClick="activateTab('postAttachments', this);"><span>Attachments</span></a></li>
+							</ul>
+						</div>
+
+						<!-- Post Options -->
+						<div id="postOptions" class="postTabContents">
+							<div>
+<table cellspacing="0" cellpadding="1" border="0" class="genmed">
+			<tr>
+		<td><input type="checkbox" id="disable_html" name="disable_html" checked="checked" /></td>
+		<td><label for="disable_html">Disable HTML in this message</label></td>
+		</tr>
+	<tr>
+		<td><input type="checkbox" id="disable_bbcode" name="disable_bbcode"  /> </td>
+		<td><label for="disable_bbcode">Disable BB Code in this message</label></td>
+	</tr>
+	<tr>
+		<td><input type="checkbox" id="disable_smilies" name="disable_smilies"  /> </td>
+		<td><label for="disable_smilies">Disable smilies in this message</label></td>
+	</tr>
+
+
+	<tr>
+		<td colspan="2">
+			Set topic as:
+			<input type="radio" checked="checked" value="0" id="topic_type0" name="topic_type"  /><label for="topic_type0">Normal</label>&nbsp;&nbsp;
+			<input type="radio" value="1" id="topic_type1" name="topic_type"  /><label for="topic_type1">Sticky</label>&nbsp;&nbsp;
+			<input type="radio" value="2" id="topic_type2" name="topic_type"  /><label for="topic_type2">Announce</label>&nbsp;&nbsp;
+		</td>
+	</tr>
+</table>							</div>
+						</div>
+
+						<!-- Poll tab -->
+							<div id="postPoll" class="postTabContents" style="display: none;">
+								<div>
+<table cellspacing="0" cellpadding="1" border="0" class="genmed">
+		<tr>
+		<td>Poll Question</b></td>
+		<td><input type="text" name="poll_label" maxlength="255" size="50" value=""></input></td>
+	</tr>
+	<tr id="pollOptionWithDelete" style="display: none;">
+		<td>Poll Option</td>
+		<td><input type="text" id="pollOption" name="poll_option" maxlength="255" size="50"></input>
+			 <input type="button" onclick="javascript:deletePollOption(this)" value="Delete"></input></td>
+	</tr>
+		<input type="hidden" name="poll_option_count" id="pollOptionCount" value="1"/>
+		<tr id="pollOption">
+			<td>Poll Option</td>
+			<td>
+				 <input type="text" id="pollOption1" name="poll_option_1" maxlength="255" size="50"></input>
+				 <input type="button" onclick="javascript:deletePollOption(this)" value="Delete"></input>								 
+			</td>
+		</tr>
+	<tr id="pollOptionWithAdd">
+		<td>
+			Add option
+		</td>
+		<td>
+			<input type="button" onclick="javascript:addPollOption()" value="Add option"></input>
+		</td>
+	</tr>
+	<tr>
+		<td>Run poll for</td>
+		<td><input type="text" name="poll_length" maxlength="5" size="4" value="0"></input>Days
+			<span class="gensmall">[ Enter 0 or leave blank for a never-ending poll ]</span></td>
+	</tr>
+</table>								</div>
+							</div>
+
+						<!-- Attachments tab -->
+							<div id="postAttachments" class="postTabContents" style="display: none; ">
+								<div>
+<table cellspacing="0" cellpadding="0" border="0" width="100%">
+	<tr>
+		<td colspan="2" id="tdAttachPanel" align="center">
+			<input type="hidden" name="edit_attach_ids" />
+			<input type="hidden" name="delete_attach" />
+			<input type="hidden" name="total_files" id="total_files" />
+
+			<table border="0" cellpadding="3" cellspacing="0" width="100%" id="tblAttachments">
+				<tr>
+					<td>
+						<span class="gensmall">
+						<b>Limit of files to attach:</b> 3
+						</span>
+					</td>
+				</tr>
+				<tr>
+					<td align="center">
+						<div id="edit_attach"></div>
+
+						<div id="attachmentFields">
+						</div>			   
+					</td>
+				</tr>
+					<tr>
+						<td align="center" class="row3"><input type="button" name="add_attach" value="Add another file" class="mainoption" onclick="addAttachmentFields()" /></td>
+					</tr>
+
+						<script type="text/javascript">addAttachmentFields();</script>
+									
+			</table>
+		</td>
+	</tr>
+</table>								</div>
+							</div>
+					</td>
+				</tr
+
+
+
+				
+				<tr>
+					<td align="center" height="28" colspan="2" class="catbottom">
+						<input class="mainoption" id="btnPreview" tabindex="5" type="button" value="Preview" onclick="previewMessage();" />&nbsp;
+						<input class="mainoption" id="btnSubmit" accesskey="s" tabindex="6" type="submit" value="Submit" name="post" />
+						<img src="/images/transp.gif" id="icon_saving">
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+
+</table>
+
+<script type="text/javascript">
+<!--
+
+
+-->
+</script>
+
+</form>
+
+<!-- SyntaxHighlighter 1.5.1 -->
+<script type="text/javascript" src="/templates/default/js/shCore.js"></script>
+<script type="text/javascript" src="/templates/default/js/shBrushJava.js"></script>
+<script type="text/javascript" src="/templates/default/js/shBrushCpp.js"></script>
+<script type="text/javascript" src="/templates/default/js/shBrushCSharp.js"></script>
+<script type="text/javascript" src="/templates/default/js/shBrushDelphi.js"></script>
+<script type="text/javascript" src="/templates/default/js/shBrushJScript.js"></script>
+<script type="text/javascript" src="/templates/default/js/shBrushPhp.js"></script>
+<script type="text/javascript" src="/templates/default/js/shBrushPython.js"></script>
+<script type="text/javascript" src="/templates/default/js/shBrushRuby.js"></script>
+<script type="text/javascript" src="/templates/default/js/shBrushSql.js"></script>
+<script type="text/javascript" src="/templates/default/js/shBrushVb.js"></script>
+<script type="text/javascript" src="/templates/default/js/shBrushXml.js"></script>
+<script type="text/javascript">
+<!--
+dp.sh.ClipboardSwf = '/templates/default/js/clipboard.swf';
+dp.sh.HighlightAll('code');
+-->
+</script></td>
+</tr>
+	<tr>
+		<td align="center">
+			
+		</td>
+	</tr>
+
+	<tr>
+		<td align="center">
+			<span class="copyright">Powered by <a class="copyright" href="http://www.jforum.net/" target="_blank">JForum 2.1.8</a> &copy; <a class="copyright" href="http://www.jforum.net/team.jsp" target="_blank">JForum Team</a></span>
+		</td>
+	</tr>
+</table>
+
+
+<iframe src="/ping_session.jsp" height="0" width="0" frameborder="0" scrolling="no"></iframe>
+
+</body>
+</html>

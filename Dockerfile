@@ -17,7 +17,7 @@ COPY src src
 COPY templates templates
 COPY images images
 RUN --mount=type=cache,target=/root/.m2 mvn -B -q package -DskipTests \
-    && cp target/jforum-*.jar /workspace/app.jar
+    && cp target/jforum.jar /workspace/app.jar
 
 # ---- runtime stage -----------------------------------------------------------
 FROM eclipse-temurin:21-jre

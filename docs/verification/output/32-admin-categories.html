@@ -1,0 +1,105 @@
+<style type="text/css">@import url( /templates/default/styles/style.css?1793962431913 );</style>
+
+<form action="/jforum.page" method="post" name="form" id="form" accept-charset="UTF-8">
+<input type="hidden" name="action" value="delete" />
+<input type="hidden" name="module" value="adminCategories" />
+
+<table class="forumline" cellspacing="0" cellpadding="3" width="100%" border="0">
+	<tr>
+		<th class="thhead" valign="middle" colspan="35 height="25">Category Listing</th>
+	</tr>
+
+
+		<tr>
+			<td class="catleft" width="38%"><span class="cattitle">Category Test</span></td>
+			<td class="catleft" align="center"><span class="gen"><a id="categoryEdit" href="/adminCategories/edit/1.page">Click to edit</a></span></td>
+			<td class="catleft" align="center" width="10%"><input type="checkbox" name="categories_id" value="1" /></td>
+			
+			<td class="catleft" align="center" width="10%">
+					&nbsp;
+			</td>
+
+			<td class="catleft" align="center" width="10%">
+					<input type="button" value="Down" class="mainoption" onClick="document.location = '/adminCategories/down/1.page';">&nbsp;
+			</td>
+		</tr>
+
+		<tr>
+			<td colspan="5" class="row1">
+				<table width="100%">
+					<tr>
+						<td>&nbsp;</td>
+						<td class="row1" width="100%"><span class="gen">Test Forum</td>
+						<td>&nbsp;</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+
+		<tr>
+			<td class="catleft" width="38%"><span class="cattitle">Java & Spring</span></td>
+			<td class="catleft" align="center"><span class="gen"><a id="categoryEdit" href="/adminCategories/edit/2.page">Click to edit</a></span></td>
+			<td class="catleft" align="center" width="10%"><input type="checkbox" name="categories_id" value="2" /></td>
+			
+			<td class="catleft" align="center" width="10%">
+					<input type="button" value="Up" class="mainoption" onClick="document.location = '/adminCategories/up/2.page';">&nbsp;
+			</td>
+
+			<td class="catleft" align="center" width="10%">
+					<input type="button" value="Down" class="mainoption" onClick="document.location = '/adminCategories/down/2.page';">&nbsp;
+			</td>
+		</tr>
+
+		<tr>
+			<td colspan="5" class="row1">
+				<table width="100%">
+					<tr>
+						<td>&nbsp;</td>
+						<td class="row1" width="100%"><span class="gen">Spring Boot</td>
+						<td>&nbsp;</td>
+					</tr>
+					<tr>
+						<td>&nbsp;</td>
+						<td class="row1" width="100%"><span class="gen">MongoDB</td>
+						<td>&nbsp;</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+
+		<tr>
+			<td class="catleft" width="38%"><span class="cattitle">Community</span></td>
+			<td class="catleft" align="center"><span class="gen"><a id="categoryEdit" href="/adminCategories/edit/3.page">Click to edit</a></span></td>
+			<td class="catleft" align="center" width="10%"><input type="checkbox" name="categories_id" value="3" /></td>
+			
+			<td class="catleft" align="center" width="10%">
+					<input type="button" value="Up" class="mainoption" onClick="document.location = '/adminCategories/up/3.page';">&nbsp;
+			</td>
+
+			<td class="catleft" align="center" width="10%">
+					&nbsp;
+			</td>
+		</tr>
+
+		<tr>
+			<td colspan="5" class="row1">
+				<table width="100%">
+					<tr>
+						<td>&nbsp;</td>
+						<td class="row1" width="100%"><span class="gen">Off-topic</td>
+						<td>&nbsp;</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+
+
+	<tr align="center">
+		<td class="catbottom" colspan="5" height="28">
+			<input class="mainoption" type="button" value="Insert new" id="btn_insert" name="button" onclick="document.location = '/adminCategories/insert.page';" />
+			&nbsp;&nbsp;
+			<input class="mainoption" type="submit" value="Delete Selected" name="submit" />
+		</td>
+	</tr>
+</table>
+</form>

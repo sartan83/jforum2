@@ -96,7 +96,7 @@ jforum:
   "stacktrace.moderators.only": "false"
   # Enable or disable registration of new users.
   "registration.enabled": "true"
-  "dateTime.format": "dd/MM/yyyy HH\\:mm\\:ss"
+  "dateTime.format": "dd/MM/yyyy HH:mm:ss"
   # RSS date and time format.
   # If you want to include the timezone, use
   # EEE, d MMM yyyy HH:mm:ss z
@@ -333,7 +333,7 @@ jforum:
   "locales.dir": "config/languages/"
   "locales.names": "locales.properties"
   "smilie.image.dir": "images/smilies"
-  "smilie.image.pattern": "<img src\\=\"#CONTEXT#/images/smilies/\\#IMAGE\\#\" border\\=\"0\">"
+  "smilie.image.pattern": "<img src=\"#CONTEXT#/images/smilies/#IMAGE#\" border=\"0\">"
   "useFilesystemCache": "false"
   "avatarMaxKbSize": "25"
   "background.tasks": "true"

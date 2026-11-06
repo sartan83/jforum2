@@ -1,0 +1,492 @@
+<style type="text/css">@import url( /templates/default/styles/style.css?1793962431913 );</style>
+
+<script language="JavaScript">
+function checkThisField(fieldName)
+{
+	if (fieldName.options[0].selected) {
+		for (i = 1; i < fieldName.length; i++) {
+			fieldName.options[i].selected = false;
+		}
+	}
+	else {
+		fieldName.options[0].selected = false;
+	}
+
+	if (fieldName.selectedIndex == -1) {
+		fieldName.options[0].selected = true;
+	}
+}
+
+function validateSelectFields()
+{
+	form = document.form1;
+	
+	for (i = 0; i < form.length; i++) {
+		if ((form.elements[i].type == "select-multiple") && (form.elements[i].selectedIndex == -1)) {
+			form.elements[i].options[0].selected = true;
+		}
+	}
+
+	return false;
+}</script>
+
+<form accept-charset="UTF-8" name="form1" action="/jforum.page" method="post">
+<input type="hidden" name="action" value="permissionsSave" />
+<input type="hidden" name="module" value="adminGroups" />
+<input type="hidden" name="id" value="1" />
+
+<table class="forumline" cellspacing="1" cellpadding="3" width="100%" border="0">
+	<tr>
+		<th class="thhead" valign="middle" colspan="3" height="25">Group Permission Control - "<i>General</i>"</th>
+	</tr>
+
+	<tr>
+		<td colspan="3">
+			<span class="gen">
+			<font color="#ff0000"><b><center>How to set permissions:</center></b></font> <br />
+			</span>
+			<span class="gensmall">
+			<li>Most roles are restrictive, which means that selecting a category or forum from the list will make the resource unavailable to the user or group being edited. </li>
+			<li>Choosing "Allow All" will turn the resource available for all categories or forums. Exceptions to the case will be written in the permission box, when applicable. </li>
+			<li>To correctly configure access options is not a trivial task, so read the instructions carefully and, when in doubt, refer to <a href="http://www.jforum.net/help.htm" target="_new">http://www.jforum.net/help.htm</a> and <a href="http://www.jforum.net/community.htm" target="_new">http://www.jforum.net/community.htm</a> for help and support.</li> 
+			</span>
+		</td>
+	</tr>
+
+		<tr>
+			<td class="row1" colspan="3"><span class="gen"><b>Administration</b></span></td>
+		</tr>
+
+			<tr>
+				<td class="row2">&nbsp;</td>
+				<td class="row2" valign="middle" width="33%"><span class="gensmall">Is Administrator</span></td>
+				<td class="row2" valign="middle" align="left">
+					<span class="gensmall">
+						<select name="perm_administration$single">
+					
+						<option value="deny" >No</option>
+						<option value="allow" >Yes</option>
+					</select>
+					
+					<input type="hidden" name="allperm_administration" value=";deny;allow" />
+				</td>
+			</tr>
+		<tr>
+			<td class="row1" colspan="3"><span class="gen"><b>Categories</b></span></td>
+		</tr>
+
+			<tr>
+				<td class="row2">&nbsp;</td>
+				<td class="row2" valign="middle" width="33%"><span class="gensmall">Restricted Categories</span></td>
+				<td class="row2" valign="middle" align="left">
+					<span class="gensmall">
+						<select name="perm_category" multiple size="4" onChange="return checkThisField(this)">
+						<option value="all">Allow All</option>
+					
+						<option value="1" >Category Test</option>
+						<option value="2" >Java & Spring</option>
+						<option value="3" >Community</option>
+					</select>
+					
+					<input type="hidden" name="allperm_category" value=";1;2;3" />
+				</td>
+			</tr>
+		<tr>
+			<td class="row1" colspan="3"><span class="gen"><b>Forums</b></span></td>
+		</tr>
+
+			<tr>
+				<td class="row2">&nbsp;</td>
+				<td class="row2" valign="middle" width="33%"><span class="gensmall">Restricted Forums</span></td>
+				<td class="row2" valign="middle" align="left">
+					<span class="gensmall">
+						<select name="perm_forum" multiple size="4" onChange="return checkThisField(this)">
+						<option value="all">Allow All</option>
+					
+						<option value="3" >MongoDB</option>
+						<option value="4" >Off-topic</option>
+						<option value="2" >Spring Boot</option>
+						<option value="1" >Test Forum</option>
+					</select>
+					
+					<input type="hidden" name="allperm_forum" value=";3;4;2;1" />
+				</td>
+			</tr>
+		<tr>
+			<td class="row1" colspan="3"><span class="gen"><b>Anonymous Posts</b></span></td>
+		</tr>
+
+			<tr>
+				<td class="row2">&nbsp;</td>
+				<td class="row2" valign="middle" width="33%"><span class="gensmall">Deny anonymous posts</span></td>
+				<td class="row2" valign="middle" align="left">
+					<span class="gensmall">
+						<select name="perm_anonymous_post" multiple size="4" onChange="return checkThisField(this)">
+						<option value="all">Allow All</option>
+					
+						<option value="3" >MongoDB</option>
+						<option value="4" >Off-topic</option>
+						<option value="2" >Spring Boot</option>
+						<option value="1" >Test Forum</option>
+					</select>
+					
+					<input type="hidden" name="allperm_anonymous_post" value=";3;4;2;1" />
+				</td>
+			</tr>
+		<tr>
+			<td class="row1" colspan="3"><span class="gen"><b>Reply Only</b></span></td>
+		</tr>
+
+			<tr>
+				<td class="row2">&nbsp;</td>
+				<td class="row2" valign="middle" width="33%"><span class="gensmall">Deny create new Topics but allow replying to existing messages (e.g, Announcement Forums)</span></td>
+				<td class="row2" valign="middle" align="left">
+					<span class="gensmall">
+						<select name="perm_reply_only" multiple size="4" onChange="return checkThisField(this)">
+						<option value="all">Allow All</option>
+					
+						<option value="3" >MongoDB</option>
+						<option value="4" >Off-topic</option>
+						<option value="2" >Spring Boot</option>
+						<option value="1" >Test Forum</option>
+					</select>
+					
+					<input type="hidden" name="allperm_reply_only" value=";3;4;2;1" />
+				</td>
+			</tr>
+		<tr>
+			<td class="row1" colspan="3"><span class="gen"><b>Sticky or Announcement Topics</b></span></td>
+		</tr>
+
+			<tr>
+				<td class="row2">&nbsp;</td>
+				<td class="row2" valign="middle" width="33%"><span class="gensmall">Can create sticky or announcement topics</span></td>
+				<td class="row2" valign="middle" align="left">
+					<span class="gensmall">
+						<select name="perm_create_sticky_announcement_topics$single">
+					
+						<option value="deny" >No</option>
+						<option value="allow"  selected>Yes</option>
+					</select>
+					
+					<input type="hidden" name="allperm_create_sticky_announcement_topics" value=";deny;allow" />
+				</td>
+			</tr>
+		<tr>
+			<td class="row1" colspan="3"><span class="gen"><b>Poll Topics</b></span></td>
+		</tr>
+
+			<tr>
+				<td class="row2">&nbsp;</td>
+				<td class="row2" valign="middle" width="33%"><span class="gensmall">Can create poll topics</span></td>
+				<td class="row2" valign="middle" align="left">
+					<span class="gensmall">
+						<select name="perm_create_poll$single">
+					
+						<option value="deny" >No</option>
+						<option value="allow"  selected>Yes</option>
+					</select>
+					
+					<input type="hidden" name="allperm_create_poll" value=";deny;allow" />
+				</td>
+			</tr>
+		<tr>
+			<td class="row1" colspan="3"><span class="gen"><b>Vote</b></span></td>
+		</tr>
+
+			<tr>
+				<td class="row2">&nbsp;</td>
+				<td class="row2" valign="middle" width="33%"><span class="gensmall">Can vote on polls</span></td>
+				<td class="row2" valign="middle" align="left">
+					<span class="gensmall">
+						<select name="perm_vote$single">
+					
+						<option value="deny" >No</option>
+						<option value="allow"  selected>Yes</option>
+					</select>
+					
+					<input type="hidden" name="allperm_vote" value=";deny;allow" />
+				</td>
+			</tr>
+		<tr>
+			<td class="row1" colspan="3"><span class="gen"><b>Read-Only Forums</b></span></td>
+		</tr>
+
+			<tr>
+				<td class="row2">&nbsp;</td>
+				<td class="row2" valign="middle" width="33%"><span class="gensmall">Read-Only forums. Choosing 'Allow All' will <b>disable</b> the read-only flag</span></td>
+				<td class="row2" valign="middle" align="left">
+					<span class="gensmall">
+						<select name="perm_read_only_forums" multiple size="4" onChange="return checkThisField(this)">
+						<option value="all">Allow All</option>
+					
+						<option value="3" >MongoDB</option>
+						<option value="4" >Off-topic</option>
+						<option value="2" >Spring Boot</option>
+						<option value="1" >Test Forum</option>
+					</select>
+					
+					<input type="hidden" name="allperm_read_only_forums" value=";3;4;2;1" />
+				</td>
+			</tr>
+		<tr>
+			<td class="row1" colspan="3"><span class="gen"><b>Moderation of replies</b></span></td>
+		</tr>
+
+			<tr>
+				<td class="row2">&nbsp;</td>
+				<td class="row2" valign="middle" width="33%"><span class="gensmall">To moderate or not replies to moderated Forums. Choosing 'Allow all' will <b>disable</b> moderation of replies, while selecting some forum will force replies to wait for moderation</span></td>
+				<td class="row2" valign="middle" align="left">
+					<span class="gensmall">
+						<select name="perm_reply_without_moderation" multiple size="4" onChange="return checkThisField(this)">
+						<option value="all">Allow All</option>
+					
+						<option value="3" >MongoDB</option>
+						<option value="4" >Off-topic</option>
+						<option value="2" >Spring Boot</option>
+						<option value="1" >Test Forum</option>
+					</select>
+					
+					<input type="hidden" name="allperm_reply_without_moderation" value=";3;4;2;1" />
+				</td>
+			</tr>
+		<tr>
+			<td class="row1" colspan="3"><span class="gen"><b>HTML messages</b></span></td>
+		</tr>
+
+			<tr>
+				<td class="row2">&nbsp;</td>
+				<td class="row2" valign="middle" width="33%"><span class="gensmall">HTML is <b> NOT allowed</b> in the selected forums. Choosing 'Allow all' will allow HTML in all forums</span></td>
+				<td class="row2" valign="middle" align="left">
+					<span class="gensmall">
+						<select name="perm_html_disabled" multiple size="4" onChange="return checkThisField(this)">
+						<option value="all">Allow All</option>
+					
+						<option value="3" >MongoDB</option>
+						<option value="4" >Off-topic</option>
+						<option value="2" >Spring Boot</option>
+						<option value="1" >Test Forum</option>
+					</select>
+					
+					<input type="hidden" name="allperm_html_disabled" value=";3;4;2;1" />
+				</td>
+			</tr>
+		<tr>
+			<td class="row1" colspan="3"><span class="gen"><b>Karma</b></span></td>
+		</tr>
+
+			<tr>
+				<td class="row2">&nbsp;</td>
+				<td class="row2" valign="middle" width="33%"><span class="gensmall">Enable Karma</span></td>
+				<td class="row2" valign="middle" align="left">
+					<span class="gensmall">
+						<select name="perm_karma_enabled$single">
+					
+						<option value="deny" >No</option>
+						<option value="allow"  selected>Yes</option>
+					</select>
+					
+					<input type="hidden" name="allperm_karma_enabled" value=";deny;allow" />
+				</td>
+			</tr>
+		<tr>
+			<td class="row1" colspan="3"><span class="gen"><b>Bookmarks</b></span></td>
+		</tr>
+
+			<tr>
+				<td class="row2">&nbsp;</td>
+				<td class="row2" valign="middle" width="33%"><span class="gensmall">Enable Bookmarks</span></td>
+				<td class="row2" valign="middle" align="left">
+					<span class="gensmall">
+						<select name="perm_bookmarks_enabled$single">
+					
+						<option value="deny" >No</option>
+						<option value="allow"  selected>Yes</option>
+					</select>
+					
+					<input type="hidden" name="allperm_bookmarks_enabled" value=";deny;allow" />
+				</td>
+			</tr>
+		<tr>
+			<td class="row1" colspan="3"><span class="gen"><b>Attachments</b></span></td>
+		</tr>
+
+			<tr>
+				<td class="row2">&nbsp;</td>
+				<td class="row2" valign="middle" width="33%"><span class="gensmall">Enable Attachments</span></td>
+				<td class="row2" valign="middle" align="left">
+					<span class="gensmall">
+						<select name="perm_attachments_enabled" multiple size="4" onChange="return checkThisField(this)">
+						<option value="all">Allow All</option>
+					
+						<option value="3" >MongoDB</option>
+						<option value="4" >Off-topic</option>
+						<option value="2" >Spring Boot</option>
+						<option value="1" >Test Forum</option>
+					</select>
+					
+					<input type="hidden" name="allperm_attachments_enabled" value=";3;4;2;1" />
+				</td>
+			</tr>
+			<tr>
+				<td class="row2">&nbsp;</td>
+				<td class="row2" valign="middle" width="33%"><span class="gensmall">Allow download of existing Attachments. <br /><i>If the previous role is allowed for the same forum, then downloads will automatically be allowed, no matter what is chosen here.</i></span></td>
+				<td class="row2" valign="middle" align="left">
+					<span class="gensmall">
+						<select name="perm_attachments_download" multiple size="4" onChange="return checkThisField(this)">
+						<option value="all">Allow All</option>
+					
+						<option value="3"  selected>MongoDB</option>
+						<option value="4"  selected>Off-topic</option>
+						<option value="2"  selected>Spring Boot</option>
+						<option value="1"  selected>Test Forum</option>
+					</select>
+					
+					<input type="hidden" name="allperm_attachments_download" value=";3;4;2;1" />
+				</td>
+			</tr>
+		<tr>
+			<td class="row1" colspan="3"><span class="gen"><b>Misc / General permissions</b></span></td>
+		</tr>
+
+			<tr>
+				<td class="row2">&nbsp;</td>
+				<td class="row2" valign="middle" width="33%"><span class="gensmall">Can see Moderation Activity Log</span></td>
+				<td class="row2" valign="middle" align="left">
+					<span class="gensmall">
+						<select name="perm_moderation_log$single">
+					
+						<option value="deny" >No</option>
+						<option value="allow"  selected>Yes</option>
+					</select>
+					
+					<input type="hidden" name="allperm_moderation_log" value=";deny;allow" />
+				</td>
+			</tr>
+			<tr>
+				<td class="row2">&nbsp;</td>
+				<td class="row2" valign="middle" width="33%"><span class="gensmall">Can see <strong>full</strong> Moderation Activity Log</span></td>
+				<td class="row2" valign="middle" align="left">
+					<span class="gensmall">
+						<select name="perm_full_moderation_log$single">
+					
+						<option value="deny" >No</option>
+						<option value="allow" >Yes</option>
+					</select>
+					
+					<input type="hidden" name="allperm_full_moderation_log" value=";deny;allow" />
+				</td>
+			</tr>
+		<tr>
+			<td class="row1" colspan="3"><span class="gen"><b>Moderation</b></span></td>
+		</tr>
+
+			<tr>
+				<td class="row2">&nbsp;</td>
+				<td class="row2" valign="middle" width="33%"><span class="gensmall">Is a moderator</span></td>
+				<td class="row2" valign="middle" align="left">
+					<span class="gensmall">
+						<select name="perm_moderation$single">
+					
+						<option value="deny" >No</option>
+						<option value="allow" >Yes</option>
+					</select>
+					
+					<input type="hidden" name="allperm_moderation" value=";deny;allow" />
+				</td>
+			</tr>
+			<tr>
+				<td class="row2">&nbsp;</td>
+				<td class="row2" valign="middle" width="33%"><span class="gensmall">Can approve / deny messages in moderated forums</span></td>
+				<td class="row2" valign="middle" align="left">
+					<span class="gensmall">
+						<select name="perm_moderation_approve_messages$single">
+					
+						<option value="deny" >No</option>
+						<option value="allow" >Yes</option>
+					</select>
+					
+					<input type="hidden" name="allperm_moderation_approve_messages" value=";deny;allow" />
+				</td>
+			</tr>
+			<tr>
+				<td class="row2">&nbsp;</td>
+				<td class="row2" valign="middle" width="33%"><span class="gensmall">Cannot moderate these forums</span></td>
+				<td class="row2" valign="middle" align="left">
+					<span class="gensmall">
+						<select name="perm_moderation_forums" multiple size="4" onChange="return checkThisField(this)">
+						<option value="all">Allow All</option>
+					
+						<option value="3"  selected>MongoDB</option>
+						<option value="4"  selected>Off-topic</option>
+						<option value="2"  selected>Spring Boot</option>
+						<option value="1"  selected>Test Forum</option>
+					</select>
+					
+					<input type="hidden" name="allperm_moderation_forums" value=";3;4;2;1" />
+				</td>
+			</tr>
+			<tr>
+				<td class="row2">&nbsp;</td>
+				<td class="row2" valign="middle" width="33%"><span class="gensmall">Can remove posts</span></td>
+				<td class="row2" valign="middle" align="left">
+					<span class="gensmall">
+						<select name="perm_moderation_post_remove$single">
+					
+						<option value="deny" >No</option>
+						<option value="allow" >Yes</option>
+					</select>
+					
+					<input type="hidden" name="allperm_moderation_post_remove" value=";deny;allow" />
+				</td>
+			</tr>
+			<tr>
+				<td class="row2">&nbsp;</td>
+				<td class="row2" valign="middle" width="33%"><span class="gensmall">Can edit messages</span></td>
+				<td class="row2" valign="middle" align="left">
+					<span class="gensmall">
+						<select name="perm_moderation_post_edit$single">
+					
+						<option value="deny" >No</option>
+						<option value="allow" >Yes</option>
+					</select>
+					
+					<input type="hidden" name="allperm_moderation_post_edit" value=";deny;allow" />
+				</td>
+			</tr>
+			<tr>
+				<td class="row2">&nbsp;</td>
+				<td class="row2" valign="middle" width="33%"><span class="gensmall">Can move messages between forums</span></td>
+				<td class="row2" valign="middle" align="left">
+					<span class="gensmall">
+						<select name="perm_moderation_topic_move$single">
+					
+						<option value="deny" >No</option>
+						<option value="allow" >Yes</option>
+					</select>
+					
+					<input type="hidden" name="allperm_moderation_topic_move" value=";deny;allow" />
+				</td>
+			</tr>
+			<tr>
+				<td class="row2">&nbsp;</td>
+				<td class="row2" valign="middle" width="33%"><span class="gensmall">Can lock and unlock topics</span></td>
+				<td class="row2" valign="middle" align="left">
+					<span class="gensmall">
+						<select name="perm_moderation_topic_lockUnlock$single">
+					
+						<option value="deny" >No</option>
+						<option value="allow" >Yes</option>
+					</select>
+					
+					<input type="hidden" name="allperm_moderation_topic_lockUnlock" value=";deny;allow" />
+				</td>
+			</tr>
+
+	<tr align="center">
+		<td class="catbottom" colspan="3" height="28"><input class="mainoption" type="submit" value="Save" name="submit" /></td>
+	</tr>
+</table>
+
+</form>
+<script language="javascript">validateSelectFields();</script>

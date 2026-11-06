@@ -25,7 +25,7 @@ Note: the `mongo:8.0` image does not start on Linux kernels >= 6.19; there use `
 ## Run from the command line
 ```bash
 mvn verify                     # build + tests (Testcontainers MongoDB; -Dmongodb.image=mongo:8.2 to override)
-java -jar target/jforum-2.1.8-boot.jar --spring.data.mongodb.uri=mongodb://localhost:27017/jforum
+java -jar target/jforum.jar --spring.data.mongodb.uri=mongodb://localhost:27017/jforum
 ```
 
 ## Configuration
@@ -66,7 +66,7 @@ SQL Server, writes the MongoDB documents preserving ids and relations, and print
 - `templates/`, `images/` – original UI, packaged as classpath resources
 - `tests/core/java` – JUnit 5 + Spring Boot Test + Testcontainers tests
 - `tools/migration` – SQL Server → MongoDB migration tool
-- `docs/verification` – verification report of the running application
+- `docs/verification` – verification report of the running application (`VERIFICATION.md`, `verify.sh`, screenshots)
 
 ## History
 JForum was a bulletin board software based on PHPBB written by Rafael Steil in the 2000's, used by sites like

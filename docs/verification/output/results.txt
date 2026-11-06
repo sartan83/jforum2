@@ -1,0 +1,44 @@
+PASS 01-health                              /actuator/health -> HTTP 200, contains '"UP"'
+PASS 02-root-redirect                       / -> HTTP 302
+PASS 03-forum-list                          /forums/list.page -> HTTP 200, contains 'Spring Boot'
+PASS 04-forum-show                          /forums/show/2.page -> HTTP 200, contains 'Migrating JForum to Spring Boot 3'
+PASS 05-topic-show                          /posts/list/2.page -> HTTP 200, contains 'Are the original templates still used?'
+PASS 06-bbcode-rendered                     /posts/list/2.page -> HTTP 200, contains '<i>all of them</i>'
+PASS 07-recent-topics                       /recentTopics/list.page -> HTTP 200, contains 'Hello everybody'
+PASS 08-member-list                         /user/list.page -> HTTP 200, contains 'giulia'
+PASS 09-user-profile                        /user/profile/3.page -> HTTP 200, contains 'mario'
+PASS 10-search                              /jforum.page?module=search&action=search&search_keywords=Atlas&match_type=all&sort_by=time&sort_dir=DESC -> HTTP 200, contains 'Connecting to MongoDB Atlas'
+PASS 11-rss                                 /rss/forumTopics/2.page -> HTTP 200, contains '<rss'
+PASS 12-static-css                          /templates/default/styles/style.css -> HTTP 200, contains 'body'
+PASS 13-template-source-hidden              /templates/default/forum_list.htm -> HTTP 404
+PASS 14-login-form                          /user/login.page -> HTTP 200, contains 'username'
+PASS 15-register-agreement                  /user/insert.page -> HTTP 200, contains 'Registration agreement terms'
+PASS 16-anon-cannot-post                    /posts/insert/2.page -> HTTP 200, contains 'login'
+PASS 17-login-wrong-password                /jforum.page -> HTTP 200, contains 'Invalid'
+PASS 18-login-mario                         /forums/list.page -> HTTP 200, contains 'Logout \[mario\]'
+PASS 19-new-topic                           /jforum.page -> HTTP 302
+PASS 20-new-topic-listed                    /forums/show/4.page -> HTTP 200, contains 'Verification topic 1793962434'
+PASS 21-new-topic-bbcode                    /posts/list/7.page -> HTTP 200, contains '<b>verify.sh</b>'
+PASS 22-reply                               /jforum.page -> HTTP 302
+PASS 23-reply-shown                         /posts/list/7.page -> HTTP 200, contains 'Reply 1793962434'
+PASS 24-pm-send                             /jforum.page -> HTTP 200
+PASS 25-pm-sentbox                          /pm/sentbox.page -> HTTP 200, contains 'PM 1793962434'
+PASS 26-pm-inbox                            /pm/inbox.page -> HTTP 200, contains 'PM 1793962434'
+PASS 27-user-not-admin                      /jforum.page?module=admBase&action=main -> HTTP 302
+PASS 28-admin-frameset                      /admBase/login.page -> HTTP 200, contains 'module=admBase&amp;action=menu\|module=admBase&action=menu'
+PASS 29-admin-menu                          /jforum.page?module=admBase&action=menu -> HTTP 200, contains 'adminCategories'
+PASS 30-admin-main                          /jforum.page?module=admBase&action=main -> HTTP 200, contains 'Admin'
+PASS 31-admin-config                        /adminConfig/list.page -> HTTP 200, contains 'forum.link'
+PASS 32-admin-categories                    /adminCategories/list.page -> HTTP 200, contains 'Java &amp; Spring\|Java & Spring'
+PASS 33-admin-forums                        /adminForums/list.page -> HTTP 200, contains 'MongoDB'
+PASS 34-admin-groups                        /adminGroups/list.page -> HTTP 200, contains 'Administration'
+PASS 35-admin-permissions                   /adminGroups/permissions/1.page -> HTTP 200, contains 'perm_'
+PASS 36-admin-users                         /adminUsers/list.page -> HTTP 200, contains 'luca'
+PASS 37-admin-smilies                       /adminSmilies/list.page -> HTTP 200, contains 'smilies'
+PASS 38-admin-rankings                      /adminRankings/list.page -> HTTP 200
+PASS 39-admin-banlist                       /adminBanning/list.page -> HTTP 200
+PASS 40-admin-attachments                   /adminAttachments/configurations.page -> HTTP 200
+PASS 41-admin-moderation-log                /moderation/showActivityLog.page -> HTTP 200
+PASS 42-admin-search-stats                  /adminSearchStats/list.page -> HTTP 200
+PASS 43-admin-cache                         /adminCache/list.page -> HTTP 200
+FAILURES: 0

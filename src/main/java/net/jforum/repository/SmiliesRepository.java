@@ -88,6 +88,11 @@ public class SmiliesRepository implements Cacheable
 		List list = (List)cache.get(FQN, ENTRIES);
 		if (!contexted) {
 			String forumLink = SystemGlobals.getValue(ConfigKeys.FORUM_LINK);
+
+			// smilie urls are "#CONTEXT#/images/...": avoid a "//" that the servlet container rejects
+			if (forumLink.endsWith("/")) {
+				forumLink = forumLink.substring(0, forumLink.length() - 1);
+			}
 			
 			for (Iterator iter = list.iterator(); iter.hasNext(); ) {
 				Smilie s = (Smilie)iter.next();

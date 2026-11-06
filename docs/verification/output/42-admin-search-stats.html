@@ -1,0 +1,303 @@
+<style type="text/css">@import url( /templates/default/styles/style.css?1793962431913 );</style>
+<script type="text/javascript" src="/templates/default/js/jquery.js?1793962431913"></script>
+
+<style type="text/css">
+.bottomLine {
+	border-bottom: 1px solid #000;
+}
+
+.leftLine {
+	border-left: 1px solid #000;
+}
+</style>
+
+<script type="text/javascript">
+function writeOptions(fieldName, from, to) 
+{
+	document.write("<select name='" + fieldName + "' onChange='chooseByDate(this.form);'>");
+	document.write("<option value=''>--</option>");
+
+	for (var i = from; i <= to; i++) {
+		document.write("<option value='" + i + "'>" + i + "</option>");
+	}
+
+	document.write("</select>&nbsp;&nbsp;");
+}
+
+function writeTimeGroup(fieldNamePrefix)
+{
+	document.write("<input type='text' style='width: 35px;' maxlength='2' name='" + fieldNamePrefix + "Hour'> : ");
+	document.write("<input type='text' style='width: 35px;' maxlength='2' name='" + fieldNamePrefix + "Minutes'>");
+}
+
+function chooseByDate(f)
+{
+	f.firstPostId.value = "";
+	f.lastPostId.value = "";
+	f.type[0].checked = true;
+}
+
+function confirmCancel(f)
+{
+	if (confirm("Are you sure you want to cancel the indexing process?")) {
+		f.submit();
+	}
+}
+
+function validateReindexForm(f)
+{
+	if (f.type[0].checked) {
+		return validateDateRange(f);
+	}
+	else {
+		return validatePostIdRange(f);
+	}
+}
+
+function validatePostIdRange(f)
+{
+	if (f.firstPostId.value.length == 0
+		|| isNaN(f.firstPostId.value * 1)
+		|| f.lastPostId.value.length == 0
+		|| isNaN(f.lastPostId.value * 1)) {
+		alert("Invalid Post ID range");
+		return false;
+	}
+
+	return true;
+}
+
+function validateDateRange(f)
+{
+	var fromHour = f.fromHour.value * 1;
+	var fromMinutes = f.fromMinutes.value * 1
+	var toHour = f.toHour.value * 1;
+	var toMinutes = f.toMinutes.value * 1
+
+	if (f.fromDay.selectedIndex == 0 
+		|| f.fromMonth.selectedIndex == 0
+		|| f.fromYear.selectedIndex == 0
+		|| f.fromHour.value.length == 0
+		|| f.fromMinutes.value.length == 0
+		|| isNaN(fromHour)
+		|| isNaN(fromMinutes)
+		|| fromHour < 0 || fromHour > 59
+		|| fromMinutes < 0 || fromMinutes > 59
+		|| f.toDay.selectedIndex == 0 
+		|| f.toMonth.selectedIndex == 0
+		|| f.toYear.selectedIndex == 0
+		|| f.toHour.value.length == 0
+		|| f.toMinutes.value.length == 0
+		|| isNaN(toHour)
+		|| isNaN(toMinutes)
+		|| toHour < 0 || toHour > 59
+		|| toMinutes < 0 || toMinutes > 59) {
+		alert("Invalid date range");
+		return false;
+	}
+
+	return true;
+}
+
+function chooseByPostId(field)
+{
+	var value = field.value;
+	
+	if (value.length > 0) {
+		if (isNaN(value * 1)) {
+			alert("Invalid Post ID");
+			field.value = "";
+		}
+		else {
+			var f = field.form;
+
+			f.fromDay.selectedIndex = 0;
+			f.fromMonth.selectedIndex = 0;
+			f.fromYear.selectedIndex = 0;
+			f.fromHour.value = "";
+			f.fromMinutes.value = "";
+
+			f.toDay.selectedIndex = 0;
+			f.toMonth.selectedIndex = 0;
+			f.toYear.selectedIndex = 0;
+			f.toHour.value = "";
+			f.toMinutes.value = "";
+
+			f.type[1].checked = true;
+		}
+	}
+}
+
+function checkIfPostExists()
+{
+	var postId = document.getElementById("checkPostId").value;
+
+	if (postId.length > 0 && !isNaN(postId * 1)) {
+		$.ajax({
+			type:"POST",
+			url:"/jforum.page?module=ajax&action=isPostIndexed",
+			data:{post_id:postId},
+			dataType:"script",
+			global:false
+		});
+	}
+}
+</script>
+
+<table border="0" class="forumline gen" width="100%">
+	<tr>
+		<th colspan="2">Search Statistics</th>
+	</tr>
+
+		<tr>
+			<td width="200"><strong>Total posts in the database:</strong> </td>
+			<td><i>13</i></td>
+		</tr>
+
+		<tr>
+			<td class="row3"><strong>Index location:</strong></td>
+			<td class="row3"><i>MongoDB text index on posts (subject, text)</i></td>
+		</tr>
+
+		<tr>
+			<td><strong>Index exists:</strong></td>
+			<td>
+					<i>Yes</i> 
+			</td>
+		</tr>
+	
+			<tr>
+				<td class="row3"><strong>Last modification date:</strong></td>
+				<td class="row3"><i>Nov 6, 2026, 10:54:12 AM</i></td>
+			</tr>
+
+			<tr>
+				<td><strong>Number of documents:</strong> </td>
+				<td><i>13</i></td>
+			</tr>
+
+			<tr>
+				<td class="row3"><strong>Index version:</strong> </td>
+				<td class="row3"><i>posts_text_search</i></td>
+			</tr>
+
+			<tr>
+				<td><strong>Is locked? (write.lock)</strong> </td>
+				<td>
+					<i>
+							No
+					</i>
+				</td>
+			</tr>
+
+			<tr>
+				<td class="row3"><strong>Is Post indexed?</strong> </td>
+				<td class="gensmall row3">
+					Enter Post ID: 
+					<input type="text" id="checkPostId">
+					<input type="button" value="Check" onClick="checkIfPostExists();">
+				</td>
+			</tr>
+</table>
+
+<br />
+
+	<form action="/jforum.page" onSubmit="return validateReindexForm(this);">
+	<input type="hidden" name="module" value="adminSearchStats" />
+
+		<input type="hidden" name="action" value="reconstructIndexFromScratch" />
+
+	<table border="0" class="forumline gen" width="100%">
+		<tr>
+			<th colspan="2">Re-Index</th>
+		</tr>
+
+			<tr>
+				<td width="200">
+					<input type="radio" id="reindexByDate" name="type" value="1" checked="checked" /><label for="reindexByDate">By date</label>
+				</td>
+				<td valign="top">
+					<table border="0" class="gen">
+						<tr>
+							<td>From:</td>
+							<td>
+								<span class="gensmall">(dd/mm/yyyy hh:mm)</span>
+
+								<script type="text/javascript">
+									writeOptions("fromDay", 1, 31);
+									writeOptions("fromMonth", 1, 12);
+									writeOptions("fromYear", 1995, new Date().getFullYear());
+									writeTimeGroup("from");
+								</script>
+							</td>
+						</tr>
+
+						<tr>
+							<td>To:</td>
+							<td>
+								<span class="gensmall">(dd/mm/yyyy hh:mm)</span>
+
+								<script type="text/javascript">
+									writeOptions("toDay", 1, 31);
+									writeOptions("toMonth", 1, 12);
+									writeOptions("toYear", 1995, new Date().getFullYear());
+									writeTimeGroup("to");
+								</script>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+
+			<tr>
+				<td class="row3">
+					<input type="radio" id="reindexByMessage" name="type" value="2"><label for="reindexByMessage">By Message ID</label>
+				</td>
+				<td valign="top" class="row3">
+					<table border="0" class="gen">
+						<tr>
+							<td>From:</td>
+							<td><input type="text" name="firstPostId" onblur="chooseByPostId(this);" />
+						</tr>
+
+						<tr>
+							<td>To:</td>
+							<td><input type="text" name="lastPostId" onBlur="chooseByPostId(this);" />
+						</tr>
+					</table>
+				</td>
+			</tr>
+
+			<tr>
+				<td><strong>Options:</strong></td>
+				<td>
+					<table class="gen" cellspacing="0" cellpadding="4">
+						<tr>
+							<td class="bottomLine">
+								<input type="checkbox" id="avoidDuplicated" name="avoidDuplicatedRecords" value="yes" checked="checked" /><label for="avoidDuplicated">Check if message exists before adding to index</label>
+							</td>
+							<td class="bottomLine leftLine gensmall">This avoid duplicated records, but the indexing process will take longer to complete</td>
+						</tr>
+
+						<tr>
+							<td class="bottomLine"><input type="radio" name="indexOperationType" checked="checked" id="operationTypeAppend" value="append" /><label for="operationTypeAppend">Append documents to the index</label></td>
+							<td class="bottomLine leftLine gensmall">Add records to the existing index database, instead of creating it from the ground up.</td>
+						</tr>
+
+						<tr>
+							<td><input type="radio" name="indexOperationType" id="operationTypeRecreate" value="recreate" /><label for="operationTypeRecreate">Recreate index from scratch<label></td>
+							<td class="leftLine gensmall">Create an entire new index database. This will delete all existing records.</td>
+						</tr>
+					</table>
+					
+				</td>
+			</tr>
+
+			<tr>
+				<td colspan="2" align="right" class="cat">
+					<input type="submit" value="Start" style="width: 100px; font-weight: bold;" />
+				</td>
+			</tr>
+	</table>
+
+	</form>
