@@ -1,5 +1,7 @@
 package net.jforum.persistence;
 
+import net.jforum.boot.DemoData;
+import net.jforum.boot.InstallationData;
 import net.jforum.search.SearchFacade;
 import net.jforum.search.SearchManager;
 
@@ -32,6 +34,11 @@ public class StoreRegistrar implements SmartInitializingSingleton
 		}
 
 		SearchFacade.init(this.context.getBeanProvider(SearchManager.class).getIfAvailable());
+
+		if (Stores.isComplete()) {
+			this.context.getBeanProvider(InstallationData.class).ifAvailable(InstallationData::installIfEmpty);
+			this.context.getBeanProvider(DemoData.class).ifAvailable(DemoData::seed);
+		}
 	}
 
 	private <T> void register(Class<T> type)

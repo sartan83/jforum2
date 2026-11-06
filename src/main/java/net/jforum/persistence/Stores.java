@@ -47,6 +47,11 @@ public final class Stores
 		STORES.put(type, store);
 	}
 
+	public static boolean isComplete()
+	{
+		return STORES.keySet().containsAll(TYPES);
+	}
+
 	public static void clear()
 	{
 		STORES.clear();
