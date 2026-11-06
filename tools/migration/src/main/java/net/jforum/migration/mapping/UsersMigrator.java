@@ -3,6 +3,7 @@ package net.jforum.migration.mapping;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -12,7 +13,8 @@ import net.jforum.migration.target.BatchSink;
 import net.jforum.migration.target.Measure;
 
 /**
- * jforum_users + jforum_user_groups → <code>users</code> with the sorted, distinct <code>groupIds</code>.
+ * jforum_users + jforum_user_groups → <code>users</code> with the sorted, distinct <code>groupIds</code> and the
+ * <code>usernameLower</code> lookup field of <code>UserDocument</code>.
  * Memberships of user ids that do not exist in jforum_users are reported as a mismatch.
  */
 public class UsersMigrator implements TableMigrator
@@ -60,6 +62,9 @@ public class UsersMigrator implements TableMigrator
 		try (BatchSink sink = ctx.sink("users")) {
 			ctx.source().stream("SELECT * FROM " + ctx.source().qualified("jforum_users") + " ORDER BY user_id", row -> {
 				var doc = Columns.toDocument(row, "user_id", Set.of());
+				if (doc.get("username") instanceof String username) {
+					doc.put("usernameLower", username.toLowerCase(Locale.ROOT));
+				}
 				doc.put("groupIds", new ArrayList<>(groups.getOrDefault(row.get("user_id"), new TreeSet<>())));
 				sink.add(doc);
 			});

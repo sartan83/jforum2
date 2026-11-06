@@ -25,7 +25,6 @@ public final class MappingCatalog
 		// the SQL Server DDL declares forum_id as IDENTITY primary key, which is a schema bug
 		// (one row per watcher); it is migrated as the link table it is in every other database
 		"jforum_forums_watch",
-		"jforum_sessions",
 		"jforum_search_results",
 		"jforum_search_topics",
 		"jforum_search_wordmatch");
@@ -54,7 +53,19 @@ public final class MappingCatalog
 		PRIMARY_KEYS.put("jforum_moderation_log", "log_id");
 		PRIMARY_KEYS.put("jforum_banner", "banner_id");
 		PRIMARY_KEYS.put("jforum_api", "api_id");
+		// one session per user: SessionDocument uses the user id as _id
+		PRIMARY_KEYS.put("jforum_sessions", "session_user_id");
 	}
+
+	/** jforum_privmsgs → PrivateMessageDocument fields. */
+	public static final FieldRules PRIVMSGS_RULES = new FieldRules("privmsgs",
+		Map.of("fromUserid", "fromUserId", "toUserid", "toUserId"),
+		Set.of("enableBbcode", "enableHtml", "enableSmilies", "attachSig"));
+
+	/** Field adjustments of the single-table mappings, to match the application's document classes. */
+	public static final Map<String, FieldRules> RULES = Map.of(
+		"jforum_banner", new FieldRules("banner", Map.of(), Set.of("active")),
+		"jforum_bookmarks", new FieldRules(null, Map.of(), Set.of("publicVisible")));
 
 	private MappingCatalog() {}
 
@@ -112,7 +123,7 @@ public final class MappingCatalog
 			}
 			String id = GENERATED_ID_TABLES.contains(table) ? null
 				: PRIMARY_KEYS.containsKey(table) ? PRIMARY_KEYS.get(table) : detectIntegerKey(source, table);
-			migrators.add(new SimpleTableMigrator(table, collectionFor(table), id));
+			migrators.add(new SimpleTableMigrator(table, collectionFor(table), id, RULES.getOrDefault(table, FieldRules.NONE)));
 		}
 		return migrators;
 	}
