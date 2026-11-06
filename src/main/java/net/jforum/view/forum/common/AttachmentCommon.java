@@ -43,7 +43,10 @@
 package net.jforum.view.forum.common;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -56,6 +59,7 @@ import java.util.Map;
 import net.jforum.SessionFacade;
 import net.jforum.context.RequestContext;
 import net.jforum.persistence.AttachmentStore;
+import net.jforum.persistence.mongo.AttachmentFileStorage;
 import net.jforum.persistence.Stores;
 import net.jforum.entities.Attachment;
 import net.jforum.entities.AttachmentExtension;
@@ -67,6 +71,7 @@ import net.jforum.entities.User;
 import net.jforum.exceptions.AttachmentException;
 import net.jforum.exceptions.AttachmentSizeTooBigException;
 import net.jforum.exceptions.BadExtensionException;
+import net.jforum.exceptions.ForumException;
 import net.jforum.repository.SecurityRepository;
 import net.jforum.security.SecurityConstants;
 import net.jforum.util.I18n;
@@ -75,6 +80,8 @@ import net.jforum.util.image.ImageUtils;
 import net.jforum.util.upload.FileItem;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+
+import javax.imageio.ImageIO;
 
 import org.apache.log4j.Logger;
 
@@ -234,15 +241,21 @@ public class AttachmentCommon
 			Attachment a = (Attachment)entry.getValue();
 			a.setPostId(post.getId());
 			
-			String path = SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_STORE_DIR) 
-				+ "/" 
-				+ a.getInfo().getPhysicalFilename();
+			String path = a.getInfo().getPhysicalFilename();
+			UploadUtils uploadUtils = (UploadUtils)entry.getKey();
 			
 			this.am.addAttachment(a);
-			((UploadUtils)entry.getKey()).saveUploadedFile(path);
+			
+			try (InputStream in = uploadUtils.getInputStream()) {
+				AttachmentFileStorage.get().store(path, in, a.getInfo().getMimetype(), a.getId(),
+					a.getInfo().getRealFilename());
+			}
+			catch (IOException e) {
+				throw new ForumException(e);
+			}
 			
 			if (this.shouldCreateThumb(a)) {
-				this.createSaveThumb(path);
+				this.createSaveThumb(path, a);
 			}
 		}
 	}
@@ -255,12 +268,25 @@ public class AttachmentCommon
 				|| "gif".equals(extension) || "png".equals(extension));
 	}
 	
-	private void createSaveThumb(String path) {
-		try {
-			BufferedImage image = ImageUtils.resizeImage(path, ImageUtils.IMAGE_JPEG, 
+	private void createSaveThumb(String path, Attachment a) {
+		AttachmentFileStorage storage = AttachmentFileStorage.get();
+		
+		try (InputStream in = storage.openStream(path)) {
+			BufferedImage original = in == null ? null : ImageIO.read(in);
+			
+			if (original == null) {
+				return;
+			}
+			
+			BufferedImage image = ImageUtils.resizeImage(original, ImageUtils.IMAGE_JPEG, 
 				SystemGlobals.getIntValue(ConfigKeys.ATTACHMENTS_IMAGES_MAX_THUMB_W),
 				SystemGlobals.getIntValue(ConfigKeys.ATTACHMENTS_IMAGES_MAX_THUMB_H));
-			ImageUtils.saveImage(image, path + "_thumb", ImageUtils.IMAGE_JPEG);
+			
+			ByteArrayOutputStream thumb = new ByteArrayOutputStream();
+			ImageIO.write(image, "jpg", thumb);
+			
+			storage.store(path + AttachmentFileStorage.THUMB_SUFFIX, 
+				new ByteArrayInputStream(thumb.toByteArray()), "image/jpeg", a.getId(), a.getInfo().getRealFilename());
 		}
 		catch (Exception e) {
 			logger.error(e.toString(), e);
@@ -310,23 +336,15 @@ public class AttachmentCommon
 					int id = Integer.parseInt(delete[i]);
 					Attachment a = am.selectAttachmentById(id);
 					
+					if (a == null) {
+						continue;
+					}
+					
 					am.removeAttachment(id, postId);
 					
-					String filename = SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_STORE_DIR)
-						+ "/" + a.getInfo().getPhysicalFilename();
-					
-					File f = new File(filename);
-					
-					if (f.exists()) {
-						f.delete();
-					}
-					
-					// Check if we have a thumb to delete
-					f = new File(filename + "_thumb");
-					
-					if (f.exists()) {
-						f.delete();
-					}
+					String filename = a.getInfo().getPhysicalFilename();
+					AttachmentFileStorage.get().delete(filename);
+					AttachmentFileStorage.get().delete(filename + AttachmentFileStorage.THUMB_SUFFIX);
 				}
 			}
 			
@@ -374,8 +392,6 @@ public class AttachmentCommon
 		
 		StringBuffer dir = new StringBuffer(256);
 		dir.append(year).append('/').append(month).append('/').append(day).append('/');
-		
-		new File(SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_STORE_DIR) + "/" + dir).mkdirs();
 		
 		return dir
 			.append(MD5.crypt(a.getRealFilename() + System.currentTimeMillis()))

@@ -42,8 +42,8 @@
  */
 package net.jforum.entities;
 
-import java.io.File;
 
+import net.jforum.persistence.mongo.AttachmentFileStorage;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
@@ -141,9 +141,7 @@ public class Attachment
 	public boolean hasThumb() 
 	{
 		return SystemGlobals.getBoolValue(ConfigKeys.ATTACHMENTS_IMAGES_CREATE_THUMB)
-			&& new File(SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_STORE_DIR)
-					+ '/'
-					+ this.info.getPhysicalFilename() + "_thumb").exists();
+			&& AttachmentFileStorage.get().exists(this.info.getPhysicalFilename() + AttachmentFileStorage.THUMB_SUFFIX);
 	}
 	
 	public String thumbPath() {

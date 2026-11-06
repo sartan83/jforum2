@@ -42,9 +42,8 @@
  */
 package net.jforum.view.forum;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
@@ -66,6 +65,7 @@ import net.jforum.persistence.PollStore;
 import net.jforum.persistence.PostStore;
 import net.jforum.persistence.TopicStore;
 import net.jforum.persistence.UserStore;
+import net.jforum.persistence.mongo.AttachmentFileStorage;
 import net.jforum.entities.Attachment;
 import net.jforum.entities.Forum;
 import net.jforum.entities.ModerationLog;
@@ -98,6 +98,7 @@ import net.jforum.view.forum.common.TopicsCommon;
 import net.jforum.view.forum.common.ViewCommon;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.mongodb.gridfs.GridFsResource;
 
 import freemarker.template.SimpleHash;
 
@@ -1399,6 +1400,12 @@ public class PostAction extends Command
 		AttachmentStore am = Stores.attachment();
 		Attachment a = am.selectAttachmentById(id);
 		
+		if (a == null) {
+			this.setTemplateName(TemplateKeys.POSTS_ATTACH_NOTFOUND);
+			this.context.put("message", I18n.getMessage("Attachments.notFound"));
+			return;
+		}
+		
 		PostStore postDao = Stores.post();
 		Post post = postDao.selectById(a.getPostId());
 		
@@ -1413,24 +1420,22 @@ public class PostAction extends Command
 			return;
 		}
 		
-		String filename = SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_STORE_DIR)
-			+ "/"
-			+ a.getInfo().getPhysicalFilename();
+		GridFsResource file = AttachmentFileStorage.get().open(a.getInfo().getPhysicalFilename());
 
-		if (!new File(filename).exists()) {
+		if (file == null) {
 			this.setTemplateName(TemplateKeys.POSTS_ATTACH_NOTFOUND);
 			this.context.put("message", I18n.getMessage("Attachments.notFound"));
 			return;
 		}
 		
-		FileInputStream fis = null;
+		InputStream fis = null;
 		OutputStream os = null;
 
 		try {
 			a.getInfo().setDownloadCount(a.getInfo().getDownloadCount() + 1);
 			am.updateAttachment(a);
 
-			fis = new FileInputStream(filename);
+			fis = file.getInputStream();
 			os = response.getOutputStream();
 
 			if (am.isPhysicalDownloadMode(a.getInfo().getExtension().getExtensionGroupId())) {
