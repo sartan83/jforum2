@@ -89,6 +89,8 @@ class POPListenerTest extends MongoTestSupport
 			integrations.getAllValues().stream().map(MailIntegration::getForumEmail).toList());
 
 		assertEquals(2, posted.size());
+		assertEquals(1, posted.get(0).size());
+		assertEquals(1, posted.get(1).size(), "each mailbox only posts its own messages");
 		assertEquals("alice@example.com", posted.get(0).get(0).getSender());
 		assertEquals("[1] Hello", posted.get(0).get(0).getSubject());
 		assertEquals("bob@example.com", posted.get(1).get(0).getSender());

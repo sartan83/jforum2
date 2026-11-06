@@ -31,10 +31,11 @@ public class POPListener
 				working = true;
 
 				List integrationList = Stores.mailintegration().findAll();
-				POPParser parser = new POPParser();
 				
 				for (Iterator iter = integrationList.iterator(); iter.hasNext(); ) {
 					MailIntegration integration = (MailIntegration)iter.next();
+					// one parser per mailbox, otherwise each forum re-posts the previous mailboxes' messages
+					POPParser parser = new POPParser();
 					
 					connector.setMailIntegration(integration);
 					
