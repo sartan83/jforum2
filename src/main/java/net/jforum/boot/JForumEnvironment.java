@@ -12,9 +12,11 @@ import java.util.Properties;
 
 import jakarta.annotation.PostConstruct;
 
+import net.jforum.util.preferences.SettingsPersister;
 import net.jforum.util.preferences.SystemGlobals;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.EnumerablePropertySource;
 import org.springframework.core.env.PropertySource;
@@ -43,11 +45,13 @@ public class JForumEnvironment
 	public static final String HOME = "jforum.home";
 
 	private final ConfigurableEnvironment environment;
+	private final ObjectProvider<SettingsPersister> settingsPersister;
 	private File home;
 
-	public JForumEnvironment(ConfigurableEnvironment environment)
+	public JForumEnvironment(ConfigurableEnvironment environment, ObjectProvider<SettingsPersister> settingsPersister)
 	{
 		this.environment = environment;
+		this.settingsPersister = settingsPersister;
 	}
 
 	@PostConstruct
@@ -60,6 +64,8 @@ public class JForumEnvironment
 		this.copyClasspathTree("templates", new File(this.home, "templates"));
 		this.copyClasspathTree("images", new File(this.home, "images"));
 
+		// admin panel overrides (MongoDB "settings" collection) win over the jforum.* defaults
+		SystemGlobals.setSettingsPersister(this.settingsPersister.getIfAvailable());
 		SystemGlobals.initGlobals(this.home.getPath(), this.jforumProperties());
 	}
 
@@ -93,7 +99,15 @@ public class JForumEnvironment
 		// let higher precedence sources that are not enumerated by name (e.g. JFORUM_FORUM_LINK
 		// environment variables, relaxed binding) override the defaults
 		for (String key : p.stringPropertyNames()) {
-			String value = this.environment.getProperty(PREFIX + key);
+			String value;
+
+			try {
+				value = this.environment.getProperty(PREFIX + key);
+			}
+			catch (IllegalArgumentException e) {
+				// unresolvable ${...}: a SystemGlobals placeholder (e.g. "${forum.link}"), keep the raw value
+				continue;
+			}
 
 			if (value != null) {
 				p.setProperty(key, value);
