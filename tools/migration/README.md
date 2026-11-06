@@ -79,13 +79,13 @@ A SQL `NULL` leaves the field out of the document.
 | Source table(s) | Collection | `_id` | Notes |
 |---|---|---|---|
 | `jforum_posts` + `jforum_posts_text` | `posts` | `post_id` | `post_subject` → `subject`, `post_text` → `text` (LEFT JOIN: a post without a text row has no `subject`/`text`) |
-| `jforum_topics` | `topics` | `topic_id` | as is |
+| `jforum_topics` | `topics` | `topic_id` | as is (`TopicDocument`); flags such as `moderated` stay int 0/1 |
 | `jforum_forums` | `forums` | `forum_id` | as is |
 | `jforum_categories` | `categories` | `categories_id` | as is |
 | `jforum_users` + `jforum_user_groups` | `users` | `user_id` | `groupIds: [int]`, sorted and distinct; `usernameLower` = `username` lower-cased (`Locale.ROOT`), used by `MongoUserStore` lookups |
 | `jforum_roles` + `jforum_role_values` | `roles` | `role_id` | `roleValues: [String]` ordered by `role_value` (`RoleDocument`) |
 | `jforum_privmsgs` + `jforum_privmsgs_text` | `privmsgs` | `privmsgs_id` | fields without the `privmsgs_` prefix as in `PrivateMessageDocument`: `type`, `subject`, `fromUserId`, `toUserId`, `date`, `ip`, `enableBbcode`, `enableHtml`, `enableSmilies`, `attachSig` (booleans), `text` (from `privmsgs_text`) |
-| `jforum_vote_desc` + `jforum_vote_results` + `jforum_vote_voters` | `polls` | `vote_id` | `options: [{voteOptionId, voteOptionText, voteResult}]` ordered by option id, `voters: [{voteUserId, voteUserIp}]` |
+| `jforum_vote_desc` + `jforum_vote_results` + `jforum_vote_voters` | `polls` | `vote_id` | `options: [{voteOptionId, voteOptionText, voteResult}]` ordered by option id, `voters: [{voteUserId, voteUserIp}]` ; `voteStart` as a date (the SQL Server DDL declares `vote_start` as bigint: numbers are read as epoch seconds, or epoch milliseconds above 99999999999, and listed as a warning) |
 | `jforum_attach` + `jforum_attach_desc` | `attachments` | `attach_id` | `attach_desc` columns flattened into the same document (`attachDescId`, `physicalFilename`, `realFilename`, `description`, `mimetype`, `filesize`, `uploadTime`, `thumb`, `extensionId`, ...) |
 | files in `--attachments-dir` | GridFS bucket `fs` | ObjectId | `<dir>/<physical_filename>` and `<physical_filename>_thumb` if present. Filename = `real_filename`. `metadata: {attachId, physicalFilename, realFilename, mimetype, thumb}` |
 | `jforum_groups` | `groups` | `group_id` | |

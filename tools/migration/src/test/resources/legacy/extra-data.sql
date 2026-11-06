@@ -44,7 +44,7 @@ SET IDENTITY_INSERT jforum_forums OFF;
 SET IDENTITY_INSERT jforum_topics ON;
 INSERT INTO jforum_topics (topic_id, forum_id, topic_title, user_id, topic_time, topic_views, topic_replies, topic_status, topic_vote_id,
   topic_type, topic_first_post_id, topic_last_post_id, moderated)
-  VALUES (10, 8, 'What do you prefer?', 3, '2024-03-01 12:00:00', 42, 1, 1, 1, 2, 11, 12, 0);
+  VALUES (10, 8, 'What do you prefer?', 3, '2024-03-01 12:00:00', 42, 1, 1, 4, 2, 11, 12, 0);
 SET IDENTITY_INSERT jforum_topics OFF;
 
 SET IDENTITY_INSERT jforum_posts ON;
