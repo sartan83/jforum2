@@ -1,0 +1,105 @@
+<style type="text/css">@import url( /templates/default/styles/style.css?1793962431913 );</style>
+
+<form accept-charset="UTF-8" name="form" action="/jforum.page" method="post">
+<input type="hidden" name="action" value="configurationsSave" />
+<input type="hidden" name="module" value="adminAttachments" />
+
+<table class="forumline" cellspacing="1" cellpadding="3" width="100%" border="0">
+<tr>
+<th class="thhead" valign="middle" colspan="2" height="25">Attachments general configuration</th>
+</tr>
+
+<!-- ICON -->
+<tr>
+	<td>
+		<table width="99%" cellpadding="4" cellspacing="1" border="0" align="center" class="forumline">
+			<tr>
+				<td class="row1" width="80%"><span class="gen"><b>Attachment Posting Icon</b></span><br />
+				<span class="gensmall">This Image is displayed next to Attachment Links in individual Postings. Leave this field empty if you don't want an icon to be displayed. This Setting will be overwritten by the Settings in Extension Groups Management.</span></td>
+
+				<td class="row2"><input type="text" size="25" maxlength="100" name="p_attachments.icon" value="images/icon_clip.gif" /></td>
+			</tr>
+		</table>
+	</td>
+</tr>
+
+<!-- THUMB -->
+<tr>
+	<td>
+		<table width="99%" cellpadding="4" cellspacing="1" border="0" align="center" class="forumline">
+			<tr>
+				<td class="row1" width="80%"><span class="gen"><b>Create Thumbnail</b></span><br />
+				<span class="gensmall">Always create a Thumbnail. This feature overrides nearly all Settings within this Special Category, except the Maximum Image Dimensions. With this Feature a Thumbnail will be displayed within the post, the User can click it to open the real Image.</span></td>
+
+				<td class="row2">
+					<span class="gen">
+					<input type="radio" name="p_attachments.images.createthumb" value="true" checked/>Yes
+					<input type="radio" name="p_attachments.images.createthumb" value="false" />No
+					</span>
+				</td>
+			</tr>
+		</table>
+	</td>
+</tr>
+
+<!-- THUMB SIZE -->
+<tr>
+	<td>
+		<table width="99%" cellpadding="4" cellspacing="1" border="0" align="center" class="forumline">
+			<tr>
+				<td class="row1" width="80%"><span class="gen"><b>Minimum Thumbnail dimensions</b></span><br />
+				<span class="gensmall">If an Image is smaller than the defined dimensions, no Thumbnail will be created, because it isn't small enough.</span></td>
+
+				<td class="row2">
+					<span class="gensmall">
+					<input type="text" size="10" maxlength="4" name="p_attachments.images.thumb.maxsize.w" value="400" />
+					x
+					<input type="text" size="10" maxlength="4" name="p_attachments.images.thumb.maxsize.h" value="400" />
+					(Width x Height)</span>
+				</td>
+			</tr>
+		</table>
+	</td>
+</tr>
+
+<!-- THUMB DISPLAY BORDER -->
+<tr>
+	<td>
+		<table width="99%" cellpadding="4" cellspacing="1" border="0" align="center" class="forumline">
+			<tr>
+				<td class="row1" width="80%"><span class="gen"><b>Add description box around Thumbs</b></span><br />
+				<span class="gensmall">If set to "Yes", the regular attachments box panel will be added around thumbnails as well, showing the image's description, as well download count and the download button. If set to "No", only the thumbnail will be shown, and then the user should click on it to download the full image.</span></td>
+
+				<td class="row2">
+					<span class="gen">
+						<input type="radio" name="p_attachments.images.thumb.box.show" value="true" checked/>Yes
+						<input type="radio" name="p_attachments.images.thumb.box.show" value="false" />No
+					</span>
+				</td>
+			</tr>
+		</table>
+	</td>
+</tr>
+
+<!-- MAX POST -->
+<tr>
+	<td>
+		<table width="99%" cellpadding="4" cellspacing="1" border="0" align="center" class="forumline">
+			<tr>
+				<td class="row1" width="80%"><span class="gen"><b>Maximum Number of Attachments</b></span><br />
+				<span class="gensmall">The maximum number of attachments allowed in one post.</span></td>
+
+				<td class="row2">
+					<input type="text" size="5" maxlength="2" name="p_attachments.max.post" value="3" />
+				</td>
+			</tr>
+		</table>
+	</td>
+</tr>
+
+<tr>
+	<td class="catsides" colspan="2" align="center"><input type="submit" value="Update" class="mainoption" />&nbsp;&nbsp;<input type="reset" value="Reset to defaults" class="mainoption"/></td>
+</tr>
+
+</table>
+</form>

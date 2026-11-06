@@ -1,0 +1,333 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="-1" />
+<style type="text/css">@import url( /templates/default/styles/style.css?1793962431913 );</style>
+<style type="text/css">@import url( /templates/default/styles/en_US.css?1793962431913 );</style>
+
+
+<title>Member Listing</title>
+
+</head>
+<body class="en_US">
+
+<!--
+Original theme from phpBB (http://www.phpbb.com) subSilver
+Created by subBlue design
+http://www.subBlue.com
+
+Modifications by JForum Team
+-->
+
+<table width="100%" border="0">
+	<tr>
+		<td>
+			<table cellspacing="0" cellpadding="0" width="100%" border="0">
+				<tr>
+					<td>
+						&nbsp;
+						<!--
+						<a href="http://localhost:8080"><img src="/templates/default/images/logo.jpg"  vspace="1" border="0" alt="[Logo]" /></a>
+						-->
+					</td>
+					 
+					<td width="100%" align="center" valign="middle">
+						<span class="boardtitle">My Forum - your board description</span>
+						<table cellspacing="0" cellpadding="2" border="0">
+							<tr>
+								<td valign="top" nowrap="nowrap" align="center">&nbsp;
+									<img src="/templates/default/images/icon_mini_search.gif" alt="[Search]"/>
+									<span class="mainmenu"><a id="search" class="mainmenu" href="/search/filters.page"><b>Search</b></a> &nbsp;
+									
+									<img src="/templates/default/images/icon_mini_recentTopics.gif" alt="[Recent Topics]" />
+									<a id="latest" class="mainmenu" href="/recentTopics/list.page">Recent Topics</a> &nbsp;
+									<img src="/templates/default/images/icon_mini_recentTopics.gif" alt="[Hottest Topics]" />
+									<a id="hottest" class="mainmenu" href="/hottestTopics/list.page">Hottest Topics</a> &nbsp;
+									<img src="/templates/default/images/icon_mini_members.gif" alt="[Members]" />&nbsp;
+									<a id="latest2" class="mainmenu" href="/user/list.page">Member Listing</a> &nbsp;
+									<span class="mainmenu"> <img src="/templates/default/images/icon_mini_groups.gif" alt="[Groups]" />&nbsp;<a id="backtosite" class="mainmenu" href="http://localhost:8080">Back to home page</a>&nbsp;
+									
+									<br>
+
+										<img src="/templates/default/images/icon_mini_members.gif" alt="[Moderation Log]" />
+										<a id="moderationlog" class="mainmenu" href="/moderation/showActivityLog.page">Moderation Log</a> &nbsp;
+
+	
+										<a id="register" class="mainmenu" href="/user/insert.page"><img src="/templates/default/images/icon_mini_register.gif" border="0" alt="[Register]" /> Register</a>&nbsp;/&nbsp;</span>
+										<a id="login" class="mainmenu" href="/user/login.page"><img src="/templates/default/images/icon_mini_login.gif" border="0" alt="[Login]" /> Login</a>&nbsp; </span>
+
+									
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	<tr>
+		<td>
+
+
+<script type="text/javascript" src="/templates/default/js/pagination.js?1793962431913"></script>
+<script type="text/javascript">
+<!--
+function showEmail(beforeAt, afterAt)
+{
+	return beforeAt + "@" + afterAt;
+}
+
+var starOn = new Image();
+starOn.src = "/templates/default/images/star_on.gif";
+
+var starOff = new Image();
+starOff.src = "/templates/default/images/star_off.gif";
+
+function writeStars(q, postId)
+{
+	for (var i = 0; i < 5; i++) {
+		var name = "star" + postId + "_" + i;
+		document.write("<img name='" + name + "' alt='*' />");
+		document.images[name].src = q > i ? starOn.src : starOff.src;
+	}
+}
+
+function addBookmark(relationType, relationId)
+{
+	var w = window.open('/bookmarks/insert/' + relationType + '/' + relationId + '.page', 'bookmark_add', 'width=700, height=200, scrollbars=auto, resizable=true');
+	w.focus();
+}
+
+-->
+</script>
+
+<script type="text/javascript">
+<!--
+var quick = false;
+
+function activateAdvancedQuery()
+{
+	quick = !quick;
+
+	document.getElementById("tableKarmaSearch").style.display = (quick ? "" : "none");
+
+	if (quick) {
+		document.location = "#quick";
+	}
+}
+-->
+</script>
+<table cellspacing="0" cellpadding="0" width="100%" border="0">
+	<tr>
+		<td colspan="3">
+			<table width="100%">
+				<tr>
+					<td align="left"><span class="nav"><a class="nav" href="/forums/list.page">Forum Index</a></span></td>
+					<td align="right">&nbsp;<!--
+						<img src="/templates/default/images/icon_mini_message.gif" align="middle">
+						<span class="nav"><a href="javascript:activateAdvancedQuery()">Advanced Karma Query</a></span>-->
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+
+<table align="center" cellspacing="0" cellpadding="0" bgcolor="FFFFFF" width="100%" border="0" style="display: none;" id="tableKarmaSearch">
+	<tr>
+		<td>
+			<form action="/jforum.page" method="post" name="searchByMonthForm" id="post">
+			<input type="hidden" name="action" value="searchByMonth" />
+			<input type="hidden" name="module" value="karma" />
+			<table class="forumline" width="100%" align="center">				
+				<tr>
+					<th class="thtop" align="left">
+						<b>Advanced Karma Query</b>
+					</th>
+				</tr>
+				
+				<tr>
+					<td><span class="gen"><b>Query by month:</b></span></td>
+				</tr>
+				
+				<tr>
+					<td>
+						<span class="gen">
+						Month:
+						<select name="month">
+							<option value="01">January</option>
+							<option value="02">February</option>
+							<option value="03">March</option>
+							<option value="04">April</option>
+							<option value="05">May</option>
+							<option value="06">June</option>
+							<option value="07">July</option>
+							<option value="08">August</option>
+							<option value="09">September</option>
+							<option value="10">October</option>
+							<option value="11">November</option>
+							<option value="12">December</option>
+						</select> &nbsp;
+						Year:<input class="post" type="text" maxlength="10" size="15" name="year" value="2005"/>
+						</span>
+					</td>
+				</tr>
+
+				<tr>
+					<td>
+						<span class="gen">
+						Order by:&nbsp;
+						<input type="radio" name="order_by" value="total" checked="checked"/> Total points
+						&nbsp;<input type="radio" name="order_by" value="votes_received"/> Votes Received
+						&nbsp;<input type="radio" name="order_by" value="votes_given"/> Votes Given
+						&nbsp;<input type="radio" name="order_by" value="user_karma"/> Karma
+						</span>
+					</td>
+				</tr>
+
+				<tr>
+					<td align="center" >
+						<input type="submit" value="Submit" class="mainoption" />
+					</td>
+				</tr>		
+			</table>
+			</form>
+
+				<form action="/jforum.page" method="post" name="searchByPeriodForm" id="post2">
+				<input type="hidden" name="action" value="searchByPeriod" />
+				<input type="hidden" name="module" value="karma" />
+			<table class="forumline" width="100%" align="center">				
+
+				<tr>
+					<td align="center"class="row2" height="1"><img src="/templates/default/images/spacer.gif" alt="" width="1" height="1" /></td>
+				</tr>
+				
+				<tr>
+					<td><span class="gen"><b>Query by period:</b></span></td>
+				</tr>
+
+				<tr>
+					<td>
+						<span class="gen">
+						First date: <input class="post" type="text" maxlength="10" size="15" name="first_date" value=""/>
+						&nbsp;
+						Last date: <input class="post" type="text"  maxlength="10" size="15" name="last_date" value="" id="last_date"/>
+						</span>
+					</td>
+				</tr>
+
+				<tr>
+					<td>
+						<span class="gen">
+						Order by:&nbsp;
+						<input type="radio" name="order_by" value="total" checked="checked" /> Total points
+						&nbsp;<input type="radio" name="order_by" value="votes_received"/> Votes Received
+						&nbsp;<input type="radio" name="order_by" value="votes_given"/> Votes Given
+						&nbsp;<input type="radio" name="order_by" value="user_karma"/> Karma
+						</span>
+					</td>
+				</tr>
+
+				<tr>
+					<td align="center">
+						<input type="submit" value="Submit" class="mainoption" />
+					</td>
+				</tr>
+			</table>
+				</form>
+		</td>
+	</tr>
+</table>
+
+<table class="forumline" cellspacing="1" cellpadding="3" width="100%" border="0">
+	<tr>
+	  <th class="thcornerl" nowrap="nowrap">#</th>
+	  <th class="thtop" nowrap="nowrap">&nbsp;Username&nbsp;</th>
+	  <th class="thtop" nowrap="nowrap">&nbsp;Private Message&nbsp;</th>	  
+	  <th class="thtop" nowrap="nowrap">&nbsp;E-mail&nbsp;</th>
+	  <th class="thtop" nowrap="nowrap">&nbsp;From&nbsp;</th>
+	  <th class="thtop" nowrap="nowrap">&nbsp;Registration date&nbsp;</th>
+	  <th class="thtop" nowrap="nowrap">&nbsp;Messages&nbsp;</th>
+	</tr>
+
+			<tr align="center">		  
+				<td class="row2"><span class="gen">2</span></td>			
+				<td class="row2"><span class="gen"><a href="/user/profile/2.page">Admin</a></span></td>
+				<td class="row2"><span class="gen"><a href="/pm/sendTo/2.page" class="icon_pm"><img src="/images/transp.gif" alt="" /></a></span></td>
+				<td class="row2"><span class="gen">
+						&nbsp;
+					</span>
+				</td>
+				<td class="row2"><span class="gen">&nbsp;</span></td>
+				<td class="row2"><span class="gen">06/11/2026 10:53:51</span></td>
+				<td class="row2"><span class="gen">1</span></td>
+			</tr>
+			<tr align="center">		  
+				<td class="row2"><span class="gen">4</span></td>			
+				<td class="row2"><span class="gen"><a href="/user/profile/4.page">giulia</a></span></td>
+				<td class="row2"><span class="gen"><a href="/pm/sendTo/4.page" class="icon_pm"><img src="/images/transp.gif" alt="" /></a></span></td>
+				<td class="row2"><span class="gen">
+						&nbsp;
+					</span>
+				</td>
+				<td class="row2"><span class="gen">&nbsp;</span></td>
+				<td class="row2"><span class="gen">06/11/2026 10:53:51</span></td>
+				<td class="row2"><span class="gen">3</span></td>
+			</tr>
+			<tr align="center">		  
+				<td class="row2"><span class="gen">5</span></td>			
+				<td class="row2"><span class="gen"><a href="/user/profile/5.page">luca</a></span></td>
+				<td class="row2"><span class="gen"><a href="/pm/sendTo/5.page" class="icon_pm"><img src="/images/transp.gif" alt="" /></a></span></td>
+				<td class="row2"><span class="gen">
+						&nbsp;
+					</span>
+				</td>
+				<td class="row2"><span class="gen">&nbsp;</span></td>
+				<td class="row2"><span class="gen">06/11/2026 10:53:51</span></td>
+				<td class="row2"><span class="gen">3</span></td>
+			</tr>
+			<tr align="center">		  
+				<td class="row2"><span class="gen">3</span></td>			
+				<td class="row2"><span class="gen"><a href="/user/profile/3.page">mario</a></span></td>
+				<td class="row2"><span class="gen"><a href="/pm/sendTo/3.page" class="icon_pm"><img src="/images/transp.gif" alt="" /></a></span></td>
+				<td class="row2"><span class="gen">
+						&nbsp;
+					</span>
+				</td>
+				<td class="row2"><span class="gen">&nbsp;</span></td>
+				<td class="row2"><span class="gen">06/11/2026 10:53:51</span></td>
+				<td class="row2"><span class="gen">4</span></td>
+			</tr>
+
+	<tr align="center">
+		<td class="catbottom" colspan="11" height="28">&nbsp;
+		</td>
+	</tr>
+</table>
+
+<table width="100%">
+	<tr>
+		<td align="right"></td>
+	</tr>
+</table>
+</td>
+</tr>
+	<tr>
+		<td align="center">
+			
+		</td>
+	</tr>
+
+	<tr>
+		<td align="center">
+			<span class="copyright">Powered by <a class="copyright" href="http://www.jforum.net/" target="_blank">JForum 2.1.8</a> &copy; <a class="copyright" href="http://www.jforum.net/team.jsp" target="_blank">JForum Team</a></span>
+		</td>
+	</tr>
+</table>
+
+
+<iframe src="/ping_session.jsp" height="0" width="0" frameborder="0" scrolling="no"></iframe>
+
+</body>
+</html>

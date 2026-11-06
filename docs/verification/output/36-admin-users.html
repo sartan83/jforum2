@@ -1,0 +1,113 @@
+
+<style type="text/css">@import url( /templates/default/styles/style.css?1793962431913 );</style>
+<table class="forumline" cellspacing="1" cellpadding="3" width="100%" border="0">
+	<tr>
+		<th class="thhead" valign="middle" colspan="6" height="25">User Administration</th>
+	</tr>
+
+	<tr>
+		<td class="gen" align="center" colspan="6">
+			<form id="formusersearch" action="/jforum.page" accept-charset="UTF-8" method="post">
+			<span class="gensmall">
+			Search by username: 
+			<input type="hidden" name="action" value="search" />
+			<input type="hidden" name="module" value="adminUsers" />
+
+			<input type="text" name="username" value="" />&nbsp;
+			or by group: 
+	<select name="group_id" >
+	
+		<option value="0">Top level Group</option>
+		
+
+			<option value="2">Administration</option>
+	
+
+			<option value="1">General</option>
+	
+
+	</select>	
+
+			<input type="submit" value="Search" class="mainoption"/>
+			</form>
+		</td>
+	</tr>
+
+	<form accept-charset="UTF-8" name="form" action="/jforum.page" method="post">
+	<input type="hidden" name="action" value="delete" />
+	<input type="hidden" name="module" value="adminUsers" />
+	<input type="hidden" name="start" value="0" />
+  
+	<tr>
+		<td class="row2" width="10%" align="center"><span class="gen"><b>ID</b></span></td>
+		<td class="row2"><span class="gen"><b>Username</b></span></td>
+		<td class="row2" align="center"><span class="gen"><b>&nbsp;</b></span></td>
+		<td class="row2" align="center"><span class="gen"><b>&nbsp;</b></span></td>
+		<td class="row2" width="10%" align="center"><span class="gen"><b>Lock</b></span></td>
+		<td class="row2" width="10%" align="center"><span class="gen"><b>Unlock</b></span></td>
+	</tr>
+
+		<tr>
+			<td class="row1" align="center"><span class="gen">2</span></td>
+			<td class="row1"><span class="gen">Admin</span></td>
+			<td class="row1" align="center"><span class="gen"><a href="/jforum.page?module=adminUsers&amp;action=edit&amp;id=2">Edit</a></span></td>
+			<td class="row1" align="center"><span class="gen"><a href="/jforum.page?module=adminUsers&amp;action=groups&amp;id=2">Groups</a></span></td>
+
+				<td class="row1" align="center"><input type="checkbox" name="user_id" value="2" /></td>
+				<td class="row1" align="center">&nbsp;</td>
+		</tr>
+		<tr>
+			<td class="row1" align="center"><span class="gen">1</span></td>
+			<td class="row1"><span class="gen">Anonymous</span></td>
+			<td class="row1" align="center"><span class="gen"><a href="/jforum.page?module=adminUsers&amp;action=edit&amp;id=1">Edit</a></span></td>
+			<td class="row1" align="center"><span class="gen"><a href="/jforum.page?module=adminUsers&amp;action=groups&amp;id=1">Groups</a></span></td>
+
+				<td class="row1" align="center"><input type="checkbox" name="user_id" value="1" /></td>
+				<td class="row1" align="center">&nbsp;</td>
+		</tr>
+		<tr>
+			<td class="row1" align="center"><span class="gen">4</span></td>
+			<td class="row1"><span class="gen">giulia</span></td>
+			<td class="row1" align="center"><span class="gen"><a href="/jforum.page?module=adminUsers&amp;action=edit&amp;id=4">Edit</a></span></td>
+			<td class="row1" align="center"><span class="gen"><a href="/jforum.page?module=adminUsers&amp;action=groups&amp;id=4">Groups</a></span></td>
+
+				<td class="row1" align="center"><input type="checkbox" name="user_id" value="4" /></td>
+				<td class="row1" align="center">&nbsp;</td>
+		</tr>
+		<tr>
+			<td class="row1" align="center"><span class="gen">5</span></td>
+			<td class="row1"><span class="gen">luca</span></td>
+			<td class="row1" align="center"><span class="gen"><a href="/jforum.page?module=adminUsers&amp;action=edit&amp;id=5">Edit</a></span></td>
+			<td class="row1" align="center"><span class="gen"><a href="/jforum.page?module=adminUsers&amp;action=groups&amp;id=5">Groups</a></span></td>
+
+				<td class="row1" align="center"><input type="checkbox" name="user_id" value="5" /></td>
+				<td class="row1" align="center">&nbsp;</td>
+		</tr>
+		<tr>
+			<td class="row1" align="center"><span class="gen">3</span></td>
+			<td class="row1"><span class="gen">mario</span></td>
+			<td class="row1" align="center"><span class="gen"><a href="/jforum.page?module=adminUsers&amp;action=edit&amp;id=3">Edit</a></span></td>
+			<td class="row1" align="center"><span class="gen"><a href="/jforum.page?module=adminUsers&amp;action=groups&amp;id=3">Groups</a></span></td>
+
+				<td class="row1" align="center"><input type="checkbox" name="user_id" value="3" /></td>
+				<td class="row1" align="center">&nbsp;</td>
+		</tr>
+
+	<tr align="center">
+		<td class="catbottom" colspan="5" height="28">
+		<!--
+			<input class="mainoption" type="button" value="Insert" onClick="document.location = '/jforum.page?module=adminUsers&action=insert';" />&nbsp;&nbsp;	
+		-->
+			<input class="mainoption" type="button" value="Insert" onClick="document.location = '/user/insert.page';" />&nbsp;&nbsp;	
+		</td>
+		<td class="catbottom">
+			<input class="mainoption" type="submit" value="Lock / Unlock" name="submit" />
+		</td>
+	</tr>
+</table>
+</form>
+<table width="100%">
+	<tr>
+		<td align="right"></td>
+	</tr>
+</table>

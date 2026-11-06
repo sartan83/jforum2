@@ -1,5 +1,5 @@
+target/
+jforum-home/
 *.class
-upload/
-tmp/
-.tomcatplugin
-WEB-INF/jforumLuceneIndex/*
+.idea/
+*.iml

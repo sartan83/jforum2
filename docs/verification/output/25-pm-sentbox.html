@@ -1,0 +1,221 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="-1" />
+<style type="text/css">@import url( /templates/default/styles/style.css?1793962431913 );</style>
+<style type="text/css">@import url( /templates/default/styles/en_US.css?1793962431913 );</style>
+
+
+<title>Private Messages Sent Box</title>
+
+</head>
+<body class="en_US">
+
+<!--
+Original theme from phpBB (http://www.phpbb.com) subSilver
+Created by subBlue design
+http://www.subBlue.com
+
+Modifications by JForum Team
+-->
+
+<table width="100%" border="0">
+	<tr>
+		<td>
+			<table cellspacing="0" cellpadding="0" width="100%" border="0">
+				<tr>
+					<td>
+						&nbsp;
+						<!--
+						<a href="http://localhost:8080"><img src="/templates/default/images/logo.jpg"  vspace="1" border="0" alt="[Logo]" /></a>
+						-->
+					</td>
+					 
+					<td width="100%" align="center" valign="middle">
+						<span class="boardtitle">My Forum - your board description</span>
+						<table cellspacing="0" cellpadding="2" border="0">
+							<tr>
+								<td valign="top" nowrap="nowrap" align="center">&nbsp;
+									<img src="/templates/default/images/icon_mini_search.gif" alt="[Search]"/>
+									<span class="mainmenu"><a id="search" class="mainmenu" href="/search/filters.page"><b>Search</b></a> &nbsp;
+									
+									<img src="/templates/default/images/icon_mini_recentTopics.gif" alt="[Recent Topics]" />
+									<a id="latest" class="mainmenu" href="/recentTopics/list.page">Recent Topics</a> &nbsp;
+									<img src="/templates/default/images/icon_mini_recentTopics.gif" alt="[Hottest Topics]" />
+									<a id="hottest" class="mainmenu" href="/hottestTopics/list.page">Hottest Topics</a> &nbsp;
+									<img src="/templates/default/images/icon_mini_members.gif" alt="[Members]" />&nbsp;
+									<a id="latest2" class="mainmenu" href="/user/list.page">Member Listing</a> &nbsp;
+									<span class="mainmenu"> <img src="/templates/default/images/icon_mini_groups.gif" alt="[Groups]" />&nbsp;<a id="backtosite" class="mainmenu" href="http://localhost:8080">Back to home page</a>&nbsp;
+									
+									<br>
+
+										<img src="/templates/default/images/icon_mini_members.gif" alt="[Moderation Log]" />
+										<a id="moderationlog" class="mainmenu" href="/moderation/showActivityLog.page">Moderation Log</a> &nbsp;
+
+										<a id="myprofile" class="mainmenu" href="/user/edit/3.page"><img src="/templates/default/images/icon_mini_profile.gif" border="0" alt="[Profile]" /> My Profile</a>&nbsp; 
+											<a class="mainmenu" href="/bookmarks/list/3.page"><img src="/templates/default/images/icon_minipost.gif" alt="[Post]" />My Bookmarks</a>&nbsp;
+										<a id="privatemessages" class="mainmenu" href="/pm/inbox.page"><img src="/templates/default/images/icon_mini_message.gif" border="0" alt="[Message]" />
+												Private Messages
+										</a>&nbsp;
+										</span>
+
+											<a id="logout" class="mainmenu" href="/user/logout.page"><img src="/templates/default/images/icon_mini_login.gif" border="0" alt="[Login]" /> Logout [mario] </a></span>
+	
+
+									
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	<tr>
+		<td>
+
+<table cellspacing="0" cellpadding="10" width="100%" align="center" border="0">
+	<tbody>
+		<tr>
+			<td class="bodyline">
+				<script type="text/javascript">
+				function select_switch(status) 
+				{
+					for (i = 0; i < document.privmsg_list.length; i++) {
+						document.privmsg_list.elements[i].checked = status;
+					}
+				}
+				</script>
+
+				<table cellspacing="0" cellpadding="0" width="100%" align="center" border="0">
+					<tbody>
+						<tr>
+							<td valign="top" align="center" width="100%">
+								<table cellspacing="2" cellpadding="2" border="0">
+									<tbody>
+										<tr valign="middle">
+											<td>
+												<a href="/pm/inbox.page">
+												<img src="/templates/default/images/msg_inbox.gif" border="0" alt="[Inbox]" />
+												</a>
+											</td>
+											<td>
+												<a href="/pm/inbox.page">
+												<span class="cattitle">Inbox &nbsp;</span>
+												</a>
+											</td>
+											<td>
+												<img src="/templates/default/images/msg_sentbox.gif" border="0" alt="[Sentbox]" />
+											</td>
+											<td>
+												<span class="cattitle">Sent Box&nbsp;</span>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<br clear="all" />
+				<form action="/jforum.page" method="post" name="privmsg_list" id="privmsg_list">
+				<input type="hidden" name="module" value="pm" />
+				<input type="hidden" name="action" value="delete" />
+					<table cellspacing="2" cellpadding="2" width="100%" align="center" border="0">
+						<tbody>
+							<tr>
+								<td valign="middle" align="left">
+									<a href="/pm/send.page" class="icon_new_topic"><img src="/images/transp.gif" alt="New Topic" /></a>
+								</td>
+								<td align="left" width="100%">
+									<span class="nav">
+									 <a class="nav" href="/forums/list.page">Forum Index</a>
+									 </span>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<table class="forumline" cellspacing="1" cellpadding="3" width="100%" border="0">
+						<tbody>
+							<tr>
+								<th class="thcornerl" nowrap="nowrap" width="5%" height="25">
+									&nbsp;&nbsp;
+								</th>
+								<th class="thtop" nowrap="nowrap" width="55%">
+									&nbsp;Subject&nbsp;
+								</th>
+								<th class="thtop" nowrap="nowrap" width="20%">
+									&nbsp;To&nbsp;
+								</th>
+								<th class="thtop" nowrap="nowrap" width="15%">
+									&nbsp;Date&nbsp;
+								</th>
+								<th class="thcornerr" nowrap="nowrap" width="5%">
+									&nbsp;&nbsp;
+								</th>
+							</tr>
+							<tr>
+								<td class="row1" valign="middle" align="center" width="5%">
+										<img src="/templates/default/images/folder.gif" alt="Folder" />
+								</td>
+								<td class="row1" valign="middle" width="55%"><span class="topictitle">&nbsp;<a class="topictitle" href="/pm/read/1.page">PM 1793962434</a></span></td>
+								<td class="row1" valign="middle" align="center" width="20%">
+									<span class="name">&nbsp;<a class="name" href="/user/profile/4.page">giulia</a></span>
+								</td>
+								<td class="row1" valign="middle" align="center" width="15%"><span class="postdetails">06/11/2026 10:54:10</span></td>
+								<td class="row1" valign="middle" align="center" width="5%"><span class="postdetails"><input type="checkbox" value="1" name="id" /></span></td>
+							</tr>
+							<tr>
+								<td class="catbottom" align="right" colspan="5" height="28">
+									&nbsp; <input class="liteoption" type="submit" value="Delete Selected" name="delete" />
+									<!--
+									&nbsp; <input class="liteoption" type="submit" value="Delete All" name="deleteall" />
+									-->
+								</td></tr>
+						</tbody>
+					</table>
+					<table cellspacing="2" cellpadding="2" width="100%" align="center" border="0">
+						<tbody>
+							<tr>
+								<td valign="middle" align="left">
+									<a href="/pm/send.page" class="icon_new_topic nav"><img src="/images/transp.gif" alt="" /></a>
+								</td>
+								<td valign="middle" align="left" width="100%"><span class="nav"></span></td>
+								<td valign="top" nowrap="nowrap" align="right">
+									<b><span class="gensmall"><a class="gensmall" href="javascript:select_switch(true);">Check All</a> :: 
+									<a class="gensmall" href="javascript:select_switch(false);">Uncheck All</a></span></b>
+									<br />
+									<span class="nav">
+										<br />
+									</span>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</form>
+				<div align="center"></div>
+			</td>
+		</tr>
+	</tbody>
+</table>
+</td>
+</tr>
+	<tr>
+		<td align="center">
+			
+		</td>
+	</tr>
+
+	<tr>
+		<td align="center">
+			<span class="copyright">Powered by <a class="copyright" href="http://www.jforum.net/" target="_blank">JForum 2.1.8</a> &copy; <a class="copyright" href="http://www.jforum.net/team.jsp" target="_blank">JForum Team</a></span>
+		</td>
+	</tr>
+</table>
+
+
+<iframe src="/ping_session.jsp" height="0" width="0" frameborder="0" scrolling="no"></iframe>
+
+</body>
+</html>

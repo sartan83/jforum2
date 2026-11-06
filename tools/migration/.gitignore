@@ -1,0 +1,4 @@
+/target/
+/migration-report/
+# the root .gitignore ignores every target/ directory: keep the net.jforum.migration.target sources
+!/src/**/target/

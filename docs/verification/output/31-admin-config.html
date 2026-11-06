@@ -1,0 +1,403 @@
+<style type="text/css">@import url( /templates/default/styles/style.css?1793962431913 );</style>
+<script type="text/javascript" src="/templates/default/js/jquery.js?1793962431913"></script>
+
+<script type="text/javascript">
+function showEmail(beforeAt, afterAt)
+{
+	return beforeAt + "@" + afterAt;
+}
+
+var starOn = new Image();
+starOn.src = "/templates/default/images/star_on.gif";
+
+var starOff = new Image();
+starOff.src = "/templates/default/images/star_off.gif";
+
+function writeStars(q, postId)
+{
+	for (var i = 0; i < 5; i++) {
+		var name = "star" + postId + "_" + i;
+		document.write("<img name='" + name + "' alt='*' />");
+		document.images[name].src = q > i ? starOn.src : starOff.src;
+	}
+}
+
+function addBookmark(relationType, relationId)
+{
+	var w = window.open('/bookmarks/insert/' + relationType + '/' + relationId + '.page', 'bookmark_add', 'width=700, height=200, scrollbars=auto, resizable=true');
+	w.focus();
+}
+</script>
+
+<script language="javascript">
+function resize()
+{
+	var h = document.form.thumbH.value;
+	var w = document.form.thumbW.value;
+	
+	if ((h > 30 && h < 350) && (w > 30 && w < 350)){
+		document.getElementById("avatarPreview").style.width = w + "px";                   
+		document.getElementById("avatarPreview").style.height = h + "px";          
+	}
+}
+
+function changeValue(field, value)
+{
+	var f = eval("document.form." + field)
+	f.value = value;
+	resize();
+}
+
+function testEmail()
+{
+	if ($("#address").val()) {
+		$("#mailButton").val("Sending...").attr("disabled", "disabled");
+
+		var params = {
+			sender: $("#sender").val(),
+			host: $("#host").val(),
+			port: $("#port").val(),
+			auth: $("#auth").val(),
+			ssl: $("#ssl").val(),
+			username: $("#username").val(),
+			password: $("#password").val(),
+			to: $("#address").val()
+		};
+
+		$.ajax({
+			type:"POST",
+			url:"$contextPath/jforum.page?module=ajax&action=sendTestMail",
+			data:params,
+			dataType:"script",
+			global:false
+		});
+	}
+}
+</script>
+
+<form accept-charset="UTF-8" name="form" action="/jforum.page" method="post">
+<input type="hidden" name="action" value="editSave" />
+<input type="hidden" name="module" value="adminConfig" />
+
+<table class="forumline" cellspacing="1" cellpadding="3" width="100%" border="0">
+<tr>
+	<th class="thhead" valign="middle" colspan="2" height="25">Configurations</th>
+</tr>
+
+<!-- General Settings -->
+<tr>
+	<td class="catsides" colspan="2"><span class="gen"><b>General Purpose</b></span></td>
+</tr>
+<tr>
+	<td class="row1" width="38%"><span class="gen">Forum URL (don't forget the trailing slash '/' )</span></td>
+	<td class="row1" width="38%"><span class="gen"><input type="text" size="50" name="p_forum.link" value="http://localhost:8080/" /></span></td>
+</tr>
+
+<tr>
+	<td class="row2" width="38%"><span class="gen">Website URL</span></td>
+	<td class="row2" width="38%"><span class="gen"><input type="text" size="50" name="p_homepage.link" value="http://localhost:8080" /></span></td>
+</tr>
+
+<tr>
+	<td class="row2" width="38%"><span class="gen">Forum Name</span></td>
+	<td class="row2" width="38%"><span class="gen"><input type="text" size="50" name="p_forum.name" value="My Forum" /></span></td>
+</tr>
+
+<tr>
+	<td class="row1" width="38%"><span class="gen">Forum Page Title</span></td>
+	<td class="row1" width="38%"><span class="gen"><input type="text" size="50" name="p_forum.page.title" value="My Forum - your board description" /></span></td>
+</tr>
+
+<tr>
+	<td class="row1" width="38%"><span class="gen">Meta Tag Description</span></td>
+	<td class="row1" width="38%"><span class="gen"><input type="text" size="50" name="p_forum.page.metatag.description" value="here goes the board description" /></span></td>
+</tr>
+
+<tr>
+	<td class="row2" width="38%"><span class="gen">Meta Tag Keywords</span></td>
+	<td class="row2" width="38%"><span class="gen"><input type="text" size="50" name="p_forum.page.metatag.keywords" value="some keywords for your board" /></span></td>
+</tr>
+
+<tr>
+	<td class="row1" width="38%"><span class="gen">Character Encoding</span></td>
+	<td class="row1" width="38%"><span class="gen"><input type="text" size="10" name="p_encoding" value="UTF-8" /></span></td>
+</tr>
+
+<tr>
+	<td class="row1" width="38%"><span class="gen">Default board Language</span></td>
+	<td class="row1" width="38%">
+		<span class="gen">
+		<select name="p_i18n.board.default">
+
+			<option value="nb_NO" >nb_NO</option>
+
+			<option value="it_IT" >it_IT</option>
+
+			<option value="zh_TW" >zh_TW</option>
+
+			<option value="en_US" selected>en_US</option>
+
+			<option value="pt_BR" >pt_BR</option>
+
+			<option value="zh_CN" >zh_CN</option>
+
+			<option value="pt_PT" >pt_PT</option>
+
+			<option value="hu_HU" >hu_HU</option>
+
+			<option value="de_DE" >de_DE</option>
+		</select>
+		</span>
+	</td>
+</tr>
+
+<tr>
+	<td class="row1" width="38%"><span class="gen">Topics per Page</span></td>
+	<td class="row1" width="38%"><span class="gen"><input type="text" size="10" name="p_topicsPerPage" value="15" /></span></td>
+</tr>
+
+<tr>
+	<td class="row2" width="38%"><span class="gen">Posts per Page</span></td>
+	<td class="row2" width="38%"><span class="gen"><input type="text" size="10" name="p_postsPerPage" value="15" /></span></td>
+</tr>
+
+<tr>
+	<td class="row1" width="38%"><span class="gen">Users per Page</span></td>
+	<td class="row1" width="38%"><span class="gen"><input type="text" size="10" name="p_usersPerPage" value="30" /></span></td>
+</tr>
+
+<tr>
+	<td class="row1" width="38%"><span class="gen">Delay (in ms) between each post from the user. Set it to 0 (zero) to disable the config</span></td>
+	<td class="row1" width="38%"><span class="gen"><input type="text" size="10" name="p_posts.new.delay" value="15000" /></span></td>
+</tr>
+
+<tr>
+	<td class="row1" width="38%"><span class="gen">Allowed HTML tags ( separated by comma )</span></td>
+	<td class="row1" width="38%"><span class="gen"><input type="text" size="50" name="p_html.tags.welcome" value="u, a, img, i, u, li, ul, font, br, p, b, hr" /></span></td>
+</tr>
+
+<tr>
+	<td class="row2" width="38%"><span class="gen">Enable Captcha during registration</span></td>
+	<td class="row2" width="38%">
+		<span class="gen">
+			<select name="p_captcha.registration">
+				<option value="true" >True</option>
+				<option value="false" selected>False</option>
+			</select>
+		</span>
+	</td>
+</tr>
+
+<tr>
+	<td class="row1" width="38%"><span class="gen">Enable registration of new users.</span></td>
+	<td class="row1" width="38%">
+		<span class="gen">
+			<select name="p_registration.enabled">
+				<option value="true" selected>True</option>
+				<option value="false" >False</option>
+			</select>
+		</span>
+	</td>
+</tr>
+
+<tr>
+	<td class="row2" width="38%"><span class="gen">Enable RSS Syndication</span></td>
+	<td class="row2" width="38%">
+		<span class="gen">
+			<select name="p_rss.enabled">
+				<option value="true" selected>True</option>
+				<option value="false" >False</option>
+			</select>
+		</span>
+	</td>
+</tr>
+
+<!-- Cache Settings -->
+<tr>
+	<td class="catsides" colspan="2"><span class="gen"><b>Cache Settings</b></span></td>
+</tr>
+
+<tr>
+	<td class="row2" width="38%"><span class="gen">Cache most recent <b>read</b> topics in memory</span></td>
+	<td class="row2" width="38%">
+		<select name="p_posts.cache.enabled">
+			<option value="true" >True</option>
+			<option value="false" selected>False</option>
+		</select>
+	</td>
+</tr>
+
+<tr>
+	<td class="row2" width="38%"><span class="gen">Number of most recent read topics to keep in memory (LRU). Only used if the previous option is set to "true"</span></td>
+	<td class="row2" width="38%"><span class="gen"><input type="text" size="10" name="p_posts.cache.size" value="100" /></span></td>
+</tr>
+
+<tr>
+	<td class="row2" width="38%"><span class="gen">Minimum number of messages to a topic be considered "hot"</span></td>
+	<td class="row2" width="38%"><span class="gen"><input type="text" size="10" name="p_hot.topic.begin" value="20" /></span></td>
+</tr>
+
+<tr>
+	<td class="row1" width="38%"><span class="gen">Maximum number of topics in Recent Topics page</span></td>
+	<td class="row1" width="38%"><span class="gen"><input type="text" size="10" name="p_topic.recent" value="50" /></span></td>
+</tr>
+
+<!-- Avatar -->
+<tr>
+	<td class="catsides" colspan="2"><span class="gen"><b>Avatar</b></span></td>
+</tr>
+
+<tr>
+	<td class="row2" width="38%"><span class="gen">Max. Avatar Size ( in KB )</span></td>
+	<td class="row2" width="38%"><span class="gen"><input type="text" size="10" name="p_avatarMaxKbSize" value="25" /></span></td>
+</tr>
+<tr>
+	<td class="row1" width="38%"><span class="gen">Max. avatar width ( in pixels )</span></td>
+	<td class="row1" width="38%"><span class="gen"><input type="text" size="10"name="p_avatar.maxWidth" value="150" onchange="changeValue('thumbW', this.value)"/></span></td>
+</tr>
+<tr>
+	<td class="row2" width="38%"><span class="gen">Max. avatar height ( in pixels )</span></td>
+	<td class="row2" width="38%"><span class="gen"><input type="text" size="10"name="p_avatar.maxHeight" value="150" onchange="changeValue('thumbH', this.value)"/></span></td>
+</tr>
+<tr>
+	<td class="row2" width="38%"><span class="gen">Avatar size preview</span></td>
+	<td class="row2" width="38%">
+		<input type="hidden" name="thumbH" value="150">	
+		<input type="hidden" name="thumbW" value="150">
+		<div id="avatarPreview" style="align:center; border:1px solid orange;">&nbsp;</div>
+	</td>
+</tr>
+
+<!-- Mail -->
+<tr>
+	<td class="catsides" colspan="2"><span class="gen"><b>Mail</b></span></td>
+</tr>
+
+<tr>
+	<td class="row1" width="38%"><span class="gen">Message Charset</span></td>
+	<td class="row1" width="38%"><span class="gen"><input type="text" size="10" name="p_mail.charset" value="UTF-8" /></span></td>
+</tr>
+<tr>
+	<td class="row2" width="38%"><span class="gen">Email Address to use as "sender"</span></td>
+	<td class="row2" width="38%"><span class="gen"><input type="text" size="50" name="p_mail.sender" id="sender" value="email@sender.address" /></span></td>
+</tr>
+<tr>
+	<td class="row2" width="38%"><span class="gen">SMTP Server</span></td>
+	<td class="row2" width="38%"><span class="gen"><input type="text" size="50" name="p_mail.smtp.host" id="host" value="localhost" /></span></td>
+</tr>
+<tr>
+	<td class="row2" width="38%"><span class="gen">SMTP Port</span></td>
+	<td class="row2" width="38%"><span class="gen"><input type="text" size="10" name="p_mail.smtp.port" id="port" value="25" /></span></td>
+</tr>
+<tr>
+	<td class="row1" width="38%"><span class="gen">SMTP Server requires authorization?</span></td>
+	<td class="row1" width="38%">
+		<select name="p_mail.smtp.auth" id="auth">
+			<option value="false" >False</option>
+			<option value="true" selected>True</option>
+		</select>
+	</td>
+</tr>
+<tr>
+	<td class="row1" width="38%"><span class="gen">Requires SSL?</span></td>
+	<td class="row1" width="38%">
+		<select name="p_mail.smtp.ssl" id="ssl">
+			<option value="false" selected>False</option>
+			<option value="true" >True</option>
+		</select>
+	</td>
+</tr>
+<tr>
+	<td class="row2" width="38%"><span class="gen">SMTP username ( only if using authorization )</span></td>
+	<td class="row2" width="38%"><span class="gen"><input type="text" size="50" name="p_mail.smtp.username" id="username" value="your@smtp.username" /></span></td>
+</tr>
+<tr>
+	<td class="row1" width="38%"><span class="gen">SMTP password ( only if using authorization )</span></td>
+	<td class="row1" width="38%"><span class="gen"><input type="text" name="p_mail.smtp.password" id="password" value="smtppassword" /></span></td>
+</tr>
+<tr>
+	<td class="row1" width="38%"><span class="gen"><font color="green">Send a test email</font></span></td>
+	<td class="row1" width="38%">
+		<span class="gen">E-mail: </span> <input type="text" id="address">&nbsp;
+		<input type="button" value="Send a test email" class="mainoption" id="mailButton" onClick="testEmail();">
+	</td>
+</tr>
+<!-- Topic answer -->
+
+<tr>
+	<td class="row1" width="38%"><span class="gen">Topic answer message file</span></td>
+	<td class="row1" width="38%"><span class="gen"><input type="text" size="50" name="p_mail.newAnswer.messageFile" value="mail/mailNewReply.txt" /></span></td>
+</tr>
+<tr>
+	<td class="row2" width="38%"><span class="gen">Topic answer message subject</span></td>
+	<td class="row2" width="38%"><span class="gen"><input type="text" size="50" name="p_mail.newAnswer.subject" value="[My Forum] Message posted: {0}" /></span></td>
+</tr>
+
+<!-- Private Message -->
+<tr>
+	<td class="row1" width="38%"><span class="gen">Private Message answer message file</span></td>
+	<td class="row1" width="38%"><span class="gen"><input type="text" size="50" name="p_mail.newPm.messageFile" value="mail/newPrivateMessage.txt" /></span></td>
+</tr>
+<tr>
+	<td class="row2" width="38%"><span class="gen">Private Message answer subject</span></td>
+	<td class="row2" width="38%"><span class="gen"><input type="text" size="50" name="p_mail.newPm.subject" value="[My Forum] Private Message" /></span></td>
+</tr>
+
+<!-- Activation -->
+<tr>
+	<td class="row1" width="38%"><span class="gen">User Activation message file</span></td>
+	<td class="row1" width="38%"><span class="gen"><input type="text" size="50" name="p_mail.activationKey.messageFile" value="mail/activateAccount.txt" /></span></td>
+</tr>
+<tr>
+	<td class="row2" width="38%"><span class="gen">User Activation message subject</span></td>
+	<td class="row2" width="38%"><span class="gen"><input type="text" size="50" name="p_mail.activationKey.subject" value="[My Forum] Activate forum account" /></span></td>
+</tr>
+
+<!-- Lost Password -->
+<tr>
+	<td class="row1" width="38%"><span class="gen">Recover password message file</span></td>
+	<td class="row1" width="38%"><span class="gen"><input type="text" size="50" name="p_mail.lostPassword.messageFile" value="mail/lostPassword.txt" /></span></td>
+</tr>
+<tr>
+	<td class="row2" width="38%"><span class="gen">Recover password message subject</span></td>
+	<td class="row2" width="38%"><span class="gen"><input type="text" size="50" name="p_mail.lostPassword.subject" value="[My Forum] Password recovery" /></span></td>
+</tr>
+
+<tr>
+	<td class="row1" width="38%"><span class="gen">Message format</span></td>
+	<td class="row1" width="38%">
+		<select name="p_mail.messageFormat">
+			<option value="text" selected>Text</option>
+			<option value="html" >HTML</option>
+		</select>
+	</td>
+</tr>
+
+<tr>
+	<td class="row2" width="38%"><span class="gen">Send an email to notify users when a topic reply is post</span></td>
+	<td class="row2" width="38%">
+		<select name="p_mail.notify.answers">
+			<option value="false" >False</option>
+			<option value="true" selected>True</option>
+		</select>
+	</td>
+</tr>
+<tr>
+	<td class="row1" width="38%"><span class="gen">Requires user to authenticate email</span></td>
+	<td class="row1" width="38%">
+		<select name="p_mail.user.email.auth">
+			<option value="false" selected>False</option>
+			<option value="true" >True</option>
+		</select>
+	</td>
+</tr>
+
+
+<tr>
+	<td class="catsides" colspan="2" align="center"><input type="submit" value="Update" class="mainoption" />
+	</td>
+</tr>
+
+</table>
+</form>
+<script language="javascript">resize();</script>
