@@ -22,7 +22,7 @@ public class POPListener
 	protected POPConnector connector = new POPConnector();
 	
 	/**
-	 * @see org.quartz.Job#execute(org.quartz.JobExecutionContext)
+	 * Checks every registered mail integration, scheduled by {@link POPJob}.
 	 */
 	public void execute()
 	{
@@ -44,7 +44,7 @@ public class POPListener
 						connector.openConnection();
 						parser.parseMessages(connector);
 						
-						POPPostAction postAction = new POPPostAction();
+						POPPostAction postAction = this.newPostAction();
 						postAction.insertMessages(parser);
 					}
 					finally {
@@ -61,6 +61,11 @@ public class POPListener
 		}
 	}
 	
+	protected POPPostAction newPostAction()
+	{
+		return new POPPostAction();
+	}
+
 	POPConnector getConnector()
 	{
 		return this.connector;

@@ -191,6 +191,8 @@ jforum:
   # If true, allow users to interact to the forum using any
   # email client, by just sending a message to a specific address
   "mail.pop3.integration.enabled": "false"
+  # Spring cron expression of the POP3 mailboxes check
+  "mail.pop3.integration.cron": "0 5 * * * *"
   # If "false", deletes all messages retrieved from a POP3
   # connection. If "true", keep them in the server
   "mail.pop3.debug.keep.messages": "true"
@@ -222,8 +224,8 @@ jforum:
   # displaying a nice error message to the user, in case of banning
   "banlist.send.403forbidden": "false"
   # SEARCH
+  # Full text search uses a MongoDB text index on posts (subject, text), always up to date
   "search.indexing.enabled": "true"
-  "search.indexer.implementation": ""
   # KARMA
   "karma.min.points": "1"
   "karma.max.points": "5"
@@ -348,4 +350,6 @@ jforum:
   # Summary
   "summary.enabled": "false"
   "summary.days.before": "7"
+  # Spring cron expression (second minute hour day month weekday) of the weekly summary
+  "summary.cron": "0 30 12 * * MON"
   "jforum.version.url": "http://www.jforum.net/latest_version.txt"

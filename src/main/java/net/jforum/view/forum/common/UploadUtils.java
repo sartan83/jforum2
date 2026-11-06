@@ -45,6 +45,7 @@ package net.jforum.view.forum.common;
 import java.io.BufferedInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import net.jforum.exceptions.ForumException;
 import net.jforum.util.upload.FileItem;
@@ -72,6 +73,16 @@ public class UploadUtils
 		return this.extension;
 	}
 	
+	public InputStream getInputStream() throws IOException
+	{
+		return this.item.getInputStream();
+	}
+
+	public String getContentType()
+	{
+		return this.item.getContentType();
+	}
+
 	public void saveUploadedFile(String filename) 
 	{
 		BufferedInputStream inputStream = null;
