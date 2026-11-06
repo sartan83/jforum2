@@ -100,3 +100,67 @@ Indexes created at startup, e.g. `posts`: `topicId`, `forumId`, `userId`, `postT
   it shows the legacy "could not determine" message and a warning is logged.
 - File attachment upload and the POP mail integration were covered by the automated tests (GridFS, Testcontainers),
   not by this HTTP run.
+
+## Recorded real-browser verification — PR #16, HEAD c1488ef
+
+Executed the requested journey in maximized Chrome against the already-running demo Docker stack
+at `http://localhost:8080`, using real MongoDB storage and the supplied Mario, Giulia and admin accounts.
+No dependencies were installed or services started for this browser run. No templates were modified.
+The earlier HTTP/headless results above are preserved and are separate from these browser observations.
+
+### Browser assertions
+
+| Check | Result and observed values | Local screenshot in `screenshots/` |
+| --- | --- | --- |
+| Anonymous forum index | Passed: Category Test, Java & Spring, Community; four forums. Off-topic baseline: 2 topics / 4 messages. | `browser-01-anonymous.png` |
+| Existing Spring Boot topic | Passed: Migrating JForum to Spring Boot 3 opens; bold Spring Boot, italic all of them, and yellow smilie render. | `browser-02-topic.png` |
+| Atlas search | Passed: Connecting to MongoDB Atlas appears as the matching result. | `browser-03-search.png` |
+| Mario sign-in and topic creation | Passed: Logout [mario]; Browser E2E 1106 renders Browser bold / Browser italic / smilie, not raw BBCode. Off-topic becomes 3 topics / 5 messages with Mario as latest author. | `browser-04-created-topic.png` |
+| Quick Reply and own-post edit | Passed: reply submitted 41 seconds after topic creation (15-second delay respected); Browser reply edited 1106 persists after reload and displays edited-once text. | `browser-05-edited-reply.png` |
+| Reply counters | Passed: Off-topic becomes 3 topics / 6 messages. | `browser-06-counters.png` |
+| PM Mario → Giulia | Passed: Giulia inbox contains Browser PM 1106 from Mario; opening it shows Mongo browser delivery 1106. | `browser-07-pm-read.png` |
+| Admin statistics | Passed: 15 posts / 8 topics / 5 users after the browser topic and reply. | `browser-08-admin-stats.png` |
+| Category and forum creation | Passed via direct admin routes after the frame-navigation issue below: Browser Category 1106 and Browser Forum 1106, description Browser-created forum. | `browser-09-category.png`, `browser-10-forum.png` |
+| Admin users and group permissions | Passed: five users listed; General group permission controls populated and visible. No permission changes were submitted. | `browser-11-users.png`, `browser-12-permissions.png` |
+| Topic lock | Passed: topic displays Locked instead of Post Reply; Off-topic list shows the padlock topic icon. | `browser-14-locked.png` |
+| Topic unlock | Passed: Post Reply, Quote and Quick Reply return; Off-topic list returns to its normal topic icon. | `browser-15-unlocked.png`, `browser-16-list-unlocked.png` |
+| Anonymous visibility after admin creation | Passed after logout: new category/forum visible with 0 topics and No messages; forum opens an empty topic list. | `browser-17-public-index.png`, `browser-18-empty-forum.png` |
+| Visible errors/assets | No An error has occurred page or visible broken-image icon observed on the tested pages. This is not an exhaustive asset audit. | Screenshots above |
+
+### Open item and coverage limitations
+
+- **Admin frame navigation is unresolved.** After a fresh incognito login through `/user/login.page`,
+  navigate to `/admBase/login.page` and normally left-click Categories in the narrow left menu.
+  In this real-mouse session Category Listing replaced the left menu instead of loading in the wide
+  main frame. A fresh retry reproduced it (`browser-13-frame-issue.png`).
+  The lead separately observed correct targeting in headless Playwright and a static frameset test.
+  The served markup has `leftFrame` and `main` frames and `target="main"` links; root cause is not
+  determined. Do not classify this as a confirmed modernization defect or dismiss the observed issue.
+  Direct `/adminCategories/list.page` and `/adminForums/list.page` worked and allowed completion.
+- An earlier admin login redirect coincided with the lead signing in as admin from other clients.
+  The lead identified legacy single-session-per-user eviction; fresh login after that contention stopped
+  restored direct admin access. This is separate from the unresolved frame-targeting issue.
+- No stock JForum runtime was supplied, so pixel-identical behavior against stock was **not verified**.
+  The inspected template/asset diff was empty; that alone does not establish runtime visual parity.
+- Lock/unlock were tested; moving topics was not (the request allowed either). Category/forum deletion,
+  attachments, SMTP and POP integration were outside this browser journey.
+- Test records remain in the demo database: topic Browser E2E 1106 (unlocked), its edited reply,
+  Browser PM 1106, Browser Category 1106 and Browser Forum 1106.
+
+### Key visual evidence
+
+| Created topic with rendered BBCode | Giulia reads Mario's PM |
+| --- | --- |
+| ![Created topic](https://devin-gtm.devinenterprise.com/attachments/53f9bfed-cfd6-4550-92d4-b08b89baf9a7/browser-04-created-topic.png) | ![PM received](https://devin-gtm.devinenterprise.com/attachments/694fc9d2-743c-4914-99da-6ba7e74bea6b/browser-07-pm-read.png) |
+
+| 🔴 Before: locked topic | 🟢 After: unlocked topic |
+| --- | --- |
+| ![Locked](https://devin-gtm.devinenterprise.com/attachments/c3215220-84d4-42a5-b121-8df8809b0441/browser-14-locked.png) | ![Unlocked](https://devin-gtm.devinenterprise.com/attachments/d8368654-f5d8-4abb-b2e0-8e270c302f99/browser-15-unlocked.png) |
+
+| Anonymous index after creation | Open item: real-mouse admin frame targeting |
+| --- | --- |
+| ![Public forum](https://devin-gtm.devinenterprise.com/attachments/15702047-dcbf-4457-b0b8-68b659675420/browser-17-public-index.png) | ![Frame issue](https://devin-gtm.devinenterprise.com/attachments/072b3ac2-d29d-4141-8375-279710ecffe3/browser-13-frame-issue.png) |
+
+Recording artifact on the test machine:
+`/home/ubuntu/screencasts/jforum-browser-e2e/jforum-browser-e2e-edited.mp4`.
+The recording includes frame troubleshooting and is longer than the primary functional journey.
