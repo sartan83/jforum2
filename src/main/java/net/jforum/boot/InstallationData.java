@@ -251,6 +251,7 @@ public class InstallationData
 		t.setLastPostDate(time);
 		t.setTotalReplies(t.getTotalReplies() + 1);
 		Stores.topic().update(t);
+		Stores.topic().incrementTotalReplies(topicId);
 
 		Stores.user().incrementPosts(userId);
 		Stores.forum().setLastPost(t.getForumId(), postId);
