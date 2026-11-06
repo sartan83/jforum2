@@ -201,6 +201,61 @@ class MongoForumStoreTest extends ForumCoreTestSupport
 		assertEquals(0, this.forums.discoverForumId("none@example.com"));
 	}
 
+	@Test
+	void installationDataFlowReturnsIdsAndKeepsCounters()
+	{
+		net.jforum.entities.Category c = new net.jforum.entities.Category();
+		c.setName("Category Test");
+		c.setOrder(1);
+		int categoryId = this.categories.addNew(c);
+		assertTrue(categoryId > 0);
+
+		Forum f = new Forum();
+		f.setIdCategories(categoryId);
+		f.setName("Test Forum");
+		f.setDescription("This is a test forum");
+		f.setOrder(1);
+		int forumId = this.forums.addNew(f);
+		assertEquals(categoryId, this.forums.selectById(forumId).getCategoryId());
+
+		User admin = new User();
+		admin.setId(2);
+		Topic t = new Topic();
+		t.setForumId(forumId);
+		t.setTitle("Welcome to JForum");
+		t.setTime(new Date(1_000));
+		t.setType(Topic.TYPE_NORMAL);
+		t.setPostedBy(admin);
+		int topicId = this.topics.addNew(t);
+		t.setId(topicId);
+		int postId = this.posts.addNew(post(topicId, forumId, 2, "welcome", 1_000));
+		t.setFirstPostId(postId);
+		t.setLastPostId(postId);
+		this.topics.update(t);
+		this.forums.incrementTotalTopics(forumId, 1);
+		this.forums.setLastPost(forumId, postId);
+
+		Topic reloaded = this.topics.selectById(topicId);
+		int replyId = this.posts.addNew(post(topicId, forumId, 3, "reply", 2_000));
+		reloaded.setLastPostId(replyId);
+		reloaded.setTotalReplies(reloaded.getTotalReplies() + 1);
+		this.topics.update(reloaded);
+		this.topics.incrementTotalReplies(topicId);
+		this.forums.setLastPost(forumId, replyId);
+
+		Topic listed = (Topic)this.topics.selectAllByForumByLimit(forumId, 0, 10).get(0);
+		assertEquals(topicId, listed.getId());
+		assertEquals(postId, listed.getFirstPostId());
+		assertEquals(replyId, listed.getLastPostId());
+		assertEquals(1, listed.getTotalReplies());
+		assertEquals("alice", listed.getPostedBy().getUsername());
+		assertEquals("bob", listed.getLastPostBy().getUsername());
+		Forum stored = this.forums.selectById(forumId);
+		assertEquals(1, stored.getTotalTopics());
+		assertEquals(2, stored.getTotalPosts());
+		assertEquals(replyId, stored.getLastPostId());
+	}
+
 	private static List<Integer> ids(List<?> l)
 	{
 		return l.stream().map(f -> ((Forum)f).getId()).toList();

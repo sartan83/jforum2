@@ -1,7 +1,5 @@
 package net.jforum.persistence.mongo;
 
-import static org.mockito.Mockito.when;
-
 import java.util.Date;
 import java.util.List;
 
@@ -14,12 +12,12 @@ import net.jforum.entities.User;
 import net.jforum.support.MongoTestSupport;
 
 import org.bson.Document;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 /**
  * Shared fixture for the forum core stores: clean collections and helpers reproducing the
@@ -52,19 +50,26 @@ abstract class ForumCoreTestSupport extends MongoTestSupport
 	@Autowired
 	protected MongoConfigStore configs;
 
-	@MockitoBean
+	@Autowired
 	protected ForumAccessResolver forumAccess;
 
 	@BeforeEach
 	void cleanCollections()
 	{
 		COLLECTIONS.forEach(c -> this.mongo.remove(new Query(), c));
-		when(this.forumAccess.allowedForumIds()).thenReturn(List.of());
+		this.forumAccess.setAllowedForums(() -> "");
+	}
+
+	@AfterEach
+	void restoreForumAccess()
+	{
+		this.forumAccess.setAllowedForums(null);
 	}
 
 	protected void allowForums(Integer... forumIds)
 	{
-		when(this.forumAccess.allowedForumIds()).thenReturn(List.of(forumIds));
+		String ids = java.util.Arrays.stream(forumIds).map(String::valueOf).collect(java.util.stream.Collectors.joining(","));
+		this.forumAccess.setAllowedForums(() -> ids);
 	}
 
 	protected void user(int id, String username)
