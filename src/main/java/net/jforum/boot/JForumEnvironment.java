@@ -90,6 +90,16 @@ public class JForumEnvironment
 			}
 		}
 
+		// let higher precedence sources that are not enumerated by name (e.g. JFORUM_FORUM_LINK
+		// environment variables, relaxed binding) override the defaults
+		for (String key : p.stringPropertyNames()) {
+			String value = this.environment.getProperty(PREFIX + key);
+
+			if (value != null) {
+				p.setProperty(key, value);
+			}
+		}
+
 		return p;
 	}
 
